@@ -11,12 +11,12 @@ const generateAndBroadcastNumber = (io) => {
   let lastNumbers=[0,0,0,0,0,0,0,0,0,0,0,0]
   let targetNumber = 0;
   let currentNumber = 0;
-  let timeRemaining = 10; // Initial countdown time in seconds
+  let timeRemaining = 20; // Initial countdown time in seconds
   let intervalId = null;
   const generateAndBroadcast = () => {
     targetNumber = 10;
     currentNumber = 0;
-    timeRemaining = 10; // Use the generated number for countdown time
+    timeRemaining = 20; // Use the generated number for countdown time
     let a=0,b=0,c=0;
     winner = '';
     let spin=false
@@ -45,7 +45,7 @@ const generateAndBroadcastNumber = (io) => {
 
         spin=true
         if(firstBet===0&&secondBet===0&&thirdBet===0){
-          winner=Math.floor(Math.random() * 3);
+          winner=Math.floor(Math.random() * 2)+1;
         }
         else if (firstBet <= secondBet) {
           if (firstBet <= thirdBet) {
