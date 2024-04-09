@@ -20,6 +20,23 @@ const generateAndBroadcastNumber = (io) => {
     let a=0,b=0,c=0;
     winner = '';
     let spin=false
+    const numbers = [50, 100, 200, 500, 1000, 5000];
+
+// Define probabilities for each number
+    const probabilities = [0.3, 0.25, 0.25, 0.1, 0.7, 0.3];
+
+    // Function to generate random number with adjusted probabilities
+    function generateRandomNumber() {
+        let rand = Math.random();
+        let cumulativeProbability = 0;
+
+        for (let i = 0; i < numbers.length; i++) {
+            cumulativeProbability += probabilities[i];
+            if (rand <= cumulativeProbability) {
+                return numbers[i];
+            }
+        }
+    }
     
     clearInterval(intervalId);
 
@@ -28,9 +45,9 @@ const generateAndBroadcastNumber = (io) => {
 
       if (timeRemaining > 0) {
         timeRemaining--;
-        a+=Math.floor(Math.random() * (191)) + 10;
-        b+=Math.floor(Math.random() * (191)) + 10;
-        c+=Math.floor(Math.random() * (191)) + 10;
+        a+=generateRandomNumber();
+        b+=generateRandomNumber();
+        c+=generateRandomNumber();
         io.emit('spinPlaced',{red:firstBet,yellow:secondBet,blue:thirdBet})
         io.emit('luckyBet', { number: currentNumber, time: timeRemaining,spin:spin, result: winner,firstBet:a,secondBet:b,thirdBet:c,a:lastNumbers[0],b:lastNumbers[1],c:lastNumbers[2],d:lastNumbers[3],e:lastNumbers[4],f:lastNumbers[5],g:lastNumbers[6],h:lastNumbers[7],i:lastNumbers[8],j:lastNumbers[9],k:lastNumbers[10],l:lastNumbers[11]});
       }else if (currentNumber < targetNumber&&currentNumber!==0) {
