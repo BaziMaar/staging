@@ -18,6 +18,7 @@ const generateAndBroadcastNumber = (io) => {
     currentNumber = 0;
     timeRemaining = 20; // Use the generated number for countdown time
     let a=0,b=0,c=0;
+    let arr1=[],arr2=[],arr3=[]
     winner = '';
     let spin=false
     const numbers = [50, 100, 200, 500, 1000, 5000];
@@ -45,20 +46,39 @@ const generateAndBroadcastNumber = (io) => {
 
       if (timeRemaining > 0) {
         timeRemaining--;
-        a+=generateRandomNumber();
-        b+=generateRandomNumber();
-        c+=generateRandomNumber();
+        let a1=0,a2=0,a3=0
+        for(let i=0;i<3;i++){
+          let x=generateRandomNumber()
+          arr1.push(x)
+          a1+=x
+        }
+        for(let i=0;i<3;i++){
+          let x=generateRandomNumber()
+          arr2.push(x)
+          a2+=x
+        }
+        for(let i=0;i<3;i++){
+          let x=generateRandomNumber()
+          arr3.push(x)
+          a3+=x
+        }
+        a+=a1;
+        b+=a2;
+        c+=a3;
         io.emit('spinPlaced',{red:firstBet,yellow:secondBet,blue:thirdBet})
-        io.emit('luckyBet', { number: currentNumber, time: timeRemaining,spin:spin, result: winner,firstBet:a,secondBet:b,thirdBet:c,a:lastNumbers[0],b:lastNumbers[1],c:lastNumbers[2],d:lastNumbers[3],e:lastNumbers[4],f:lastNumbers[5],g:lastNumbers[6],h:lastNumbers[7],i:lastNumbers[8],j:lastNumbers[9],k:lastNumbers[10],l:lastNumbers[11]});
+        io.emit('luckyBet', { number: currentNumber, time: timeRemaining,spin:spin, result: winner,firstBet:a,secondBet:b,thirdBet:c,a:lastNumbers[0],b:lastNumbers[1],c:lastNumbers[2],d:lastNumbers[3],e:lastNumbers[4],f:lastNumbers[5],g:lastNumbers[6],h:lastNumbers[7],i:lastNumbers[8],j:lastNumbers[9],k:lastNumbers[10],l:lastNumbers[11],arr1:arr1,arr2:arr2,arr3:arr3});
+        arr1=[]
+        arr2=[]
+        arr3=[]    
       }else if (currentNumber < targetNumber&&currentNumber!==0) {
         currentNumber += 1;
         io.emit('spinPlaced',{red:firstBet,yellow:secondBet,blue:thirdBet})
-        io.emit('luckyBet', { number: currentNumber, time: timeRemaining, spin:spin,result: winner,firstBet:a,secondBet:b,thirdBet:c,a:lastNumbers[0],b:lastNumbers[1],c:lastNumbers[2],d:lastNumbers[3],e:lastNumbers[4],f:lastNumbers[5],f:lastNumbers[5],g:lastNumbers[6],h:lastNumbers[7],i:lastNumbers[8],j:lastNumbers[9],k:lastNumbers[10],l:lastNumbers[11] });
+        io.emit('luckyBet', { number: currentNumber, time: timeRemaining, spin:spin,result: winner,firstBet:a,secondBet:b,thirdBet:c,a:lastNumbers[0],b:lastNumbers[1],c:lastNumbers[2],d:lastNumbers[3],e:lastNumbers[4],f:lastNumbers[5],f:lastNumbers[5],g:lastNumbers[6],h:lastNumbers[7],i:lastNumbers[8],j:lastNumbers[9],k:lastNumbers[10],l:lastNumbers[11],arr1:arr1,arr2:arr2,arr3:arr3 });
       }
       else if(currentNumber===0&&timeRemaining===0){
         currentNumber++;
         io.emit('spinPlaced',{red:firstBet,yellow:secondBet,blue:thirdBet})
-        io.emit('luckyBet', { number: currentNumber, time: timeRemaining,spin:spin, result: winner,firstBet:a,secondBet:b,thirdBet:c,a:lastNumbers[0],b:lastNumbers[1],c:lastNumbers[2],d:lastNumbers[3],e:lastNumbers[4],f:lastNumbers[5],f:lastNumbers[5],g:lastNumbers[6],h:lastNumbers[7],i:lastNumbers[8],j:lastNumbers[9],k:lastNumbers[10],l:lastNumbers[11]  });
+        io.emit('luckyBet', { number: currentNumber, time: timeRemaining,spin:spin, result: winner,firstBet:a,secondBet:b,thirdBet:c,a:lastNumbers[0],b:lastNumbers[1],c:lastNumbers[2],d:lastNumbers[3],e:lastNumbers[4],f:lastNumbers[5],f:lastNumbers[5],g:lastNumbers[6],h:lastNumbers[7],i:lastNumbers[8],j:lastNumbers[9],k:lastNumbers[10],l:lastNumbers[11] ,arr1:arr1,arr2:arr2,arr3:arr3 });
 
         spin=true
         if(firstBet===0&&secondBet===0&&thirdBet===0){
