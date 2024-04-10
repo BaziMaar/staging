@@ -47,17 +47,17 @@ const generateAndBroadcastNumber = (io) => {
       if (timeRemaining > 0) {
         timeRemaining--;
         let a1=0,a2=0,a3=0
-        for(let i=0;i<Math.floor(Math.random()*2)+1;i++){
+        for(let i=0;i<Math.floor(Math.random())+1;i++){
           let x=generateRandomNumber()
           arr1[i]=x;
           a1+=x
         }
-        for(let i=0;i<Math.floor(Math.random()*3)+1;i++){
+        for(let i=0;i<Math.floor(Math.random()*2)+1;i++){
           let x=generateRandomNumber()
           arr2[i]=x
           a2+=x
         }
-        for(let i=0;i<Math.floor(Math.random()*3)+1;i++){
+        for(let i=0;i<Math.floor(Math.random()*2)+1;i++){
           let x=generateRandomNumber()
           arr3[i]=x
           a3+=x
