@@ -11,12 +11,12 @@ const generateAndBroadcastNumber = (io) => {
   let lastNumbers=[0,0,0,0,0,0,0,0,0,0,0,0]
   let targetNumber = 0;
   let currentNumber = 0;
-  let timeRemaining = 20; // Initial countdown time in seconds
+  let timeRemaining = 15; // Initial countdown time in seconds
   let intervalId = null;
   const generateAndBroadcast = () => {
     targetNumber = 10;
     currentNumber = 0;
-    timeRemaining = 20; // Use the generated number for countdown time
+    timeRemaining = 15; // Use the generated number for countdown time
     let a=0,b=0,c=0;
     let arr1=[0,0,0],arr2=[0,0,0],arr3=[0,0,0]
     winner = '';
