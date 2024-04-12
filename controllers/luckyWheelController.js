@@ -53,12 +53,12 @@ const generateAndBroadcastNumber = (io) => {
           a1+=x
           
         }
-        for(let i=0;i<Math.floor(Math.random()*3)+1;i++){
+        for(let i=0;i<Math.floor(Math.random()*4)+1;i++){
           let x=generateRandomNumber()
           arr2[i]=x
           a2+=x
         }
-        for(let i=0;i<Math.floor(Math.random()*3)+1;i++){
+        for(let i=0;i<Math.floor(Math.random()*4)+1;i++){
           let x=generateRandomNumber()
           arr3[i]=x
           a3+=x
@@ -86,14 +86,13 @@ const generateAndBroadcastNumber = (io) => {
           winner=Math.floor(Math.random() * 2)+1;
         }
         else if (secondBet <= firstBet && secondBet <= thirdBet) {
-          console.log(`>>>>>>>>1>>>>`,firstBet)
-          winner = 0; // First bet is the highest
-      } else if (secondBet <= firstBet && secondBet <= thirdBet) {
+          winner = 1; // First bet is the highest
+      } else if (thirdBet <= firstBet && thirdBet <= secondBet) {
         console.log(`>>>>>>>>2>>>>>>`,secondBet)  
-        winner = 1; // Second bet is the highest
+        winner = 2; // Second bet is the highest
       } else {
         console.log(`>>>>>>>>3>>>>>>`,thirdBet)         
-          winner = 2; // Third bet is the highest
+          winner = 0; // Third bet is the highest
       }
         lastNumbers.push(winner)
         if(lastNumbers.length>12){
