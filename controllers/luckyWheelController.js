@@ -52,12 +52,12 @@ const generateAndBroadcastNumber = (io) => {
           arr1[i]=x;
           a1+=x
         }
-        for(let i=0;i<Math.floor(Math.random()*2)+1;i++){
+        for(let i=0;i<Math.floor(Math.random()*3)+1;i++){
           let x=generateRandomNumber()
           arr2[i]=x
           a2+=x
         }
-        for(let i=0;i<Math.floor(Math.random()*2)+1;i++){
+        for(let i=0;i<Math.floor(Math.random()*3)+1;i++){
           let x=generateRandomNumber()
           arr3[i]=x
           a3+=x
@@ -83,6 +83,14 @@ const generateAndBroadcastNumber = (io) => {
         spin=true
         if(firstBet===0&&secondBet===0&&thirdBet===0){
           winner=Math.floor(Math.random() * 2)+1;
+        }
+        else if(firstBet===0){
+          if(secondBet<thirdBet){
+            winner=1
+          }
+          else{
+            winner=2
+          }
         }
         else if (firstBet <= secondBet) {
           if (firstBet <= thirdBet) {
