@@ -82,6 +82,9 @@ const generateAndBroadcastNumber = (io) => {
         io.emit('luckyBet', { number: currentNumber, time: timeRemaining,spin:spin, result: winner,firstBet:a,secondBet:b,thirdBet:c,a:lastNumbers[0],b:lastNumbers[1],c:lastNumbers[2],d:lastNumbers[3],e:lastNumbers[4],f:lastNumbers[5],f:lastNumbers[5],g:lastNumbers[6],h:lastNumbers[7],i:lastNumbers[8],j:lastNumbers[9],k:lastNumbers[10],l:lastNumbers[11] ,arr1:arr1,arr2:arr2,arr3:arr3 });
 
         spin=true
+        console.log(`>>>>>>>>>`,firstBet)
+        console.log(`>>>>>2>>>>>`,secondBet)
+        console.log(`>>>>>3>>>>>>`thirdBet)
         if(firstBet===0&&secondBet===0&&thirdBet===0){
           winner=Math.floor(Math.random() * 2)+1;
         }
