@@ -84,7 +84,7 @@ const generateAndBroadcastNumber = (io) => {
         spin=true
         console.log(`>>>>>>>>>`,firstBet)
         console.log(`>>>>>2>>>>>`,secondBet)
-        console.log(`>>>>>3>>>>>>`thirdBet)
+        console.log(`>>>>>3>>>>>>`,thirdBet)
         if(firstBet===0&&secondBet===0&&thirdBet===0){
           winner=Math.floor(Math.random() * 2)+1;
         }
