@@ -94,10 +94,13 @@ const generateAndBroadcastNumber = (io) => {
         //   }
         // }
         else if (firstBet <= secondBet && firstBet <= thirdBet) {
+          console.log(`>>>>>>>>1>>>>`,firstBet)
           winner = 0; // First bet is the highest
       } else if (secondBet <= firstBet && secondBet <= thirdBet) {
-          winner = 1; // Second bet is the highest
+        console.log(`>>>>>>>>2>>>>>>`,secondBet)  
+        winner = 1; // Second bet is the highest
       } else {
+        console.log(`>>>>>>>>3>>>>>>`,thirdBet)         
           winner = 2; // Third bet is the highest
       }
         lastNumbers.push(winner)
