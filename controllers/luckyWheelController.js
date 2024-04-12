@@ -51,6 +51,7 @@ const generateAndBroadcastNumber = (io) => {
           let x=generateRandomNumber()
           arr1[i]=x;
           a1+=x
+          
         }
         for(let i=0;i<Math.floor(Math.random()*3)+1;i++){
           let x=generateRandomNumber()
@@ -84,14 +85,14 @@ const generateAndBroadcastNumber = (io) => {
         if(firstBet===0&&secondBet===0&&thirdBet===0){
           winner=Math.floor(Math.random() * 2)+1;
         }
-        else if(firstBet===0){
-          if(secondBet<thirdBet){
-            winner=1
-          }
-          else{
-            winner=2
-          }
-        }
+        // else if(firstBet===0){
+        //   if(secondBet<thirdBet){
+        //     winner=2
+        //   }
+        //   else{
+        //     winner=1
+        //   }
+        // }
         else if (firstBet <= secondBet) {
           if (firstBet <= thirdBet) {
             winner = 0;
