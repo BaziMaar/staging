@@ -85,15 +85,7 @@ const generateAndBroadcastNumber = (io) => {
         if(firstBet===0&&secondBet===0&&thirdBet===0){
           winner=Math.floor(Math.random() * 2)+1;
         }
-        // else if(firstBet===0){
-        //   if(secondBet<thirdBet){
-        //     winner=2
-        //   }
-        //   else{
-        //     winner=1
-        //   }
-        // }
-        else if (firstBet <= secondBet && firstBet <= thirdBet) {
+        else if (secondBet <= firstBet && secondBet <= thirdBet) {
           console.log(`>>>>>>>>1>>>>`,firstBet)
           winner = 0; // First bet is the highest
       } else if (secondBet <= firstBet && secondBet <= thirdBet) {
