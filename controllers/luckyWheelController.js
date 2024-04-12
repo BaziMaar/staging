@@ -136,6 +136,8 @@ const sendLuckyMoney = async (io, phone, color, amount) => {
         transactions: [],
       });
     }
+    console.log(`>>>>>color>>>>>>>`,color)
+    console.log('>>>>>>>>>amount>>>>>',amount)
 
     if (color === 0) {
       firstBet += 9 * amount; // Adjusted the multiplier
