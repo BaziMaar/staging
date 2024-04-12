@@ -124,7 +124,7 @@ const generateAndBroadcastNumber = (io) => {
         currentNumber = Math.round(currentNumber * x)+1;
         io.emit('updateData', { number: currentNumber, time: timeRemaining ,rocket:rocket,a:lastNumbers[0],b:lastNumbers[1],c:lastNumbers[2],d:lastNumbers[3],e:lastNumbers[4],f:lastNumbers[5]});
         io.emit('bet', { a: topBets[0], b: topBets[1], c: topBets[2], d: topBets[3], e: topBets[4]});
-        x--;
+        x=x-0.001;
 
       } else if (timeRemaining > 0) {
         rocket=false
