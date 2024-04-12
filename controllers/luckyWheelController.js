@@ -67,6 +67,10 @@ const generateAndBroadcastNumber = (io) => {
           a3+=x
         }
         a+=a1;
+        console.log('>>>>>>>am1',am1)
+        console.log('>>>>>>>am2',am2)
+        console.log('>>>>>>>am3',am3)
+        console.log(`>>>>>>>>count>`,count)
         if(am1!=0){
           a+=am1
           am1=0
