@@ -119,12 +119,14 @@ const generateAndBroadcastNumber = (io) => {
     clearInterval(intervalId);
     intervalId = setInterval(() => {
       if (currentNumber < targetNumber) {
-        let x=1.005
+        let x=1.01
         // Increase the number
         currentNumber = Math.round(currentNumber * x)+1;
         io.emit('updateData', { number: currentNumber, time: timeRemaining ,rocket:rocket,a:lastNumbers[0],b:lastNumbers[1],c:lastNumbers[2],d:lastNumbers[3],e:lastNumbers[4],f:lastNumbers[5]});
         io.emit('bet', { a: topBets[0], b: topBets[1], c: topBets[2], d: topBets[3], e: topBets[4]});
-        x=x-0.001;
+        if(x>=1.00){
+          x=x-0.001
+        };
 
       } else if (timeRemaining > 0) {
         rocket=false
@@ -139,7 +141,7 @@ const generateAndBroadcastNumber = (io) => {
         clearInterval(intervalId);
         generateAndBroadcast();
       }
-    }, 200);
+    }, 150);
   };
 
   // Call generateAndBroadcast to start the initial round
