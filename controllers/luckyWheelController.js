@@ -7,7 +7,9 @@ let secondBet = 0;
 let thirdBet = 0;
 let winner = null;
 let count =0;
-
+let am1=0
+let am2=0
+let am3=0
 const generateAndBroadcastNumber = (io) => {
   let lastNumbers=[0,0,0,0,0,0,0,0,0,0,0,0]
   let targetNumber = 0;
@@ -65,6 +67,17 @@ const generateAndBroadcastNumber = (io) => {
           a3+=x
         }
         a+=a1;
+        if(am1!=0){
+          a+=am1
+          am1=0
+        }
+        if(am2!==0){
+          b+=am2
+        }
+        if(am3!==0){
+          c+=am3
+          am3=0
+        }
         b+=a2;
         c+=a3;
         io.emit('spinPlaced',{red:firstBet,yellow:secondBet,blue:thirdBet})
@@ -142,14 +155,17 @@ const sendLuckyMoney = async (io, phone, color, amount) => {
         transactions: [],
       });
     }
-    console.log(`>>>>>color>>>>>>>`,color)
-    console.log('>>>>>>>>>amount>>>>>',amount)
+
+  
 
     if (color === 0) {
+      am1+=amount
       firstBet += 9 * amount; // Adjusted the multiplier
     } else if (color === 1) {
+      am2+=amount
       secondBet += 2 * amount; // Adjusted the multiplier
     } else {
+      am3+=amount
       thirdBet += 2 * amount; // Adjusted the multiplier
     }
 
