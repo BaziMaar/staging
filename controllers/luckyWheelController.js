@@ -6,6 +6,7 @@ let firstBet = 0;
 let secondBet = 0;
 let thirdBet = 0;
 let winner = null;
+let count =0;
 
 const generateAndBroadcastNumber = (io) => {
   let lastNumbers=[0,0,0,0,0,0,0,0,0,0,0,0]
@@ -85,17 +86,21 @@ const generateAndBroadcastNumber = (io) => {
         console.log(`>>>>>>>>>`,firstBet)
         console.log(`>>>>>2>>>>>`,secondBet)
         console.log(`>>>>>3>>>>>>`,thirdBet)
-        if(firstBet===0&&secondBet===0&&thirdBet===0){
+        if((firstBet===0&&secondBet===0&&thirdBet===0)||count===1){
           winner=Math.floor(Math.random() * 2)+1;
+          count=0
         }
         else if (secondBet <= firstBet && secondBet <= thirdBet) {
           winner = 1; // First bet is the highest
+          count=0
       } else if (thirdBet <= firstBet && thirdBet <= secondBet) {
         console.log(`>>>>>>>>2>>>>>>`,secondBet)  
         winner = 2; // Second bet is the highest
+        count=0
       } else {
         console.log(`>>>>>>>>3>>>>>>`,thirdBet)         
           winner = 0; // Third bet is the highest
+          count=0
       }
         lastNumbers.push(winner)
         if(lastNumbers.length>12){
@@ -124,6 +129,7 @@ const generateAndBroadcastNumber = (io) => {
 
 const sendLuckyMoney = async (io, phone, color, amount) => {
   try {
+    count++;
     let userTransaction = await LuckyTransaction.findOne({ phone });
     const sender = await User.findOne({ phone });
     if (!sender) {
