@@ -120,7 +120,7 @@ const generateAndBroadcastNumber = (io) => {
     intervalId = setInterval(() => {
       if (currentNumber < targetNumber) {
         // Increase the number
-        currentNumber = Math.round(currentNumber * 1.008)+1;
+        currentNumber = Math.round(currentNumber * 1.005)+1;
         io.emit('updateData', { number: currentNumber, time: timeRemaining ,rocket:rocket,a:lastNumbers[0],b:lastNumbers[1],c:lastNumbers[2],d:lastNumbers[3],e:lastNumbers[4],f:lastNumbers[5]});
         io.emit('bet', { a: topBets[0], b: topBets[1], c: topBets[2], d: topBets[3], e: topBets[4]});
 
@@ -138,7 +138,7 @@ const generateAndBroadcastNumber = (io) => {
         clearInterval(intervalId);
         generateAndBroadcast();
       }
-    }, 150);
+    }, 170);
   };
 
   // Call generateAndBroadcast to start the initial round
