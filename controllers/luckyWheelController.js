@@ -8,7 +8,7 @@ let thirdBet = 0;
 let winner = null;
 let count =0;
 let am1=0
-let am2=0
+let am2=0 
 let am3=0
 const generateAndBroadcastNumber = (io) => {
   let lastNumbers=[0,0,0,0,0,0,0,0,0,0,0,0]
@@ -73,13 +73,17 @@ const generateAndBroadcastNumber = (io) => {
         console.log(`>>>>>>>>count>`,count)
         if(am1!=0){
           a+=am1
+          console.log(`>>>>>>am1a>>>>`,am1)
           am1=0
         }
         if(am2!==0){
           b+=am2
+          console.log(`>>>>>>am2a>>>>`,am2)
+          am2=0
         }
         if(am3!==0){
           c+=am3
+          console.log(`>>>>>>am3a>>>>`,am3)
           am3=0
         }
         b+=a2;
