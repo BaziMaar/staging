@@ -13,7 +13,7 @@ const walletRoute=require('./routes/walletRoutes')
 
 // Import the generateAndBroadcastNumber and sendMoney functions
 const { generateAndBroadcastNumber, sendMoney } = require('./controllers/generateController');
-app.use(cors());
+  app.use(cors());
 // Serve HTML file for testing
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/index.html'));
@@ -47,10 +47,12 @@ app.use('/api', generateRoutes(io));
 const userRoutes = require('./routes/userRoute');
 const minesRoute = require('./routes/minesRoute');
 const luckyRoute = require('./routes/luckyRoutes');
+const dragonTigerRoute=require('./routes/dragonTigerRoutes')
 app.use('/user', userRoutes);
 app.use('/wallet',walletRoute);
 app.use('/mines',minesRoute);
 app.use('/lucky',luckyRoute(io));
+app.use('/dragon',dragonTigerRoute(io))
 // Start the Express server on port 3000
 const EXPRESS_PORT = 3000;
 expressServer.listen(EXPRESS_PORT, () => {
