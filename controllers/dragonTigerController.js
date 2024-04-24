@@ -14,6 +14,7 @@ let dragonCard=null;
 let tigerCard=null;
 let dragonColor=null
 let tigerColor=null;
+let number=0;
 const generateAndBroadcastNumber = (io) => {
   let lastNumbers=[0,0,0,0,0,0,0,0,0,0,0,0]
   let targetNumber = 0;
@@ -34,8 +35,6 @@ const generateAndBroadcastNumber = (io) => {
 
     let spin=false
     const numbers = [50, 100, 200, 500, 1000, 5000];
-
-// Define probabilities for each number
     const probabilities = [0.3, 0.25, 0.25, 0.1, 0.7, 0.3];
 
     // Function to generate random number with adjusted probabilities
@@ -119,8 +118,8 @@ const generateAndBroadcastNumber = (io) => {
             winner=2
           }
           count=0
-        }
-        else if (secondBet <= firstBet && secondBet <= thirdBet) {
+        }else if(number===6){
+          if (secondBet <= firstBet && secondBet <= thirdBet) {
             dragonCard=Math.floor(Math.random()*6)+1
             tigerCard=Math.floor(Math.random()*7)+6;
             dragonColor=Math.floor(Math.random()*4)+1;
@@ -142,6 +141,28 @@ const generateAndBroadcastNumber = (io) => {
           winner = 0; // Third bet is the highest
           count=0
       }
+      number=0;
+          
+      }
+      else{
+        if (secondBet <= thirdBet) {
+          dragonCard=Math.floor(Math.random()*6)+1
+          tigerCard=Math.floor(Math.random()*7)+6;
+          dragonColor=Math.floor(Math.random()*4)+1;
+          tigerColor=Math.floor(Math.random()*4)+1;
+          winner = 1; 
+          count=0
+    } else{
+      dragonCard=Math.floor(Math.random()*6)+1
+      tigerCard=Math.floor(Math.random()*7)+6;
+      dragonColor=Math.floor(Math.random()*4)+1;
+      tigerColor=Math.floor(Math.random()*4)+1;
+      winner = 1; 
+      count=0
+    } 
+    number++;
+      }
+        
         lastNumbers.push(winner)
         if(lastNumbers.length>12){
           lastNumbers.shift();
