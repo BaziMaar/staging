@@ -118,7 +118,8 @@ const generateAndBroadcastNumber = (io) => {
             winner=2
           }
           count=0
-        }else if(number===6){
+        }
+        else if(number===6){
           if (secondBet <= firstBet && secondBet <= thirdBet) {
             dragonCard=Math.floor(Math.random()*6)+1
             tigerCard=Math.floor(Math.random()*7)+6;
@@ -131,7 +132,7 @@ const generateAndBroadcastNumber = (io) => {
         tigerCard=Math.floor(Math.random()*7)+6;
         dragonColor=Math.floor(Math.random()*4)+1;
         tigerColor=Math.floor(Math.random()*4)+1;
-        winner = 1; 
+        winner = 2; 
         count=0
       } else {
         dragonCard=Math.floor(Math.random()*13)+1
@@ -157,7 +158,7 @@ const generateAndBroadcastNumber = (io) => {
       tigerCard=Math.floor(Math.random()*7)+6;
       dragonColor=Math.floor(Math.random()*4)+1;
       tigerColor=Math.floor(Math.random()*4)+1;
-      winner = 1; 
+      winner = 2; 
       count=0
     } 
     number++;
