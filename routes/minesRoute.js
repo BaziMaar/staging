@@ -4,8 +4,9 @@ const bodyParser = require("body-parser");
 mines_route.use(bodyParser.json());
 mines_route.use(bodyParser.urlencoded({ extended: true }));
 const minesController=require('../controllers/minesController.js');
-mines_route.get('/getMines', minesController.getMatrix);
-mines_route.post('/sendMinesMoney', minesController.sendMinesMoney);
-mines_route.post('/receiveMinesMoney', minesController.receiveMinesMoney);
+const { verifyDeviceId,getVerifyDeviceId } = require("../middlewares/verifyDeviceId.js");
+mines_route.get('/getMines',getVerifyDeviceId, minesController.getMatrix);
+mines_route.post('/sendMinesMoney',verifyDeviceId, minesController.sendMinesMoney);
+mines_route.post('/receiveMinesMoney', verifyDeviceId,minesController.receiveMinesMoney);
 mines_route.get(`/getReward`,minesController.getReward)
 module.exports = mines_route;

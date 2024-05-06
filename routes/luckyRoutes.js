@@ -7,6 +7,7 @@ router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 
 const { generateAndBroadcastNumber, sendLuckyMoney ,receiveMoney,getLuckyTransactions} = require('../controllers/luckyWheelController');
+const { verifyDeviceId } = require('../middlewares/verifyDeviceId');
 
 module.exports = (io) => {
   // Route to trigger number generation and broadcast
@@ -16,7 +17,7 @@ module.exports = (io) => {
   });
   router.get('/getLuckyTrans',getLuckyTransactions)
   // Route to handle sending money
-  router.post('/sendLuckyMoney', async (req, res) => {
+  router.post('/sendLuckyMoney',verifyDeviceId, async (req, res) => {
     const { phone, color, amount,avatar } = req.body;
 
     try {
@@ -28,7 +29,7 @@ module.exports = (io) => {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
-  router.post('/receiveMoney', async (req, res) => {
+  router.post('/receiveMoney',verifyDeviceId, async (req, res) => {
     const { phone, color, amount } = req.body;
 
     try {
