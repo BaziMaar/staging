@@ -10,6 +10,19 @@ let count =0;
 let am1=0
 let am2=0 
 let am3=0
+const probabilitied = [0.20, 0.50, 0.30]; 
+function generateRandomWithProbability(probabilities) {
+  const rand = Math.random();
+  let cumulativeProbability = 0;
+  
+  for (let i = 0; i < probabilities.length; i++) {
+      cumulativeProbability += probabilities[i];
+      
+      if (rand < cumulativeProbability) {
+          return i;
+      }
+  }
+}
 const generateAndBroadcastNumber = (io) => {
   let lastNumbers=[0,0,0,0,0,0,0,0,0,0,0,0]
   let targetNumber = 0;
@@ -56,34 +69,27 @@ const generateAndBroadcastNumber = (io) => {
           a1+=x
           
         }
-        for(let i=0;i<Math.floor(Math.random()*4)+1;i++){
+        for(let i=0;i<Math.floor(Math.random()*4)+3;i++){
           let x=generateRandomNumber()
           arr2[i]=x
           a2+=x
         }
-        for(let i=0;i<Math.floor(Math.random()*4)+1;i++){
+        for(let i=0;i<Math.floor(Math.random()*4)+3;i++){
           let x=generateRandomNumber()
           arr3[i]=x
           a3+=x
         }
         a+=a1;
-        console.log('>>>>>>>am1',am1)
-        console.log('>>>>>>>am2',am2)
-        console.log('>>>>>>>am3',am3)
-        console.log(`>>>>>>>>count>`,count)
         if(am1!=0){
           a+=am1
-          console.log(`>>>>>>am1a>>>>`,am1)
           am1=0
         }
         if(am2!==0){
           b+=am2
-          console.log(`>>>>>>am2a>>>>`,am2)
           am2=0
         }
         if(am3!==0){
           c+=am3
-          console.log(`>>>>>>am3a>>>>`,am3)
           am3=0
         }
         b+=a2;
@@ -104,22 +110,17 @@ const generateAndBroadcastNumber = (io) => {
         io.emit('luckyBet', { number: currentNumber, time: timeRemaining,spin:spin, result: winner,firstBet:a,secondBet:b,thirdBet:c,a:lastNumbers[0],b:lastNumbers[1],c:lastNumbers[2],d:lastNumbers[3],e:lastNumbers[4],f:lastNumbers[5],f:lastNumbers[5],g:lastNumbers[6],h:lastNumbers[7],i:lastNumbers[8],j:lastNumbers[9],k:lastNumbers[10],l:lastNumbers[11] ,arr1:arr1,arr2:arr2,arr3:arr3 });
 
         spin=true
-        console.log(`>>>>>>>>>`,firstBet)
-        console.log(`>>>>>2>>>>>`,secondBet)
-        console.log(`>>>>>3>>>>>>`,thirdBet)
         if((firstBet===0&&secondBet===0&&thirdBet===0)||count===1){
-          winner=Math.floor(Math.random() * 2)+1;
+          winner=generateRandomWithProbability(probabilitied);
           count=0
         }
         else if (secondBet <= firstBet && secondBet <= thirdBet) {
           winner = 1; // First bet is the highest
           count=0
       } else if (thirdBet <= firstBet && thirdBet <= secondBet) {
-        console.log(`>>>>>>>>2>>>>>>`,secondBet)  
         winner = 2; // Second bet is the highest
         count=0
-      } else {
-        console.log(`>>>>>>>>3>>>>>>`,thirdBet)         
+      } else {       
           winner = 0; // Third bet is the highest
           count=0
       }
@@ -143,7 +144,6 @@ const generateAndBroadcastNumber = (io) => {
       }
     }, 1000); // Reduced the interval to 1000ms (1 second)
   };
-
   // Call generateAndBroadcast to start the initial round
   generateAndBroadcast();
 };
