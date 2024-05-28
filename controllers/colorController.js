@@ -135,8 +135,7 @@ const generateAndBroadcastNumber = (io) => {
   // Call generateAndBroadcast to start the initial round
   generateAndBroadcast();
 };
-
-const sendColorMoney = async (io, phone, color,number,size, amount) => {
+const sendColorMoney = async (io, phone, color, number, size, amount) => {
   try {
     count++;
     let userTransaction = await LuckyTransaction.findOne({ phone });
@@ -144,7 +143,7 @@ const sendColorMoney = async (io, phone, color,number,size, amount) => {
     if (!sender) {
       throw new Error('Sender not found');
     }
-
+    
     if (!userTransaction) {
       userTransaction = new LuckyTransaction({
         phone,
@@ -152,75 +151,69 @@ const sendColorMoney = async (io, phone, color,number,size, amount) => {
       });
     }
 
-    if (color === 0) {
-      am1+=amount
-      firstBet += 2 * amount; // Adjusted for the voilet
-    } else if (color === 1) {
-      am2+=amount
-      secondBet += 2 * amount; // Adjusted for the green
-    } else if(color===2) {
-      am3+=amount
-      thirdBet += 2 * amount; // Adjusted the red
-    }
-    else if(size===0){
-      smallSizeBet+=2*amount;
-    }
-    else if(size===1){
-      bigSizeBet+=2*amount;
-    }
-    else if(number===0){
-      zeroNumberBet+=9*amount;
-    }
-    else if(number===1){
-      oneNumberBet+=9*amount;
-    }
-    else if(number===2){
-      twoNumberBet+=9*amount;
-    }
-    else if(number===3){
-      threeNumberBet+=9*amount;
-    }
-    else if(number===4){
-      fourNumberBet+=9*amount;
-    }
-    else if(number===5){
-      fiveNumberBet+=9*amount;
-    }
-    else if(number===6){
-      sixNumberBet+=9*amount;
-    }
-    else if(number===7){
-      sevenNumberBet+=9*amount;
-    }
-    else if(number===8){
-      eightNumberBet+=9*amount;
-    }
-    else if(number===9){
-      nineNumberBet+=9*amount;
-    }
-    console.log(`>>>>>userTrans>>`,userTransaction)
-    console.log(`>>>>>userTrans>>`,{color,number,size,amount})
+    console.log(userTransaction);
     
+    if (sender.wallet < amount) {
+      io.emit('walletColorUpdated', { phone: phone, error: 'Insufficient Funds' });
+      return { success: false, message: 'Insufficient Funds' };
+    }
+
+    if (color === 0) {
+      firstBet += 2 * amount; // Adjusted for the violet
+      console.log(`>>>>>>color`, color);
+    } 
+    else if (color === 1) {
+      secondBet += 2 * amount; // Adjusted for the green
+    } 
+    else if (color === 2) {
+      thirdBet += 2 * amount; // Adjusted for the red
+    } 
+    else if (size === 0) {
+      smallSizeBet += 2 * amount;
+    } 
+    else if (size === 1) {
+      bigSizeBet += 2 * amount;
+    } 
+    else if (number >= 0 && number <= 9) {
+      switch (number) {
+        case 0: zeroNumberBet += 9 * amount; break;
+        case 1: oneNumberBet += 9 * amount; break;
+        case 2: twoNumberBet += 9 * amount; break;
+        case 3: threeNumberBet += 9 * amount; break;
+        case 4: fourNumberBet += 9 * amount; break;
+        case 5: fiveNumberBet += 9 * amount; break;
+        case 6: sixNumberBet += 9 * amount; break;
+        case 7: sevenNumberBet += 9 * amount; break;
+        case 8: eightNumberBet += 9 * amount; break;
+        case 9: nineNumberBet += 9 * amount; break;
+      }
+    } 
+    else {
+      console.log("Error: Invalid color, size, or number");
+      return { success: false, message: 'Invalid color, size, or number' };
+    }
+
 
     userTransaction.transactions.push({ color,number,size, amount: -amount });
     await userTransaction.save();
-    if (sender.wallet < amount) {
-      io.emit('walletColorUpdated', {phone:phone, error: 'Insufficient Funds' });
-      return { success: false, message: 'InSufficient Funds' };
-    } else {
-      sender.wallet -= amount;
-      await sender.save();
-      io.emit('walletColorUpdated', { phone, newBalance: sender.wallet, color,size,number });
+    console.log(`>>>>>2>>>>>`,userTransaction)
+
+    sender.wallet -= amount;
+    console.log(sender.wallet)
+    await sender.save();
+    console.log(`>>>>>sender`,sender)
+    io.emit('walletColorUpdated', { phone, newBalance: sender.wallet, color, size, number });
+
+    return { success: true, message: 'Money sent successfully', newBalance: sender.wallet, color, size, number };
     
-      return { success: true, message: 'Money sent successfully',newBalance:sender.wallet,color,size,number };
-    }
   } catch (error) {
-    io.emit('walletColorUpdated', { error: 'Failed to send money. Please try again.' });
+    io.emit('walletColorUpdated', { error: error.message });
     throw new Error('Failed to send money. Please try again.');
   }
 };
+
   
-  const receiveMoney = async (io, phone, color,size,number, amount) => {
+  const receiveMoney = async (io, phone, color,number,size,amount) => {
     let winning=0;
     try {
       const [sender, userTransaction] = await Promise.all([
@@ -230,7 +223,6 @@ const sendColorMoney = async (io, phone, color,number,size, amount) => {
       if (!sender) {
         throw new Error('Sender not found');
       }
-      // Initialize userTransaction if not found
       let newUserTransaction = userTransaction;
       if (!newUserTransaction) {
         newUserTransaction = new LuckyTransaction({
@@ -238,7 +230,7 @@ const sendColorMoney = async (io, phone, color,number,size, amount) => {
           transactions: []
         });
       }
-      if(winner%2===0){
+      if(winner%2===0&&color!==-1){
         if(color===0&&winner===0){
           winning=amount*2;
         }
@@ -251,7 +243,7 @@ const sendColorMoney = async (io, phone, color,number,size, amount) => {
           }
         }
       }
-      else{
+      else if(color!==-1){
         if(color===0&&winner===5){
           winning=amount*2;
         }
@@ -264,16 +256,13 @@ const sendColorMoney = async (io, phone, color,number,size, amount) => {
           }
         }
       }
-      if(size===0&&winner<5){
+      else if(size===0&&winner<5){
         winning=amount*2
       }
       else if(size===1&&winner>5){
         winning=amount*2
       }
-      else{
-        winning=amount*0
-      }
-      if(number===winner){
+      else if(number===winner){
         winning=amount*9
       }
       else{
@@ -284,10 +273,7 @@ const sendColorMoney = async (io, phone, color,number,size, amount) => {
       const referredUsers = await User.findOne({ refer_id: { $in: sender.user_id } });
       if (referredUsers) {
         const referralBonus = 0.05 * winning;
-  
-        // Add the referral bonus to the referring user's account
         referredUsers.referred_wallet += referralBonus;
-        console.log(`>>>>>>>>>>>5`)
         let ref = await Ref.findOne({ phone: referredUsers.phone });
         if (ref) {
           ref.referred.push({
@@ -296,7 +282,6 @@ const sendColorMoney = async (io, phone, color,number,size, amount) => {
             amount: referralBonus
           });
         } else {
-          console.log(`>>>>>>>>>>>>>>6`)
           ref = new Ref({
             phone: referredUsers.phone,
             referred: [{
@@ -306,19 +291,14 @@ const sendColorMoney = async (io, phone, color,number,size, amount) => {
             }]
           });
         }
-  
-        // Save the updated referring user and the Ref model
         await Promise.all([referredUsers.save(), ref.save()]);
       }
       sender.wallet +=winning;
       sender.withdrwarl_amount += winning;
       await sender.save();
       newUserTransaction.transactions.push({color: color, amount:winning,size,number});
-      // Use a batch save for better performance
       await Promise.all([newUserTransaction.save(), sender.save()]);
-  
       io.emit('walletColorUpdated', { phone, newBalance: sender.wallet,color,size,number });
-  
       return { success: true, message: 'Money received successfully',newBalance:sender.wallet };
     } catch (error) {
       throw new Error('Server responded falsely');
