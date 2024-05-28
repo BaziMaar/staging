@@ -230,7 +230,7 @@ const sendColorMoney = async (io, phone, color, number, size, amount) => {
           transactions: []
         });
       }
-      if(winner%2===0&&color!==-1){
+      if(winner%2===0&&color!==-1&&winner!==""){
         if(color===0&&winner===0){
           winning=amount*2;
         }
@@ -243,7 +243,7 @@ const sendColorMoney = async (io, phone, color, number, size, amount) => {
           }
         }
       }
-      else if(color!==-1){
+      else if(color!==-1&&winner!==""){
         if(color===0&&winner===5){
           winning=amount*2;
         }
@@ -256,13 +256,13 @@ const sendColorMoney = async (io, phone, color, number, size, amount) => {
           }
         }
       }
-      else if(size===0&&winner<5){
+      else if(size===0&&winner<5&&winner!==""){
         winning=amount*2
       }
-      else if(size===1&&winner>5){
+      else if(size===1&&winner>5&&winner!==""){
         winning=amount*2
       }
-      else if(number===winner){
+      else if(number===winner&&winner!==""){
         winning=amount*9
       }
       else{
