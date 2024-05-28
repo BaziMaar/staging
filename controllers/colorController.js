@@ -322,7 +322,7 @@ const sendColorMoney = async (io, phone, color,number,size, amount) => {
     }
   };
   
-  const getLuckyTransactions = async (req, res) => {
+  const getColorTransactions = async (req, res) => {
     const { phone } = req.query;
     try {
       const userTransactions = await LuckyTransaction.findOne({ phone });
@@ -338,6 +338,6 @@ const sendColorMoney = async (io, phone, color,number,size, amount) => {
     generateAndBroadcastNumber,
     sendColorMoney,
     receiveMoney,
-    getLuckyTransactions
+    getColorTransactions
   };
   
