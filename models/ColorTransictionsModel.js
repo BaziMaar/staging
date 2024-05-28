@@ -7,20 +7,16 @@ const transactionSchema = new mongoose.Schema({
     },
     transactions: [{
         color: {
-            type: Number,
-            required: true
+            type: Number
         },
         size:{
-            type: Number,
-            required:true
+            type: Number
         },
         number:{
-            type:Number,
-            required:true
+            type:Number
         },
         amount: {
-            type: Number,
-            required: true
+            type: Number
         },
         createdAt: {
             type: Date,

@@ -198,6 +198,9 @@ const sendColorMoney = async (io, phone, color,number,size, amount) => {
     else if(number===9){
       nineNumberBet+=9*amount;
     }
+    console.log(`>>>>>userTrans>>`,userTransaction)
+    console.log(`>>>>>userTrans>>`,{color,number,size,amount})
+    
 
     userTransaction.transactions.push({ color,number,size, amount: -amount });
     await userTransaction.save();
