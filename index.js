@@ -10,9 +10,11 @@ const app = express();
 const expressServer = http.createServer(app);
 const io = socketIO(expressServer);
 const walletRoute=require('./routes/walletRoutes')
-
 // Import the generateAndBroadcastNumber and sendMoney functions
 const { generateAndBroadcastNumber, sendMoney } = require('./controllers/generateController');
+const luckyWheelController=require('./controllers/luckyWheelController')
+const dragonTigerController=require('./controllers/dragonTigerController')
+const colorController=require('./controllers/colorController')
   app.use(cors());
 // Serve HTML file for testing
 app.get('/', (req, res) => {
@@ -58,6 +60,10 @@ app.use('/dragon',dragonTigerRoute(io))
 // Start the Express server on port 3000
 const EXPRESS_PORT = 3000;
 expressServer.listen(EXPRESS_PORT, () => {
+  generateAndBroadcastNumber(io);
+  luckyWheelController.generateAndBroadcastNumber(io);
+  colorController.generateAndBroadcastNumber(io);
+  dragonTigerController.generateAndBroadcastNumber(io);
 });
 
 // Start Socket.IO on port 4000
