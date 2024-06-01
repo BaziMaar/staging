@@ -20,6 +20,7 @@ let winner = null;
 let count =0;
 let globalNumber=666777
 
+
 function getCurrentDate() {
   const today = new Date();
   const year = today.getFullYear();
@@ -54,7 +55,7 @@ const generateAndBroadcastNumber = (io) => {
     currentNumber = 0;
     timeRemaining = 45;
     const currentDate=getCurrentDate()
-    let finalNumber=number=string(currentDate)+string(globalNumber)
+    let finalNumber=number=String(currentDate)+String(globalNumber)
     let a=0,b=0,c=0;
     winner = '';
     let spin=false
