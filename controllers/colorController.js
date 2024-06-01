@@ -210,7 +210,7 @@ const sendColorMoney = async (io, phone, color, number, size, amount) => {
     }
 
 
-    userTransaction.transactions.push({ color,number,size, amount: -amount });
+    userTransaction.transactions.push({ color,number,size, amount: -amount,globalNumber:String(getCurrentDate())+String(globalNumber),orignalNumber:winner});
     await userTransaction.save();
     console.log(`>>>>>2>>>>>`,userTransaction)
 
@@ -312,7 +312,7 @@ const sendColorMoney = async (io, phone, color, number, size, amount) => {
       sender.wallet +=winning;
       sender.withdrwarl_amount += winning;
       await sender.save();
-      newUserTransaction.transactions.push({color: color, amount:winning,size,number});
+      newUserTransaction.transactions.push({color: color, amount:winning,size,number,globalNumber:String(getCurrentDate())+String(globalNumber),orignalNumber:winner});
       await Promise.all([newUserTransaction.save(), sender.save()]);
       io.emit('walletColorUpdated', { phone, newBalance: sender.wallet,color,size,number });
       return { success: true, message: 'Money received successfully',newBalance:sender.wallet };

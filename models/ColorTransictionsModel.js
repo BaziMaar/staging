@@ -21,6 +21,12 @@ const transactionSchema = new mongoose.Schema({
         createdAt: {
             type: Date,
             default: Date.now
+        },
+        globalNumber:{
+            type:Number
+        },
+        orignalNumber:{
+            type:Number
         }
     }]
 }, {
