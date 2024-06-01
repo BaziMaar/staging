@@ -18,6 +18,16 @@ let eightNumberBet=0;
 let nineNumberBet=0;
 let winner = null;
 let count =0;
+let globalNumber=666777
+
+function getCurrentDate() {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+  const day = String(today.getDate()).padStart(2, '0');
+  
+  return `${year}${month}${day}`;
+}
 const probabilitied = [0.1, 0.1, 0.1,0.1,0.1,0.1,0.1,0.1,0.1,0.1]; 
 
 function generateRandomWithProbability(probabilities) {
@@ -38,10 +48,13 @@ const generateAndBroadcastNumber = (io) => {
   let currentNumber = 0;
   let timeRemaining = 45;
   let intervalId = null;
+  
   const generateAndBroadcast = () => {
     targetNumber = 5;
     currentNumber = 0;
     timeRemaining = 45;
+    const currentDate=getCurrentDate()
+    let finalNumber=number=string(currentDate)+string(globalNumber)
     let a=0,b=0,c=0;
     winner = '';
     let spin=false
@@ -50,15 +63,17 @@ const generateAndBroadcastNumber = (io) => {
       if (timeRemaining > 0) {
         timeRemaining--;
         io.emit('colorPlaced',{voilet:firstBet,green:secondBet,red:thirdBet})
-        io.emit('colorBet', { number: currentNumber, time: timeRemaining,spin:spin, result: winner,a:lastNumbers[0],b:lastNumbers[1],c:lastNumbers[2],d:lastNumbers[3],e:lastNumbers[4],f:lastNumbers[5],g:lastNumbers[6],h:lastNumbers[7],i:lastNumbers[8],j:lastNumbers[9],k:lastNumbers[10],l:lastNumbers[11]}); 
+        io.emit('colorBet', { number: currentNumber, time: timeRemaining,spin:spin, result: winner,globalNumbers:finalNumber,a:lastNumbers[0],b:lastNumbers[1],c:lastNumbers[2],d:lastNumbers[3],e:lastNumbers[4],f:lastNumbers[5],g:lastNumbers[6],h:lastNumbers[7],i:lastNumbers[8],j:lastNumbers[9],k:lastNumbers[10],l:lastNumbers[11]}); 
       }else if (currentNumber < targetNumber&&currentNumber!==0) {
         currentNumber += 1;
         io.emit('colorPlaced',{voilet:firstBet,green:secondBet,red:thirdBet})
-        io.emit('colorBet', { number: currentNumber, time: timeRemaining,spin:spin, result: winner,a:lastNumbers[0],b:lastNumbers[1],c:lastNumbers[2],d:lastNumbers[3],e:lastNumbers[4],f:lastNumbers[5],g:lastNumbers[6],h:lastNumbers[7],i:lastNumbers[8],j:lastNumbers[9],k:lastNumbers[10],l:lastNumbers[11]});       }
+        io.emit('colorBet', { number: currentNumber, time: timeRemaining,spin:spin, result: winner,globalNumbers:finalNumber,a:lastNumbers[0],b:lastNumbers[1],c:lastNumbers[2],d:lastNumbers[3],e:lastNumbers[4],f:lastNumbers[5],g:lastNumbers[6],h:lastNumbers[7],i:lastNumbers[8],j:lastNumbers[9],k:lastNumbers[10],l:lastNumbers[11]});       }
       else if(currentNumber===0&&timeRemaining===0){
         currentNumber++;
+        globalNumber++;
         io.emit('colorPlaced',{voilet:firstBet,green:secondBet,red:thirdBet})
-        io.emit('colorBet', { number: currentNumber, time: timeRemaining,spin:spin, result: winner,a:lastNumbers[0],b:lastNumbers[1],c:lastNumbers[2],d:lastNumbers[3],e:lastNumbers[4],f:lastNumbers[5],g:lastNumbers[6],h:lastNumbers[7],i:lastNumbers[8],j:lastNumbers[9],k:lastNumbers[10],l:lastNumbers[11]});         spin=true
+        io.emit('colorBet', { number: currentNumber, time: timeRemaining,spin:spin, result: winner,globalNumbers:finalNumber,a:lastNumbers[0],b:lastNumbers[1],c:lastNumbers[2],d:lastNumbers[3],e:lastNumbers[4],f:lastNumbers[5],g:lastNumbers[6],h:lastNumbers[7],i:lastNumbers[8],j:lastNumbers[9],k:lastNumbers[10],l:lastNumbers[11]});    
+        spin=true
         if((firstBet===0&&secondBet===0&&thirdBet===0&&smallSizeBet===0&&bigSizeBet===0&&zeroNumberBet===0&&oneNumberBet===0&&twoNumberBet===0&&threeNumberBet===0&&fourNumberBet===0&&fiveNumberBet===0&&sixNumberBet===0&&sevenNumberBet===0&&eightNumberBet===0&&nineNumberBet===0)||count===1){
           winner=generateRandomWithProbability(probabilitied);
           count=0
