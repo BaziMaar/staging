@@ -27,11 +27,12 @@ const setGlobalNumber = async () => {
       globalNumber = lastEntry.globalNumber;
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
+
 const initializeGlobalNumber = async () => {
-  globalNumber = await setGlobalNumber();
+  await setGlobalNumber();
 };
 
 function getCurrentDate() {
