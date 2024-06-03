@@ -19,7 +19,17 @@ let eightNumberBet=0;
 let nineNumberBet=0;
 let winner = null;
 let count =0;
-let globalNumber=666777
+let globalNumber=setGlobalNumber();
+const setGlobalNumber = async () => {
+  try {
+    const lastEntry = await Result.findOne().sort({ createdAt: -1 });
+    if (lastEntry) {
+      globalNumber = lastEntry.globalNumber;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 
 function getCurrentDate() {
@@ -56,7 +66,7 @@ const generateAndBroadcastNumber = (io) => {
     currentNumber = 0;
     timeRemaining = 60;
     const currentDate=getCurrentDate()
-    let finalNumber=number=String(currentDate)+String(globalNumber)
+    let finalNumber=String(currentDate)+String(globalNumber)
     let a=0,b=0,c=0;
     winner = '';
     let spin=false
@@ -382,23 +392,31 @@ const sendColorMoney = async (io, phone, color, number, size, amount) => {
       throw new Error('Server responded falsely');
     }
   };
+  const getGameHistory=async(req,res)={
+
+  }
   
-  const getColorTransactions = async (req, res) => {
-    const { phone } = req.query;
+  const getResultTransactions = async (req, res) => {
     try {
-      const userTransactions = await LuckyTransaction.findOne({ phone });
-      if (!userTransactions) {
-        return res.status(404).json({ error: 'User not found' });
+      const resultTransactions = await Result.find()
+        .sort({ createdAt: -1 }) // Sort by createdAt in descending order
+        .limit(10); // Limit to the last 10 entries
+  
+      if (!resultTransactions || resultTransactions.length === 0) {
+        return res.status(404).json({ error: 'No results found' });
       }
-      res.status(200).json({ transactions: userTransactions.transactions });
+  
+      res.status(200).json({ transactions: resultTransactions });
     } catch (error) {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   };
+  
   module.exports = {
     generateAndBroadcastNumber,
     sendColorMoney,
     receiveMoney,
-    getColorTransactions
+    getColorTransactions,
+    getResultTransactions
   };
   
