@@ -56,7 +56,7 @@ const generateAndBroadcastNumber = (io) => {
     currentNumber = 0;
     timeRemaining = 60;
     const currentDate=getCurrentDate()
-    let finalNumber=number+String(currentDate)+String(globalNumber)
+    let finalNumber=number=String(currentDate)+String(globalNumber)
     let a=0,b=0,c=0;
     winner = '';
     let spin=false
