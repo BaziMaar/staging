@@ -33,11 +33,6 @@ const setGlobalNumber = async () => {
 const initializeGlobalNumber = async () => {
   globalNumber = await setGlobalNumber();
 };
-initializeGlobalNumber().then(() => {
-  // Now you can use globalNumber in your game logic
-  generateAndBroadcastNumber(io);
-});
-
 
 function getCurrentDate() {
   const today = new Date();
@@ -61,12 +56,13 @@ function generateRandomWithProbability(probabilities) {
       }
   }
 }
-const generateAndBroadcastNumber = (io) => {
+const generateAndBroadcastNumber = async(io) => {
   let lastNumbers=[0,0,0,0,0,0,0,0,0,0,0,0]
   let targetNumber = 0;
   let currentNumber = 0;
   let timeRemaining = 60;
   let intervalId = null;
+  await initializeGlobalNumber()
   
   const generateAndBroadcast = () => {
     targetNumber = 0;
