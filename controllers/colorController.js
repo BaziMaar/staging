@@ -126,6 +126,23 @@ const generateAndBroadcastNumber = (io) => {
         if(lastNumbers.length>12){
           lastNumbers.shift();
         }
+        firstBet = 0;
+        secondBet = 0;
+        thirdBet = 0;
+        zeroNumberBet=0;
+        oneNumberBet=0;
+        twoNumberBet=0;
+        threeNumberBet=0;
+        fourNumberBet=0;
+        fiveNumberBet=0
+        sixNumberBet=0;
+        sevenNumberBet=0;
+        eightNumberBet=0;
+        nineNumberBet=0;
+        smallSizeBet=0;
+        bigSizeBet=0;
+        clearInterval(intervalId);
+        generateAndBroadcast();
       }  
       else {
         firstBet = 0;
