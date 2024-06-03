@@ -420,6 +420,7 @@ const sendColorMoney = async (io, phone, color, number, size, amount) => {
     generateAndBroadcastNumber,
     sendColorMoney,
     receiveMoney,
-    getResultTransactions
+    getResultTransactions,
+    initializeGlobalNumber
   };
   
