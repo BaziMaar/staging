@@ -30,7 +30,7 @@ const setGlobalNumber = async () => {
     console.log(error);
   }
 };
-let globalNumber=await setGlobalNumber();
+let globalNumber=setGlobalNumber();
 
 
 function getCurrentDate() {
