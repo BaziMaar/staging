@@ -19,7 +19,7 @@ let eightNumberBet=0;
 let nineNumberBet=0;
 let winner = null;
 let count =0;
-let globalNumber=setGlobalNumber();
+
 const setGlobalNumber = async () => {
   try {
     const lastEntry = await Result.findOne().sort({ createdAt: -1 });
@@ -30,6 +30,7 @@ const setGlobalNumber = async () => {
     console.log(error);
   }
 };
+let globalNumber=setGlobalNumber();
 
 
 function getCurrentDate() {
