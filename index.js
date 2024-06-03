@@ -62,7 +62,7 @@ const EXPRESS_PORT = 3000;
 expressServer.listen(EXPRESS_PORT, () => {
   generateAndBroadcastNumber(io);
   luckyWheelController.generateAndBroadcastNumber(io);
-  colorController.generateAndBroadcastNumber(io);
+  colorController.initializeGlobalNumber();
   dragonTigerController.generateAndBroadcastNumber(io);
 });
 

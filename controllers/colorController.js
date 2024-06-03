@@ -19,7 +19,7 @@ let eightNumberBet=0;
 let nineNumberBet=0;
 let winner = null;
 let count =0;
-
+let globalNumber=666777;
 const setGlobalNumber = async () => {
   try {
     const lastEntry = await Result.findOne().sort({ createdAt: -1 });
@@ -30,7 +30,13 @@ const setGlobalNumber = async () => {
     console.log(error);
   }
 };
-let globalNumber=setGlobalNumber();
+const initializeGlobalNumber = async () => {
+  globalNumber = await setGlobalNumber();
+};
+initializeGlobalNumber().then(() => {
+  // Now you can use globalNumber in your game logic
+  generateAndBroadcastNumber();
+});
 
 
 function getCurrentDate() {
