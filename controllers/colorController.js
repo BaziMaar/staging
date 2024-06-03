@@ -35,7 +35,7 @@ const initializeGlobalNumber = async () => {
 };
 initializeGlobalNumber().then(() => {
   // Now you can use globalNumber in your game logic
-  generateAndBroadcastNumber();
+  generateAndBroadcastNumber(io);
 });
 
 
