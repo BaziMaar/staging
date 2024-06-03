@@ -407,7 +407,19 @@ const sendColorMoney = async (io, phone, color, number, size, amount) => {
         return res.status(404).json({ error: 'No results found' });
       }
   
-      res.status(200).json({ transactions: resultTransactions });
+      const formattedTransactions = resultTransactions.map(transaction => {
+        const date = new Date(transaction.createdAt);
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+        const day = String(date.getDate()).padStart(2, '0');
+        const formattedDate = `${year}${month}${day}`;
+        return {
+          ...transaction._doc,
+          globalNumber: `${formattedDate}${transaction.globalNumber}`
+        };
+      });
+  
+      res.status(200).json({ transactions: formattedTransactions });
     } catch (error) {
       res.status(500).json({ error: 'Internal Server Error' });
     }
