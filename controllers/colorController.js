@@ -1,6 +1,7 @@
 const LuckyTransaction = require("../models/ColorTransictionsModel.js");
 const User = require("../models/userModel.js");  // Import the User model
 const Ref=require('../models/referModel')
+const Result=require('../models/resultModel.js')
 let firstBet = 0;
 let secondBet = 0;
 let thirdBet = 0;
@@ -47,30 +48,30 @@ const generateAndBroadcastNumber = (io) => {
   let lastNumbers=[0,0,0,0,0,0,0,0,0,0,0,0]
   let targetNumber = 0;
   let currentNumber = 0;
-  let timeRemaining = 45;
+  let timeRemaining = 60;
   let intervalId = null;
   
   const generateAndBroadcast = () => {
-    targetNumber = 5;
+    targetNumber = 0;
     currentNumber = 0;
-    timeRemaining = 45;
+    timeRemaining = 60;
     const currentDate=getCurrentDate()
-    let finalNumber=number=String(currentDate)+String(globalNumber)
+    let finalNumber=number+String(currentDate)+String(globalNumber)
     let a=0,b=0,c=0;
     winner = '';
     let spin=false
     clearInterval(intervalId);
-    intervalId = setInterval(() => {
+    intervalId = setInterval(async() => {
       if (timeRemaining > 0) {
         timeRemaining--;
         io.emit('colorPlaced',{voilet:firstBet,green:secondBet,red:thirdBet})
         io.emit('colorBet', { number: currentNumber, time: timeRemaining,spin:spin, result: winner,globalNumbers:finalNumber,a:lastNumbers[0],b:lastNumbers[1],c:lastNumbers[2],d:lastNumbers[3],e:lastNumbers[4],f:lastNumbers[5],g:lastNumbers[6],h:lastNumbers[7],i:lastNumbers[8],j:lastNumbers[9],k:lastNumbers[10],l:lastNumbers[11]}); 
-      }else if (currentNumber < targetNumber&&currentNumber!==0) {
-        currentNumber += 1;
-        io.emit('colorPlaced',{voilet:firstBet,green:secondBet,red:thirdBet})
-        io.emit('colorBet', { number: currentNumber, time: timeRemaining,spin:spin, result: winner,globalNumbers:finalNumber,a:lastNumbers[0],b:lastNumbers[1],c:lastNumbers[2],d:lastNumbers[3],e:lastNumbers[4],f:lastNumbers[5],g:lastNumbers[6],h:lastNumbers[7],i:lastNumbers[8],j:lastNumbers[9],k:lastNumbers[10],l:lastNumbers[11]});       }
-      else if(currentNumber===0&&timeRemaining===0){
-        currentNumber++;
+      }
+      // else if (currentNumber < targetNumber&&currentNumber!==0) {
+      //   currentNumber += 1;
+      //   io.emit('colorPlaced',{voilet:firstBet,green:secondBet,red:thirdBet})
+      //   io.emit('colorBet', { number: currentNumber, time: timeRemaining,spin:spin, result: winner,globalNumbers:finalNumber,a:lastNumbers[0],b:lastNumbers[1],c:lastNumbers[2],d:lastNumbers[3],e:lastNumbers[4],f:lastNumbers[5],g:lastNumbers[6],h:lastNumbers[7],i:lastNumbers[8],j:lastNumbers[9],k:lastNumbers[10],l:lastNumbers[11]});       }
+      else if(timeRemaining===0){
         globalNumber++;
         io.emit('colorPlaced',{voilet:firstBet,green:secondBet,red:thirdBet})
         io.emit('colorBet', { number: currentNumber, time: timeRemaining,spin:spin, result: winner,globalNumbers:finalNumber,a:lastNumbers[0],b:lastNumbers[1],c:lastNumbers[2],d:lastNumbers[3],e:lastNumbers[4],f:lastNumbers[5],g:lastNumbers[6],h:lastNumbers[7],i:lastNumbers[8],j:lastNumbers[9],k:lastNumbers[10],l:lastNumbers[11]});    
@@ -121,6 +122,7 @@ const generateAndBroadcastNumber = (io) => {
           count=0
       }
         lastNumbers.push(winner)
+        await storeCurrentData()
         if(lastNumbers.length>12){
           lastNumbers.shift();
         }
@@ -151,6 +153,49 @@ const generateAndBroadcastNumber = (io) => {
   // Call generateAndBroadcast to start the initial round
   generateAndBroadcast();
 };
+const storeCurrentData=async()=>{
+  try{
+    if(globalNumber===0){
+      const resultEntry=new Result({
+        globalNumber:globalNumber,
+        result:winner,
+        color:[0,1],
+        size:0
+      })
+      await resultEntry.save()
+    }
+    else if(globalNumber===1||globalNumber===3||globalNumber===7||globalNumber===9){
+      const resultEntry=new Result({
+        globalNumber:globalNumber,
+        result:winner,
+        color:[1],
+        size:globalNumber<5?0:1
+      })
+      await resultEntry.save()
+    }
+    else if(globalNumber===2||globalNumber===4||globalNumber===6||globalNumber===8){
+      const resultEntry=new Result({
+        globalNumber:globalNumber,
+        result:winner,
+        color:[2],
+        size:globalNumber<5?0:1
+      })
+      await resultEntry.save()
+    }
+    else{
+      const resultEntry=new Result({
+        globalNumber:globalNumber,
+        result:winner,
+        color:[0,2],
+        size:0
+      })
+      await resultEntry.save()
+    }
+  }
+  catch(error){
+    console.log(error);
+  }
+}
 const sendColorMoney = async (io, phone, color, number, size, amount) => {
   try {
     count++;
