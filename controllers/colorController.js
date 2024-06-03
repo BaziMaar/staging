@@ -393,9 +393,6 @@ const sendColorMoney = async (io, phone, color, number, size, amount) => {
       throw new Error('Server responded falsely');
     }
   };
-  const getGameHistory=async(req,res)={
-
-  }
   
   const getResultTransactions = async (req, res) => {
     try {
@@ -417,7 +414,6 @@ const sendColorMoney = async (io, phone, color, number, size, amount) => {
     generateAndBroadcastNumber,
     sendColorMoney,
     receiveMoney,
-    getColorTransactions,
     getResultTransactions
   };
   
