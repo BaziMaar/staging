@@ -429,6 +429,7 @@ const sendColorMoney = async (io, phone, color, number, size, amount) => {
     sendColorMoney,
     receiveMoney,
     getResultTransactions,
-    initializeGlobalNumber
+    initializeGlobalNumber,
+    getColorTransactions
   };
   
