@@ -390,8 +390,8 @@ const sendColorMoney = async (io, phone, color, number, size, amount) => {
       await sender.save();
       newUserTransaction.transactions.push({color: color, amount:winning,size,number,globalNumber:String(getCurrentDate())+String(globalNumber),orignalNumber:winner});
       await Promise.all([newUserTransaction.save(), sender.save()]);
-      io.emit('walletColorUpdated', { phone, newBalance: sender.wallet,color,size,number });
-      return { success: true, message: 'Money received successfully',newBalance:sender.wallet };
+      io.emit('walletColorUpdated', { phone, newBalance: sender.wallet,color,size,number,amount:winning===0?-amount:winning});
+      return { success: true, message: 'Money received successfully',newBalance:sender.wallet,amount:winning===0?-amount:winning };
     } catch (error) {
       throw new Error('Server responded falsely');
     }
