@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 
-const { generateAndBroadcastNumber, sendColorMoney ,receiveMoney,getResultTransactions} = require('../controllers/colorController');
+const { generateAndBroadcastNumber, sendColorMoney ,receiveMoney,getResultTransactions,getColorTransactions} = require('../controllers/colorController');
 const { verifyDeviceId } = require('../middlewares/verifyDeviceId');
 
 module.exports = (io) => {
