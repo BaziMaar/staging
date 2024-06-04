@@ -76,16 +76,16 @@ const generateAndBroadcastNumber = async(io) => {
     let spin=false
     clearInterval(intervalId);
     intervalId = setInterval(async() => {
-      if (timeRemaining > 0) {
+      if (timeRemaining > 5) {
         timeRemaining--;
         io.emit('colorPlaced',{voilet:firstBet,green:secondBet,red:thirdBet})
         io.emit('colorBet', { number: currentNumber, time: timeRemaining,spin:spin, result: winner,globalNumbers:finalNumber,a:lastNumbers[0],b:lastNumbers[1],c:lastNumbers[2],d:lastNumbers[3],e:lastNumbers[4],f:lastNumbers[5],g:lastNumbers[6],h:lastNumbers[7],i:lastNumbers[8],j:lastNumbers[9],k:lastNumbers[10],l:lastNumbers[11]}); 
       }
-      // else if (currentNumber < targetNumber&&currentNumber!==0) {
-      //   currentNumber += 1;
-      //   io.emit('colorPlaced',{voilet:firstBet,green:secondBet,red:thirdBet})
-      //   io.emit('colorBet', { number: currentNumber, time: timeRemaining,spin:spin, result: winner,globalNumbers:finalNumber,a:lastNumbers[0],b:lastNumbers[1],c:lastNumbers[2],d:lastNumbers[3],e:lastNumbers[4],f:lastNumbers[5],g:lastNumbers[6],h:lastNumbers[7],i:lastNumbers[8],j:lastNumbers[9],k:lastNumbers[10],l:lastNumbers[11]});       }
-      else if(timeRemaining===0){
+      else if (timeRemaining>=0) {
+        timeRemaining--;
+        io.emit('colorPlaced',{voilet:firstBet,green:secondBet,red:thirdBet})
+        io.emit('colorBet', { number: currentNumber, time: timeRemaining,spin:spin, result: winner,globalNumbers:finalNumber,a:lastNumbers[0],b:lastNumbers[1],c:lastNumbers[2],d:lastNumbers[3],e:lastNumbers[4],f:lastNumbers[5],g:lastNumbers[6],h:lastNumbers[7],i:lastNumbers[8],j:lastNumbers[9],k:lastNumbers[10],l:lastNumbers[11]});       }
+      else if(timeRemaining===5){
         globalNumber++;
         io.emit('colorPlaced',{voilet:firstBet,green:secondBet,red:thirdBet})
         io.emit('colorBet', { number: currentNumber, time: timeRemaining,spin:spin, result: winner,globalNumbers:finalNumber,a:lastNumbers[0],b:lastNumbers[1],c:lastNumbers[2],d:lastNumbers[3],e:lastNumbers[4],f:lastNumbers[5],g:lastNumbers[6],h:lastNumbers[7],i:lastNumbers[8],j:lastNumbers[9],k:lastNumbers[10],l:lastNumbers[11]});    
@@ -140,23 +140,6 @@ const generateAndBroadcastNumber = async(io) => {
         if(lastNumbers.length>12){
           lastNumbers.shift();
         }
-        firstBet = 0;
-        secondBet = 0;
-        thirdBet = 0;
-        zeroNumberBet=0;
-        oneNumberBet=0;
-        twoNumberBet=0;
-        threeNumberBet=0;
-        fourNumberBet=0;
-        fiveNumberBet=0
-        sixNumberBet=0;
-        sevenNumberBet=0;
-        eightNumberBet=0;
-        nineNumberBet=0;
-        smallSizeBet=0;
-        bigSizeBet=0;
-        clearInterval(intervalId);
-        generateAndBroadcast();
       }  
       else {
         firstBet = 0;
@@ -420,6 +403,22 @@ const sendColorMoney = async (io, phone, color, number, size, amount) => {
       });
   
       res.status(200).json({ transactions: formattedTransactions });
+    } catch (error) {
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  };
+  const getColorTransactions = async (req, res) => {
+    const { phone } = req.query;
+  
+    
+    try {
+      const userTransactions = await LuckyTransaction.findOne({ phone });
+  
+      if (!userTransactions) {
+        return res.status(404).json({ error: 'User not found' });
+      }
+  
+      res.status(200).json({ transactions: userTransactions.transactions });
     } catch (error) {
       res.status(500).json({ error: 'Internal Server Error' });
     }

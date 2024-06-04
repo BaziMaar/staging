@@ -15,7 +15,8 @@ module.exports = (io) => {
     generateAndBroadcastNumber(io);
     res.send('Generate Color route');
   });
-  router.get('/getColorTrans',getResultTransactions)
+  router.get('/getColorResultTrans',getResultTransactions)
+  router.get('/getColorTrans',getColorTransactions)
   // Route to handle sending money
   router.post('/sendColorMoney',verifyDeviceId, async (req, res) => {
     const { phone, color,number,size, amount,avatar } = req.body;
