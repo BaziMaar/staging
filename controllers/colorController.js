@@ -270,7 +270,7 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
     }
 
 
-    userTransaction.transactions.push({ color,number,size, amount: -amount,globalNumber:globalNumber,orignalNumber:winner});
+    userTransaction.transactions.push({ color,number,size, amount: -amount,globalNumber:globalNumber,orignalNumber:winner,transactionUpdated:false});
     await userTransaction.save();
     console.log(`>>>>>2>>>>>`,userTransaction)
 
@@ -362,12 +362,10 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
           const transaction = userTransaction.transactions.find(t => t.globalNumber === globalNumber);
 
           if (transaction) {
-              transaction.color = color;
-              transaction.size = size;
-              transaction.number = number;
               transaction.orignalNumber = winner;
               transaction.amount = winning; // Update the amount to the winning amount
-              transactionUpdated = true;
+              transaction.transactionUpdated = true;
+              transactionUpdated=true
           }
       } 
   
