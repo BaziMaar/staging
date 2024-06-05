@@ -435,20 +435,31 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
   };
   const getColorTransactions = async (req, res) => {
     const { phone } = req.query;
+    const currentDate=getCurrentDate()
+    const finalNumber=String(currentDate)+String(globalNumber)
   
-    
     try {
-      const userTransactions = await LuckyTransaction.findOne({ phone });
-  
-      if (!userTransactions) {
-        return res.status(404).json({ error: 'User not found' });
-      }
-  
-      res.status(200).json({ transactions: userTransactions.transactions });
+        const userTransactions = await LuckyTransaction.findOne({ phone });
+
+        if (!userTransactions) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const transactions = userTransactions.transactions;
+        const lastTransaction = transactions[transactions.length - 1];
+
+        if (lastTransaction.globalNumber !== finalNumber) {
+            lastTransaction.transactionUpdated = true;
+
+            await userTransactions.save(); // Save the updated document
+        }
+
+        res.status(200).json({ transactions });
     } catch (error) {
-      res.status(500).json({ error: 'Internal Server Error' });
+        res.status(500).json({ error: 'Internal Server Error' });
     }
-  };
+};
+
   
   module.exports = {
     generateAndBroadcastNumber,
