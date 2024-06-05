@@ -363,7 +363,7 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
 
           if (transaction) {
               transaction.orignalNumber = winner;
-              transaction.amount = winning; // Update the amount to the winning amount
+              transaction.amount = winning===0?transaction.amount:winning; // Update the amount to the winning amount
               transaction.transactionUpdated = true;
               transactionUpdated=true
           }
@@ -399,7 +399,7 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
         await userTransaction.save();
     }
       await sender.save();
-      io.emit('walletColorUpdated', { phone, newBalance: sender.wallet,color,size,number,amount:winning===0?-amount:winning});
+      io.emit('walletColorUpdated', { phone, newBalance: sender.wallet,color,size,number,amount:winning===0?-amount:winning,transactionUpdated:transactionUpdated});
       return { success: true, message: 'Money received successfully',newBalance:sender.wallet,amount:winning===0?-amount:winning };
     } catch (error) {
       throw new Error('Server responded falsely');
