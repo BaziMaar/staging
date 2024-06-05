@@ -34,7 +34,7 @@ module.exports = (io) => {
     const { phone, color,number,size, amount,globalNumber } = req.body;
 
     try {
-      const response=await receiveMoney(io, phone,color,number,size, amount,globalNumber);x
+      const response=await receiveMoney(io, phone,color,number,size, amount,globalNumber);
       res.status(200).json({ response:response });
     } catch (error) {
       console.error('Error sending money:', error);
