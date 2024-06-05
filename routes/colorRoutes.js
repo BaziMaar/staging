@@ -18,11 +18,11 @@ module.exports = (io) => {
   router.get('/getColorResultTrans',getResultTransactions)
   router.get('/getColorTrans',getColorTransactions)
   // Route to handle sending money
-  router.post('/sendColorMoney',verifyDeviceId, async (req, res) => {
-    const { phone, color,number,size, amount,avatar } = req.body;
+  router.post('/sendColorMoney', async (req, res) => {
+    const { phone, color,number,size, amount,avatar,globalNumber } = req.body;
 
     try {
-      const response=await sendColorMoney(io, phone,color,number,size, amount);
+      const response=await sendColorMoney(io, phone,color,number,size, amount,globalNumber);
       console.log(response)
       res.status(200).json({ response:response });
     } catch (error) {
@@ -30,11 +30,11 @@ module.exports = (io) => {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
-  router.post('/receiveColorMoney',verifyDeviceId, async (req, res) => {
+  router.post('/receiveColorMoney', async (req, res) => {
     const { phone, color,number,size, amount } = req.body;
 
     try {
-      const response=await receiveMoney(io, phone,color,number,size, amount);
+      const response=await receiveMoney(io, phone,color,number,size, amount,globalNumber);
       res.status(200).json({ response:response });
     } catch (error) {
       console.error('Error sending money:', error);
