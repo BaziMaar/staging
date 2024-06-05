@@ -31,10 +31,10 @@ module.exports = (io) => {
     }
   });
   router.post('/receiveColorMoney', async (req, res) => {
-    const { phone, color,number,size, amount } = req.body;
+    const { phone, color,number,size, amount,globalNumber } = req.body;
 
     try {
-      const response=await receiveMoney(io, phone,color,number,size, amount,globalNumber);
+      const response=await receiveMoney(io, phone,color,number,size, amount,globalNumber);x
       res.status(200).json({ response:response });
     } catch (error) {
       console.error('Error sending money:', error);
