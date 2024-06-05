@@ -211,7 +211,7 @@ const storeCurrentData=async()=>{
     console.log(error);
   }
 }
-const sendColorMoney = async (io, phone, color, number, size, amount) => {
+const sendColorMoney = async (io, phone, color, number, size, amount,globalNumber) => {
   try {
     count++;
     let userTransaction = await LuckyTransaction.findOne({ phone });
@@ -270,7 +270,7 @@ const sendColorMoney = async (io, phone, color, number, size, amount) => {
     }
 
 
-    userTransaction.transactions.push({ color,number,size, amount: -amount,globalNumber:String(getCurrentDate())+String(globalNumber),orignalNumber:winner});
+    userTransaction.transactions.push({ color,number,size, amount: -amount,globalNumber:globalNumber,orignalNumber:winner});
     await userTransaction.save();
     console.log(`>>>>>2>>>>>`,userTransaction)
 
@@ -278,9 +278,9 @@ const sendColorMoney = async (io, phone, color, number, size, amount) => {
     console.log(sender.wallet)
     await sender.save();
     console.log(`>>>>>sender`,sender)
-    io.emit('walletColorUpdated', { phone, newBalance: sender.wallet, color, size, number });
+    io.emit('walletColorUpdated', { phone, newBalance: sender.wallet, color, size, number,globalNumber });
 
-    return { success: true, message: 'Money sent successfully', newBalance: sender.wallet, color, size, number };
+    return { success: true, message: 'Money sent successfully', newBalance: sender.wallet, color, size, number,globalNumber };
     
   } catch (error) {
     io.emit('walletColorUpdated', { error: error.message });
@@ -289,23 +289,28 @@ const sendColorMoney = async (io, phone, color, number, size, amount) => {
 };
 
   
-  const receiveMoney = async (io, phone, color,number,size,amount) => {
+  const receiveMoney = async (io, phone, color,number,size,amount,globalNumber) => {
     let winning=0;
     try {
       const [sender, userTransaction] = await Promise.all([
         User.findOne({ phone }),
-        LuckyTransaction.findOne({ phone })
-      ]);
+        LuckyTransaction.findOne({ 
+          phone, 
+          'transactions.globalNumber': globalNumber 
+      })
+    ]);
+
       if (!sender) {
         throw new Error('Sender not found');
       }
-      let newUserTransaction = userTransaction;
-      if (!newUserTransaction) {
-        newUserTransaction = new LuckyTransaction({
-          phone,
-          transactions: []
-        });
-      }
+      // let newUserTransaction = userTransaction;
+
+      // if (!newUserTransaction) {
+      //   newUserTransaction = new LuckyTransaction({
+      //     phone,
+      //     transactions: []
+      //   });
+      // }
       if(winner%2===0&&color!==-1&&winner!==""){
         if(color===0&&winner===0){
           winning=amount*2;
@@ -345,6 +350,20 @@ const sendColorMoney = async (io, phone, color, number, size, amount) => {
         winning=amount*0
       }
 
+      let transactionUpdated = false;
+
+      if (userTransaction) {
+          const transaction = userTransaction.transactions.find(t => t.globalNumber === globalNumber);
+
+          if (transaction) {
+              transaction.color = color;
+              transaction.size = size;
+              transaction.number = number;
+              transaction.orignalNumber = winner;
+              transaction.amount = winning; // Update the amount to the winning amount
+              transactionUpdated = true;
+          }
+      } 
   
       const referredUsers = await User.findOne({ refer_id: { $in: sender.user_id } });
       if (referredUsers) {
@@ -372,8 +391,10 @@ const sendColorMoney = async (io, phone, color, number, size, amount) => {
       sender.wallet +=winning;
       sender.withdrwarl_amount += winning;
       await sender.save();
-      newUserTransaction.transactions.push({color: color, amount:winning,size,number,globalNumber:String(getCurrentDate())+String(globalNumber),orignalNumber:winner});
-      await Promise.all([newUserTransaction.save(), sender.save()]);
+      if (transactionUpdated) {
+        await userTransaction.save();
+    }
+      await sender.save();
       io.emit('walletColorUpdated', { phone, newBalance: sender.wallet,color,size,number,amount:winning===0?-amount:winning});
       return { success: true, message: 'Money received successfully',newBalance:sender.wallet,amount:winning===0?-amount:winning };
     } catch (error) {
