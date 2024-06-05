@@ -319,8 +319,11 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
           if(color===2&&winning===0){
             winning=amount*1.5
           }
-          else{
+          else if(color%2===0){
              winning=amount*2
+          }
+          else{
+            winning=amount*0
           }
         }
       }
@@ -329,11 +332,14 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
           winning=amount*2;
         }
         else {
-          if(color===1&&winning===5){
+          if(color===1&&winner===5){
             winning=amount*1.5
           }
-          else{
+          else if(color%2===1&&winner%2===1){
              winning=amount*2
+          }
+          else{
+            winning=amount*0
           }
         }
       }
