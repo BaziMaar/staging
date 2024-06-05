@@ -437,6 +437,7 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
     const { phone } = req.query;
     const currentDate=getCurrentDate()
     const finalNumber=String(currentDate)+String(globalNumber)
+    console.log(finalNumber)
   
     try {
         const userTransactions = await LuckyTransaction.findOne({ phone });
