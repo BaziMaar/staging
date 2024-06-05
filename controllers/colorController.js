@@ -136,7 +136,7 @@ const generateAndBroadcastNumber = async(io) => {
           winner = 0; //condition may be false
           count=0
       }
-        lastNumbers.push(winner)
+        lastNumbers.push(String(finalNumber)+String(winner))
         await storeCurrentData()
         if(lastNumbers.length>12){
           lastNumbers.shift();
