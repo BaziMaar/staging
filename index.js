@@ -3,19 +3,32 @@ const http = require('http');
 const socketIO = require('socket.io');
 const path = require('path');
 const mongoose = require('mongoose');
-const fs=require('fs');
+const fs = require('fs');
 require('dotenv').config();
-const cors=require('cors');
+const cors = require('cors');
 const app = express();
 const expressServer = http.createServer(app);
-const io = socketIO(expressServer);
-const walletRoute=require('./routes/walletRoutes')
+const io = socketIO(expressServer, {
+  cors: {
+    origin: "*",
+    methods: ["GET", "POST"]
+  }
+});
+
+const walletRoute = require('./routes/walletRoutes');
 // Import the generateAndBroadcastNumber and sendMoney functions
 const { generateAndBroadcastNumber, sendMoney } = require('./controllers/generateController');
-const luckyWheelController=require('./controllers/luckyWheelController')
-const dragonTigerController=require('./controllers/dragonTigerController')
-const colorController=require('./controllers/colorController')
-  app.use(cors());
+const luckyWheelController = require('./controllers/luckyWheelController');
+const dragonTigerController = require('./controllers/dragonTigerController');
+const colorController = require('./controllers/colorController');
+
+// Use CORS middleware with options to allow all origins
+app.use(cors({
+  origin: "*",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
 // Serve HTML file for testing
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/index.html'));
@@ -33,13 +46,14 @@ if (!MONGODB_USERNAME || !MONGODB_PASSWORD || !MONGODB_DBNAME) {
 
 const MONGODB_URI = `mongodb+srv://${MONGODB_USERNAME}:${MONGODB_PASSWORD}@cluster0.zwwed4z.mongodb.net/${MONGODB_DBNAME}?retryWrites=true&w=majority`;
 
-mongoose.connect(MONGODB_URI,{useUnifiedTopology: true, useNewUrlParser: true })
-.then(console.log("mongodb connected successfully...."))
-.catch(err =>console.log(err));
+mongoose.connect(MONGODB_URI, { useUnifiedTopology: true, useNewUrlParser: true })
+  .then(() => console.log("mongodb connected successfully...."))
+  .catch(err => console.log(err));
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', () => {
+  console.log('MongoDB connected.');
 });
 
 // Import the generate route and use it under the '/api' path
@@ -50,16 +64,18 @@ const userRoutes = require('./routes/userRoute');
 const minesRoute = require('./routes/minesRoute');
 const luckyRoute = require('./routes/luckyRoutes');
 const colorRoute = require('./routes/colorRoutes');
-const dragonTigerRoute=require('./routes/dragonTigerRoutes')
+const dragonTigerRoute = require('./routes/dragonTigerRoutes');
 app.use('/user', userRoutes);
-app.use('/wallet',walletRoute);
-app.use('/mines',minesRoute);
-app.use('/lucky',luckyRoute(io));
-app.use('/color',colorRoute(io));
-app.use('/dragon',dragonTigerRoute(io))
+app.use('/wallet', walletRoute);
+app.use('/mines', minesRoute);
+app.use('/lucky', luckyRoute(io));
+app.use('/color', colorRoute(io));
+app.use('/dragon', dragonTigerRoute(io));
+
 // Start the Express server on port 3000
 const EXPRESS_PORT = 3000;
 expressServer.listen(EXPRESS_PORT, () => {
+  console.log(`Express server running on port ${EXPRESS_PORT}`);
   generateAndBroadcastNumber(io);
   luckyWheelController.generateAndBroadcastNumber(io);
   colorController.generateAndBroadcastNumber(io);
@@ -68,10 +84,9 @@ expressServer.listen(EXPRESS_PORT, () => {
 
 // Start Socket.IO on port 4000
 const SOCKET_IO_PORT = 4000;
-io.listen(SOCKET_IO_PORT);
-
-// Initial call to generateAndBroadcastNumber (commented out)
-// generateAndBroadcastNumber();
+io.listen(SOCKET_IO_PORT, () => {
+  console.log(`Socket.IO server running on port ${SOCKET_IO_PORT}`);
+});
 
 // Example: Send Money functionality
 app.post('/api/sendMoney', express.json(), async (req, res) => {
