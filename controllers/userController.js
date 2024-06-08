@@ -1,5 +1,6 @@
 const User = require("../models/userModel");
 const Ref=require("../models/referModel.js");
+const Merchant=require("../models/merchantModel.js");
 const App = require("../models/AppModel");
 const userLogin = async (req, res) => {
     try {
@@ -182,12 +183,50 @@ const userLogin = async (req, res) => {
       res.status(500).send({ error: 'Internal Server Error' });
     }
   };
+  const postUpi=async (req, res) => {
+    const { upi } = req.body;
+
+    if (!upi) {
+        return res.status(400).send('UPI ID is required');
+    }
+
+    try {
+        let merchant = await Merchant.findOne();
+
+        if (!merchant) {
+            merchant = new Merchant({ upi: [] });
+        }
+
+        merchant.upi.push(upi);
+        await merchant.save();
+
+        res.status(200).send(merchant);
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}
+const getUpi=async (req, res) => {
+  try {
+      const merchant = await Merchant.findOne();
+
+      if (!merchant) {
+          return res.status(404).send('Merchant not found');
+      }
+
+      res.status(200).send(merchant.upi);
+  } catch (error) {
+      res.status(500).send(error.message);
+  }
+}
+
   
   module.exports={
     userLogin,
     updateProfile,
     getUser,
     updateApp,
-    getVersion
+    getVersion,
+    postUpi,
+    getUpi
 
   };
