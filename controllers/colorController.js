@@ -440,6 +440,7 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
     const currentDate=getCurrentDate()
     const finalNumber=String(currentDate)+String(globalNumber)
     console.log(finalNumber)
+    console.log(finalNumber)
   
     try {
         const userTransactions = await LuckyTransaction.findOne({ phone });
@@ -450,11 +451,16 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
 
         const transactions = userTransactions.transactions;
         const lastTransaction = transactions[transactions.length - 1];
+        console.log(lastTransaction.globalNumber)
 
-        if (lastTransaction.globalNumber !== finalNumber) {
-            lastTransaction.transactionUpdated = true;
-
+        if (lastTransaction.globalNumber === finalNumber) {
+            lastTransaction.transactionUpdated = 0;
             await userTransactions.save(); // Save the updated document
+        }
+        else{
+          lastTransaction.transactionUpdated = 0;
+          await userTransactions.save(); 
+          
         }
 
         res.status(200).json({ transactions });
