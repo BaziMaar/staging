@@ -360,6 +360,8 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
 
       if (userTransaction) {
           const transaction = userTransaction.transactions.find(t => t.globalNumber === globalNumber);
+          console.log(userTransaction)
+          console.log(`>>>>>>winning>>>>`,winning)
 
           if (transaction) {
               transaction.orignalNumber = winner;

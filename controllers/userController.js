@@ -205,6 +205,34 @@ const userLogin = async (req, res) => {
         res.status(500).send(error.message);
     }
 }
+const deleteUpi = async (req, res) => {
+  const { upi } = req.body;
+
+  if (!upi) {
+      return res.status(400).send('UPI ID is required');
+  }
+
+  try {
+      let merchant = await Merchant.findOne();
+
+      if (!merchant) {
+          return res.status(404).send('Merchant not found');
+      }
+
+      const upiIndex = merchant.upi.indexOf(upi);
+      if (upiIndex === -1) {
+          return res.status(404).send('UPI ID not found');
+      }
+
+      merchant.upi.splice(upiIndex, 1);
+      await merchant.save();
+
+      res.status(200).send(merchant);
+  } catch (error) {
+      res.status(500).send(error.message);
+  }
+}
+
 const getUpi=async (req, res) => {
   try {
       const merchant = await Merchant.findOne();
@@ -227,6 +255,7 @@ const getUpi=async (req, res) => {
     updateApp,
     getVersion,
     postUpi,
-    getUpi
+    getUpi,
+    deleteUpi
 
   };
