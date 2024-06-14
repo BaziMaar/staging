@@ -270,7 +270,7 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
     }
 
 
-    userTransaction.transactions.push({ color,number,size, amount: -amount,globalNumber:globalNumber,orignalNumber:winner,transactionUpdated:false});
+    userTransaction.transactions.push({ color,number,size, amount: -amount,globalNumber:globalNumber,orignalNumber:winner,transactionUpdated:0});
     await userTransaction.save();
     console.log(`>>>>>2>>>>>`,userTransaction)
 
@@ -367,7 +367,7 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
               transaction.orignalNumber = winner;
               transaction.amount = winning===0?transaction.amount:winning; // Update the amount to the winning amount
               transaction.transactionUpdated = true;
-              transactionUpdated=true
+              transactionUpdated=1
           }
       } 
   

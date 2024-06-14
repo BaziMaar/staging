@@ -29,7 +29,7 @@ const transactionSchema = new mongoose.Schema({
             type:Number
         },
         transactionUpdated:{
-            type:Boolean
+            type:Number
         }
     }]
 }, {
