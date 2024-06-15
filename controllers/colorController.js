@@ -354,6 +354,7 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
       let transactionUpdated = 0;
 
       if (userTransaction) {
+        console.log(globalNumber)
           const transaction = userTransaction.transactions.find(t => t.globalNumber === globalNumber);
           console.log(`>>>>>trans>>>`,transaction)
           if (transaction) {
