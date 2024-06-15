@@ -430,9 +430,11 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
     const { phone } = req.query;
     const currentDate = getCurrentDate();
     const finalNumber = String(currentDate) + String(globalNumber);
-    console.log(finalNumber)
-    console.log(`>>>>>>isCHeck>>>`,globalNumber===finalNumber)
-  
+    
+    // Debugging log for finalNumber
+    console.log('>>> finalNumber:', finalNumber);
+    
+
     try {
         const userTransactions = await LuckyTransaction.findOne({ phone });
 
@@ -446,9 +448,19 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
         }
 
         const lastTransaction = transactions[transactions.length - 1];
-        console.log(`>>>>>>>>>last>>>>>>>`,lastTransaction.globalNumber)
 
-        if (lastTransaction.globalNumber !== finalNumber) {
+        // Debugging log for lastTransaction.globalNumber
+        console.log('>>> lastTransaction.globalNumber:', lastTransaction.globalNumber);
+        console.log(`>>> isCheck (globalNumber === finalNumber):`, lastTransaction.globalNumber === finalNumber);
+
+        // Ensure both values are strings before comparing
+        const lastGlobalNumberStr = String(lastTransaction.globalNumber);
+
+        console.log('>>> Comparing:', finalNumber, 'with', lastGlobalNumberStr);
+        const isCheck = finalNumber !== lastGlobalNumberStr;
+        console.log('>>> isCheck:', isCheck);
+
+        if (isCheck) {
             lastTransaction.transactionUpdated = 1;
             await userTransactions.save(); // Save the updated document
         }
@@ -459,6 +471,7 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
 
 
   
