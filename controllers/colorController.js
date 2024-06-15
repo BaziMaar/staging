@@ -431,7 +431,6 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
     const currentDate = getCurrentDate();
     const finalNumber = String(currentDate) + String(globalNumber);
     console.log(finalNumber)
-    console.log(`>>>>>>>>>last>>>>>>>`,lastTransaction.globalNumber)
     console.log(`>>>>>>isCHeck>>>`,globalNumber===finalNumber)
   
     try {
@@ -447,6 +446,7 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
         }
 
         const lastTransaction = transactions[transactions.length - 1];
+        console.log(`>>>>>>>>>last>>>>>>>`,lastTransaction.globalNumber)
 
         if (lastTransaction.globalNumber !== finalNumber) {
             lastTransaction.transactionUpdated = 1;
