@@ -359,6 +359,7 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
       let transactionUpdated = false;
 
       if (userTransaction) {
+        console.log(`>>>>>>>>>>>>>>>>`,globalNumber)
           const transaction = userTransaction.transactions.find(t => t.globalNumber === globalNumber);
           console.log(userTransaction)
           console.log(`>>>>>>winning>>>>`,winning)
@@ -453,14 +454,9 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
         const lastTransaction = transactions[transactions.length - 1];
         console.log(lastTransaction.globalNumber)
 
-        if (lastTransaction.globalNumber === finalNumber) {
-            lastTransaction.transactionUpdated = 0;
+        if (lastTransaction.globalNumber !== finalNumber) {
+            lastTransaction.transactionUpdated = 1;
             await userTransactions.save(); // Save the updated document
-        }
-        else{
-          lastTransaction.transactionUpdated = 0;
-          await userTransactions.save(); 
-          
         }
 
         res.status(200).json({ transactions });
