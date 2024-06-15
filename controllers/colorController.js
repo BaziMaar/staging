@@ -293,6 +293,7 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
       })
     ]);
 
+
       if (!sender) {
         throw new Error('Sender not found');
       }
@@ -304,6 +305,7 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
       //     transactions: []
       //   });
       // }
+      
       if(winner%2===0&&color!==-1&&winner!==""){
         if(color===0&&winner===0){
           winning=amount*2;
@@ -349,11 +351,11 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
         winning=amount*0
       }
 
-      let transactionUpdated = false;
+      let transactionUpdated = 0;
 
       if (userTransaction) {
           const transaction = userTransaction.transactions.find(t => t.globalNumber === globalNumber);
-
+          console.log(`>>>>>trans>>>`,transaction)
           if (transaction) {
               transaction.orignalNumber = winner;
               transaction.amount = winning===0?transaction.amount:winning; // Update the amount to the winning amount
