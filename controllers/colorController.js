@@ -354,16 +354,19 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
       let transactionUpdated = 0;
 
       if (userTransaction) {
-        console.log(globalNumber)
-          const transaction = userTransaction.transactions.find(t => t.globalNumber === globalNumber);
-          console.log(`>>>>>trans>>>`,transaction)
-          if (transaction) {
-              transaction.orignalNumber = winner;
-              transaction.amount = winning===0?transaction.amount:winning; // Update the amount to the winning amount
-              transaction.transactionUpdated = true;
-              transactionUpdated=1
-          }
-      } 
+        const transaction = userTransaction.transactions.find(t => {
+            console.log(`Comparing ${String(t.globalNumber).trim()} with ${String(globalNumber).trim()}`);
+            return String(t.globalNumber).trim() === String(globalNumber).trim();
+        });
+        console.log(`Transaction found: ${transaction}`);
+
+        if (transaction) {
+            transaction.orignalNumber = winner;
+            transaction.amount = winning === 0 ? transaction.amount : winning; // Update the amount to the winning amount
+            transaction.transactionUpdated = true;
+            transactionUpdated = true;
+        }
+    }
   
       const referredUsers = await User.findOne({ refer_id: { $in: sender.user_id } });
       if (referredUsers) {
