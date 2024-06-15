@@ -231,7 +231,6 @@ const sendLuckyMoney = async (io, phone, color, amount) => {
   
         // Add the referral bonus to the referring user's account
         referredUsers.referred_wallet += referralBonus;
-        console.log(`>>>>>>>>>>>5`)
         let ref = await Ref.findOne({ phone: referredUsers.phone });
         if (ref) {
           ref.referred.push({
@@ -240,7 +239,6 @@ const sendLuckyMoney = async (io, phone, color, amount) => {
             amount: referralBonus
           });
         } else {
-          console.log(`>>>>>>>>>>>>>>6`)
           ref = new Ref({
             phone: referredUsers.phone,
             referred: [{
@@ -254,7 +252,6 @@ const sendLuckyMoney = async (io, phone, color, amount) => {
         // Save the updated referring user and the Ref model
         await Promise.all([referredUsers.save(), ref.save()]);
       }
-      console.log(`>>>>>>>>>7>>>>>`)
   
       sender.wallet +=winning;
       sender.withdrwarl_amount += winning;

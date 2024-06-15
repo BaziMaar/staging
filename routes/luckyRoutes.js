@@ -22,7 +22,6 @@ module.exports = (io) => {
 
     try {
       const response=await sendLuckyMoney(io, phone,color, amount);
-      console.log(response)
       res.status(200).json({ response:response });
     } catch (error) {
       console.error('Error sending money:', error);

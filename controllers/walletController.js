@@ -14,16 +14,13 @@ const depositFunds = async (req, res) => {
 };
 const getWallet = async (req, res) => {
   try {
-    console.log(req.query.phone)
     const { phone } = req.query; // Assuming phone is in the request body
     const wallet = await User.find({ phone:phone });
-    console.log(wallet)
     if (!wallet) {
       return res.status(404).json({ error: 'User not found' });
     }
 
     const walletMoney = wallet[0].wallet;
-    console.log('>>>>>>>>>>',walletMoney)
     res.status(200).send({ wallet:walletMoney,refer_wallet:wallet[0].referred_wallet,withdrawable_balance:wallet[0].withdrwarl_amount });
   } catch (error) {
     console.error('Error getting wallet:', error);

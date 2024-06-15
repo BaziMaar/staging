@@ -208,7 +208,6 @@ const storeCurrentData=async()=>{
     }
   }
   catch(error){
-    console.log(error);
   }
 }
 const sendColorMoney = async (io, phone, color, number, size, amount,globalNumber) => {
@@ -227,7 +226,6 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
       });
     }
 
-    console.log(userTransaction);
     
     if (sender.wallet < amount) {
       io.emit('walletColorUpdated', { phone: phone, error: 'Insufficient Funds' });
@@ -235,8 +233,7 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
     }
 
     if (color === 0) {
-      firstBet += 2 * amount; // Adjusted for the violet
-      console.log(`>>>>>>color`, color);
+      firstBet += 2 * amount; 
     } 
     else if (color === 1) {
       secondBet += 2 * amount; // Adjusted for the green
@@ -265,19 +262,15 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
       }
     } 
     else {
-      console.log("Error: Invalid color, size, or number");
       return { success: false, message: 'Invalid color, size, or number' };
     }
 
 
     userTransaction.transactions.push({ color,number,size, amount: -amount,globalNumber:globalNumber,orignalNumber:winner,transactionUpdated:0});
     await userTransaction.save();
-    console.log(`>>>>>2>>>>>`,userTransaction)
 
     sender.wallet -= amount;
-    console.log(sender.wallet)
     await sender.save();
-    console.log(`>>>>>sender`,sender)
     io.emit('walletColorUpdated', { phone, newBalance: sender.wallet, color, size, number,globalNumber });
 
     return { success: true, message: 'Money sent successfully', newBalance: sender.wallet, color, size, number,globalNumber };
@@ -359,10 +352,7 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
       let transactionUpdated = false;
 
       if (userTransaction) {
-        console.log(`>>>>>>>>>>>>>>>>`,globalNumber)
           const transaction = userTransaction.transactions.find(t => t.globalNumber === globalNumber);
-          console.log(userTransaction)
-          console.log(`>>>>>>winning>>>>`,winning)
 
           if (transaction) {
               transaction.orignalNumber = winner;
@@ -438,10 +428,11 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
   };
   const getColorTransactions = async (req, res) => {
     const { phone } = req.query;
-    const currentDate=getCurrentDate()
-    const finalNumber=String(currentDate)+String(globalNumber)
+    const currentDate = getCurrentDate();
+    const finalNumber = String(currentDate) + String(globalNumber);
     console.log(finalNumber)
-    console.log(finalNumber)
+    console.log(`>>>>>>>>>last>>>>>>>`,lastTransaction.globalNumber)
+    console.log(`>>>>>>isCHeck>>>`,globalNumber===finalNumber)
   
     try {
         const userTransactions = await LuckyTransaction.findOne({ phone });
@@ -451,8 +442,11 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
         }
 
         const transactions = userTransactions.transactions;
+        if (transactions.length === 0) {
+            return res.status(200).json({ transactions: [] });
+        }
+
         const lastTransaction = transactions[transactions.length - 1];
-        console.log(lastTransaction.globalNumber)
 
         if (lastTransaction.globalNumber !== finalNumber) {
             lastTransaction.transactionUpdated = 1;
@@ -461,9 +455,11 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
 
         res.status(200).json({ transactions });
     } catch (error) {
+        console.error(error); // Log the error for debugging purposes
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
 
   
   module.exports = {
