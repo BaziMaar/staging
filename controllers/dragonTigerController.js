@@ -34,7 +34,7 @@ const generateAndBroadcastNumber = (io) => {
     tigerColor='';
 
     let spin=false
-    const numbers = [50, 100, 200, 500, 1000, 5000];
+    const numbers = [10,50, 100, 500, 1000, 5000];
     const probabilities = [0.3, 0.25, 0.25, 0.1, 0.7, 0.3];
 
     // Function to generate random number with adjusted probabilities

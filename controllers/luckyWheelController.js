@@ -37,7 +37,7 @@ const generateAndBroadcastNumber = (io) => {
     let arr1=[0,0,0],arr2=[0,0,0],arr3=[0,0,0]
     winner = '';
     let spin=false
-    const numbers = [50, 100, 200, 500, 1000, 5000];
+    const numbers = [10,50, 100, 500, 1000, 5000];
 
 // Define probabilities for each number
     const probabilities = [0.3, 0.25, 0.25, 0.1, 0.7, 0.3];

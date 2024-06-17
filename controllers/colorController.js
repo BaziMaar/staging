@@ -282,128 +282,138 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
 };
 
   
-  const receiveMoney = async (io, phone, color,number,size,amount,globalNumber) => {
-    let winning=0;
-    try {
-      const [sender, userTransaction] = await Promise.all([
-        User.findOne({ phone }),
-        LuckyTransaction.findOne({ 
-          phone, 
-          'transactions.globalNumber': globalNumber 
-      })
+const receiveMoney = async (io, phone, color, number, size, amount, globalNumber) => {
+  let winning = 0;
+
+  try {
+    // Retrieve sender and user transaction in parallel
+    const [sender, userTransaction] = await Promise.all([
+      User.findOne({ phone }),
+      LuckyTransaction.findOne({ phone, 'transactions.globalNumber': globalNumber })
     ]);
 
-
-      if (!sender) {
-        throw new Error('Sender not found');
-      }
-      // let newUserTransaction = userTransaction;
-
-      // if (!newUserTransaction) {
-      //   newUserTransaction = new LuckyTransaction({
-      //     phone,
-      //     transactions: []
-      //   });
-      // }
-      
-      if(winner%2===0&&color!==-1&&winner!==""){
-        if(color===0&&winner===0){
-          winning=amount*2;
-        }
-        else {
-          if(color===2&&winning===0){
-            winning=amount*1.5
-          }
-          else if(color%2===0){
-             winning=amount*2
-          }
-          else{
-            winning=amount*0
-          }
-        }
-      }
-      else if(color!==-1&&winner!==""){
-        if(color===0&&winner===5){
-          winning=amount*2;
-        }
-        else {
-          if(color===1&&winner===5){
-            winning=amount*1.5
-          }
-          else if(color%2===1&&winner%2===1){
-             winning=amount*2
-          }
-          else{
-            winning=amount*0
-          }
-        }
-      }
-      else if(size===0&&winner<5&&winner!==""){
-        winning=amount*2
-      }
-      else if(size===1&&winner>5&&winner!==""){
-        winning=amount*2
-      }
-      else if(number===winner&&winner!==""){
-        winning=amount*9
-      }
-      else{
-        winning=amount*0
-      }
-
-      let transactionUpdated = 0;
-
-      if (userTransaction) {
-        const transaction = userTransaction.transactions.find(t => {
-            console.log(`Comparing ${String(t.globalNumber).trim()} with ${String(globalNumber).trim()}`);
-            return String(t.globalNumber).trim() === String(globalNumber).trim();
-        });
-        console.log(`Transaction found: ${transaction}`);
-
-        if (transaction) {
-            transaction.orignalNumber = winner;
-            transaction.amount = winning === 0 ? transaction.amount : winning; // Update the amount to the winning amount
-            transaction.transactionUpdated = true;
-            transactionUpdated = true;
-        }
+    // If sender not found, throw an error
+    if (!sender) {
+      throw new Error('Sender not found');
     }
-  
-      const referredUsers = await User.findOne({ refer_id: { $in: sender.user_id } });
-      if (referredUsers) {
-        const referralBonus = 0.05 * winning;
-        referredUsers.referred_wallet += referralBonus;
-        let ref = await Ref.findOne({ phone: referredUsers.phone });
-        if (ref) {
-          ref.referred.push({
+
+    // Determine the winning amount based on the conditions
+    if (winner % 2 === 0 && color !== -1 && winner !== "") {
+      if (color === 0 && winner === 0) {
+        winning = amount * 2;
+      } else if (color === 2 && winner === 0) {
+        winning = amount * 1.5;
+      } else if (color % 2 === 0) {
+        winning = amount * 2;
+      }
+    } else if (color !== -1 && winner !== "") {
+      if (color === 0 && winner === 5) {
+        winning = amount * 2;
+      } else if (color === 1 && winner === 5) {
+        winning = amount * 1.5;
+      } else if (color % 2 === 1 && winner % 2 === 1) {
+        winning = amount * 2;
+      }
+    } else if (size === 0 && winner < 5 && winner !== "") {
+      winning = amount * 2;
+    } else if (size === 1 && winner > 5 && winner !== "") {
+      winning = amount * 2;
+    } else if (number === winner && winner !== "") {
+      winning = amount * 9;
+    }
+
+    // Update transaction if it exists
+    let transactionUpdated = false;
+    if (userTransaction) {
+      const transaction = userTransaction.transactions.find(t => String(t.globalNumber).trim() === String(globalNumber).trim());
+      if (transaction) {
+        transaction.orignalNumber = winner;
+        transaction.amount = winning === 0 ? transaction.amount : winning; // Update the amount to the winning amount
+        transaction.transactionUpdated = true;
+        transactionUpdated = true;
+      }
+    }
+
+    // Handle referral bonus if the referred user exists
+    const referredUser = await User.findOne({ refer_id: { $in: sender.user_id } });
+    if (referredUser) {
+      const referralBonus = 0.05 * winning;
+      referredUser.referred_wallet += referralBonus;
+      let ref = await Ref.findOne({ phone: referredUser.phone });
+
+      if (ref) {
+        ref.referred.push({
+          user_id: sender.user_id,
+          avatar: sender.avatar,
+          amount: referralBonus
+        });
+      } else {
+        ref = new Ref({
+          phone: referredUser.phone,
+          referred: [{
             user_id: sender.user_id,
             avatar: sender.avatar,
             amount: referralBonus
-          });
-        } else {
-          ref = new Ref({
-            phone: referredUsers.phone,
-            referred: [{
-              user_id: sender.user_id,
-              avatar: sender.avatar,
-              amount: referralBonus
-            }]
-          });
-        }
-        await Promise.all([referredUsers.save(), ref.save()]);
+          }]
+        });
       }
-      sender.wallet +=winning;
-      sender.withdrwarl_amount += winning;
-      await sender.save();
-      if (transactionUpdated) {
-        await userTransaction.save();
+
+      await Promise.all([referredUser.save(), ref.save()]);
     }
-      await sender.save();
-      io.emit('walletColorUpdated', { phone, newBalance: sender.wallet,color,size,number,amount:winning===0?-amount:winning,transactionUpdated:transactionUpdated});
-      return { success: true, message: 'Money received successfully',newBalance:sender.wallet,amount:winning===0?-amount:winning };
-    } catch (error) {
-      throw new Error('Server responded falsely');
+
+    // Update sender's wallet
+    sender.wallet += winning;
+    sender.withdrawal_amount += winning;
+    await sender.save();
+
+    // Save user transaction if it was updated
+    if (transactionUpdated) {
+      await userTransaction.save();
     }
-  };
+
+    // Emit socket event with updated wallet info
+    io.emit('walletColorUpdated', {
+      phone,
+      newBalance: sender.wallet,
+      color,
+      size,
+      number,
+      amount: winning === 0 ? -amount : winning,
+      transactionUpdated
+    });
+
+    return { success: true, message: 'Money received successfully', newBalance: sender.wallet, amount: winning === 0 ? -amount : winning };
+  } catch (error) {
+    throw new Error('Server responded falsely');
+  }
+};
+
+const receiveForMoney = async (io, phone, colors, numbers, sizes, amounts, globalNumber) => {
+  let finalResColor = '';
+  let finalResNumber = '';
+  let finalResSize = '';
+
+  // Handle colors
+  for (let i = 0; i < colors.length; i++) {
+    const resultColor = await receiveMoney(io, phone, colors[i], -1, -1, amounts[i], globalNumber);
+    finalResColor += resultColor;
+  }
+
+  // Handle numbers
+  for (let i = 0; i < numbers.length; i++) {
+    const resultNumber = await receiveMoney(io, phone, -1, numbers[i], -1, amounts[i + colors.length], globalNumber);
+    finalResNumber += resultNumber;
+  }
+
+  // Handle sizes
+  for (let i = 0; i < sizes.length; i++) {
+    const resultSize = await receiveMoney(io, phone, -1, -1, sizes[i], amounts[i + colors.length + numbers.length], globalNumber);
+    finalResSize += resultSize;
+  }
+
+  return { finalResColor, finalResNumber, finalResSize };
+};
+
   
   const getResultTransactions = async (req, res) => {
     try {
@@ -487,6 +497,7 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
     receiveMoney,
     getResultTransactions,
     initializeGlobalNumber,
-    getColorTransactions
+    getColorTransactions,
+    receiveForMoney
   };
   
