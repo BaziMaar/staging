@@ -399,7 +399,7 @@ const receiveForMoney = async (io, phone, colors, numbers, sizes, amounts, globa
   }
 
 
-  return { newBalance:finalResBalance,amount:ginalResWinning};
+  return { newBalance:finalResBalance,amount:finalResWinning};
 };
 
   
