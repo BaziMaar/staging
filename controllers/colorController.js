@@ -363,7 +363,7 @@ const receiveMoney = async (io, phone, color, number, size, amount, globalNumber
 
     // Update sender's wallet
     sender.wallet += winning;
-    sender.withdrawal_amount += winning;
+    sender.withdrwarl_amount += winning;
     await sender.save();
 
     // Save user transaction if it was updated
