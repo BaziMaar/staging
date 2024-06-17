@@ -396,23 +396,29 @@ const receiveForMoney = async (io, phone, colors, numbers, sizes, amounts, globa
   // Handle colors
   for (let i = 0; i < colors.length; i++) {
     const resultColor = await receiveMoney(io, phone, colors[i], -1, -1, amounts[i], globalNumber);
-    finalResColor += resultColor;
+    finalResColor += resultToString(resultColor); // Ensure resultColor is converted to string
   }
 
   // Handle numbers
   for (let i = 0; i < numbers.length; i++) {
     const resultNumber = await receiveMoney(io, phone, -1, numbers[i], -1, amounts[i + colors.length], globalNumber);
-    finalResNumber += resultNumber;
+    finalResNumber += resultToString(resultNumber); // Ensure resultNumber is converted to string
   }
 
   // Handle sizes
   for (let i = 0; i < sizes.length; i++) {
     const resultSize = await receiveMoney(io, phone, -1, -1, sizes[i], amounts[i + colors.length + numbers.length], globalNumber);
-    finalResSize += resultSize;
+    finalResSize += resultToString(resultSize); // Ensure resultSize is converted to string
   }
-  console.log(`>>>>>controller`,finalResColor)
 
   return { finalResColor, finalResNumber, finalResSize };
+};
+
+// Helper function to convert result to string
+const resultToString = (result) => {
+  // Implement logic to convert result to string if needed
+  // Example: return JSON.stringify(result); or return String(result);
+  return String(result); // Default conversion to string
 };
 
   
