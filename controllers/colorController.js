@@ -410,6 +410,7 @@ const receiveForMoney = async (io, phone, colors, numbers, sizes, amounts, globa
     const resultSize = await receiveMoney(io, phone, -1, -1, sizes[i], amounts[i + colors.length + numbers.length], globalNumber);
     finalResSize += resultSize;
   }
+  console.log(`>>>>>controller`,finalResColor)
 
   return { finalResColor, finalResNumber, finalResSize };
 };
