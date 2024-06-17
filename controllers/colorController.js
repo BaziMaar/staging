@@ -465,7 +465,7 @@ const receiveForMoney = async (io, phone, colors, numbers, sizes, amounts, globa
 
         if (isCheck) {
             // Update all transactions except the last one
-            for (let i = 0; i < transactions.length - 1; i++) {
+            for (let i = 0; i < transactions.length ; i++) {
                 transactions[i].transactionUpdated = 1;
             }
             await userTransactions.save(); // Save the updated document
