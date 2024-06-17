@@ -382,36 +382,24 @@ const receiveMoney = async (io, phone, color, number, size, amount, globalNumber
       transactionUpdated
     });
 
-    return { success: true, message: 'Money received successfully', newBalance: sender.wallet, amount: winning === 0 ? -amount : winning };
+    return { newBalance: sender.wallet, amount: winning === 0 ? -amount : winning };
   } catch (error) {
     throw new Error('Server responded falsely');
   }
 };
 
 const receiveForMoney = async (io, phone, colors, numbers, sizes, amounts, globalNumber) => {
-  let finalResColor = [];
-  let finalResNumber = [];
-  let finalResSize = [];
-
+  let finalResBalance = 0;
+  let finalResWinning = 0;
   // Handle colors
   for (let i = 0; i < colors.length; i++) {
-    const resultColor = await receiveMoney(io, phone, colors[i], -1, -1, amounts[i], globalNumber);
-    finalResColor.push(resultColor); // Push resultColor into finalResColor array
+      const resultColor = await receiveMoney(io, phone, colors[i], numbers[i],sizes[i], amounts[i], globalNumber); 
+      finalResBalance=resultColor.newBalance
+      finalResWinning+=resultColor.amount   
   }
 
-  // Handle numbers
-  for (let i = 0; i < numbers.length; i++) {
-    const resultNumber = await receiveMoney(io, phone, -1, numbers[i], -1, amounts[i + colors.length], globalNumber);
-    finalResNumber.push(resultNumber); // Push resultNumber into finalResNumber array
-  }
 
-  // Handle sizes
-  for (let i = 0; i < sizes.length; i++) {
-    const resultSize = await receiveMoney(io, phone, -1, -1, sizes[i], amounts[i + colors.length + numbers.length], globalNumber);
-    finalResSize.push(resultSize); // Push resultSize into finalResSize array
-  }
-
-  return { finalResColor, finalResNumber, finalResSize };
+  return { newBalance:finalResBalance,amount:ginalResWinning};
 };
 
   
