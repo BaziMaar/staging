@@ -434,10 +434,9 @@ const receiveForMoney = async (io, phone, colors, numbers, sizes, amounts, globa
     const { phone } = req.query;
     const currentDate = getCurrentDate();
     const finalNumber = String(currentDate) + String(globalNumber);
-    
+
     // Debugging log for finalNumber
     console.log('>>> finalNumber:', finalNumber);
-    
 
     try {
         const userTransactions = await LuckyTransaction.findOne({ phone });
@@ -465,7 +464,10 @@ const receiveForMoney = async (io, phone, colors, numbers, sizes, amounts, globa
         console.log('>>> isCheck:', isCheck);
 
         if (isCheck) {
-            lastTransaction.transactionUpdated = 1;
+            // Update all transactions except the last one
+            for (let i = 0; i < transactions.length - 1; i++) {
+                transactions[i].transactionUpdated = 1;
+            }
             await userTransactions.save(); // Save the updated document
         }
 
