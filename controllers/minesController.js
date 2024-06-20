@@ -1,6 +1,7 @@
 const MinesTransaction=require('../models/minesTransactionModel');
 const User = require('../models/userModel');
 const Ref=require('../models/referModel');
+const MinesEntryTransaction=require('../models/MinesEntryModel')
 const getMatrix = async (req, res) => {
     try {
         const number = req.query.number; // Assuming 'number' is the query parameter name
@@ -111,17 +112,14 @@ const flipMat = (matrix) => {
   };
 
 
-const sendMinesMoney = async (req, res) => {
-    const phone = req.body.phone;
-    const time = req.body.multiply;
-    const amount = req.body.amount;
+  const sendMinesMoney = async (req, res) => {
+    const { phone, multiply: time, amount } = req.body;
   
     try {
       let userTransaction = await MinesTransaction.findOne({ phone });
   
       if (!userTransaction) {
         // Create a new transaction only if it doesn't exist
-        // Otherwise, use the existing transaction
         userTransaction = new MinesTransaction({
           phone,
           transactions: []
@@ -146,6 +144,15 @@ const sendMinesMoney = async (req, res) => {
       sender.wallet -= amount;
       await sender.save();
   
+      // Save the entry in MinesEntryTransaction model
+      const minesEntry = new MinesEntryTransaction({
+        phone,
+        time,
+        amount: -amount
+      });
+  
+      await minesEntry.save();
+  
       return res.status(200).json({ phone, newBalance: sender.wallet, time });
     } catch (error) {
       console.error(error); // Log the error for debugging
@@ -154,9 +161,7 @@ const sendMinesMoney = async (req, res) => {
   };
   
   const receiveMinesMoney = async (req, res) => {
-    const phone = req.body.phone;
-    const time = req.body.multiply;
-    const amount = req.body.amount;
+    const { phone, multiply: time, amount } = req.body;
   
     try {
       const [sender, userTransaction] = await Promise.all([
@@ -183,7 +188,6 @@ const sendMinesMoney = async (req, res) => {
         const referralBonus = 0.05 * amount * (time - 1.00);
         sender.wallet += referralBonus;
         sender.referred_wallet += referralBonus;
-        await sender.save();
   
         for (const referredUser of referredUsers) {
           referredUser.referred_wallet += referralBonus;
@@ -196,8 +200,7 @@ const sendMinesMoney = async (req, res) => {
               avatar: sender.avatar,
               amount: referralBonus
             });
-          } 
-          else {
+          } else {
             ref = new Ref({
               phone: referredUser.phone,
               referred: [{
@@ -212,8 +215,17 @@ const sendMinesMoney = async (req, res) => {
       }
   
       sender.wallet += amount * time;
-      sender.withdrwarl_amount += amount * time;
-      await Promise.all([newUserTransaction.save(), sender.save()]);
+      sender.withdrawal_amount += amount * time;
+      newUserTransaction.transactions.push({ time, amount: amount * time });
+  
+      // Save the entry in MinesEntryTransaction model
+      const minesEntry = new MinesEntryTransaction({
+        phone,
+        time,
+        amount: amount * time
+      });
+  
+      await Promise.all([newUserTransaction.save(), sender.save(), minesEntry.save()]);
   
       // Send the response to the client
       return res.status(200).json({ success: true, message: 'Money received successfully', newBalance: sender.wallet, time });
