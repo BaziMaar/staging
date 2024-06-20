@@ -150,7 +150,7 @@ const generateAndBroadcastNumber = (io) => {
 
 
 
-const sendMoney = async (io, phone, time, amount) => {
+const sendMoney = async (io, phone, time, amount, avatar) => {
   try {
     let userTransaction = await Transaction.findOne({ phone });
 
@@ -180,6 +180,7 @@ const sendMoney = async (io, phone, time, amount) => {
       topBets.push({ phone, amount });
       topBets.sort((a, b) => b.amount - a.amount);
     }
+    
 
     // Use a batch save for better performance
     await Promise.all([userTransaction.save()]);
@@ -191,13 +192,10 @@ const sendMoney = async (io, phone, time, amount) => {
     }
 
     if (sender.wallet < amount) {
-      io.emit('walletUpdated', { phone, error: 'Insufficient Funds' });
-      return { success: false, message: 'Insufficient Funds' };
+      io.emit('walletUpdated', { error: 'Insufficient Funds' });
     } else {
       sender.wallet -= amount;
       await sender.save();
-
-      // Save the entry in AviatorEntryTransaction model
       const aviatorEntry = new AviatorEntryTransaction({
         phone,
         time,
@@ -215,6 +213,7 @@ const sendMoney = async (io, phone, time, amount) => {
     throw new Error('Failed to send money. Please try again.');
   }
 };
+
 
 const receiveMoney = async (io, phone, time, amount) => {
   try {
@@ -266,17 +265,15 @@ const receiveMoney = async (io, phone, time, amount) => {
     }
 
     sender.wallet += amount * time;
-    sender.withdrawal_amount += amount * time;
+    sender.withdrwarl_amount += amount * time;
     await sender.save();
-    newUserTransaction.transactions.push({ time, amount: amount * time });
-
-    // Save the entry in AviatorEntryTransaction model
     const aviatorEntry = new AviatorEntryTransaction({
       phone,
       time,
       amount: amount * time
     });
     await aviatorEntry.save();
+    newUserTransaction.transactions.push({ time, amount: amount * time });
 
     // Use a batch save for better performance
     await Promise.all([newUserTransaction.save(), sender.save()]);
