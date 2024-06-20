@@ -1,7 +1,7 @@
 const LuckyTransaction = require("../models/LuckyTransictionsModel.js");
 const User = require("../models/userModel.js");  // Import the User model
 const Ref=require('../models/referModel')
-const LuckyEntryTransaction=('../models/LuckyTransactionsEntryModel.js')
+const LuckyEntryTransaction=require('../models/LuckyTransactionsEntryModel.js')
 let firstBet = 0;
 let secondBet = 0;
 let thirdBet = 0;
