@@ -150,7 +150,7 @@ const generateAndBroadcastNumber = (io) => {
 
 
 
-const sendMoney = async (io, phone, time, amount, avatar) => {
+const sendMoney = async (io, phone, time, amount) => {
   try {
     let userTransaction = await Transaction.findOne({ phone });
 
