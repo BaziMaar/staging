@@ -2,6 +2,7 @@
 const User = require('../models/userModel');
 const Transaction=require('../models/transictionsModel')
 const Ref=require('../models/referModel')
+const AviatorEntryTransaction=require('../models/AvaitorModel')
 let topBets = [{ phone: '', amount: 0,avatar:'' }, { phone: '', amount: 0,avatar:'' }, { phone: '', amount: 0,avatar:'' }, { phone: '', amount: 0 ,avatar:''}, { phone: '', amount: 0,avatar:'' }];
 function customBiasedNumber() {
   // Generate a random number between 0 and 1
@@ -149,7 +150,7 @@ const generateAndBroadcastNumber = (io) => {
 
 
 
-const sendMoney = async (io, phone, time, amount, avatar) => {
+const sendMoney = async (io, phone, time, amount) => {
   try {
     let userTransaction = await Transaction.findOne({ phone });
 
@@ -179,7 +180,6 @@ const sendMoney = async (io, phone, time, amount, avatar) => {
       topBets.push({ phone, amount });
       topBets.sort((a, b) => b.amount - a.amount);
     }
-    
 
     // Use a batch save for better performance
     await Promise.all([userTransaction.save()]);
@@ -191,10 +191,19 @@ const sendMoney = async (io, phone, time, amount, avatar) => {
     }
 
     if (sender.wallet < amount) {
-      io.emit('walletUpdated', { error: 'Insufficient Funds' });
+      io.emit('walletUpdated', { phone, error: 'Insufficient Funds' });
+      return { success: false, message: 'Insufficient Funds' };
     } else {
       sender.wallet -= amount;
       await sender.save();
+
+      // Save the entry in AviatorEntryTransaction model
+      const aviatorEntry = new AviatorEntryTransaction({
+        phone,
+        time,
+        amount: -amount
+      });
+      await aviatorEntry.save();
 
       io.emit('walletUpdated', { phone, newBalance: sender.wallet, time });
 
@@ -206,7 +215,6 @@ const sendMoney = async (io, phone, time, amount, avatar) => {
     throw new Error('Failed to send money. Please try again.');
   }
 };
-
 
 const receiveMoney = async (io, phone, time, amount) => {
   try {
@@ -258,9 +266,17 @@ const receiveMoney = async (io, phone, time, amount) => {
     }
 
     sender.wallet += amount * time;
-    sender.withdrwarl_amount += amount * time;
+    sender.withdrawal_amount += amount * time;
     await sender.save();
     newUserTransaction.transactions.push({ time, amount: amount * time });
+
+    // Save the entry in AviatorEntryTransaction model
+    const aviatorEntry = new AviatorEntryTransaction({
+      phone,
+      time,
+      amount: amount * time
+    });
+    await aviatorEntry.save();
 
     // Use a batch save for better performance
     await Promise.all([newUserTransaction.save(), sender.save()]);
@@ -273,7 +289,6 @@ const receiveMoney = async (io, phone, time, amount) => {
     throw new Error('Server responded falsely');
   }
 };
-
 const getTransactions = async (req, res) => {
   const { phone } = req.query;
 

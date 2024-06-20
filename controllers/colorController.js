@@ -2,6 +2,7 @@ const LuckyTransaction = require("../models/ColorTransictionsModel.js");
 const User = require("../models/userModel.js");  // Import the User model
 const Ref=require('../models/referModel')
 const Result=require('../models/resultModel.js')
+const ColorEntryTransaction=require('../models/ColorTransactionsEntryModel.js')
 let firstBet = 0;
 let secondBet = 0;
 let thirdBet = 0;
@@ -210,7 +211,7 @@ const storeCurrentData=async()=>{
   catch(error){
   }
 }
-const sendColorMoney = async (io, phone, color, number, size, amount,globalNumber) => {
+const sendColorMoney = async (io, phone, color, number, size, amount, globalNumber) => {
   try {
     count++;
     let userTransaction = await LuckyTransaction.findOne({ phone });
@@ -226,7 +227,6 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
       });
     }
 
-    
     if (sender.wallet < amount) {
       io.emit('walletColorUpdated', { phone: phone, error: 'Insufficient Funds' });
       return { success: false, message: 'Insufficient Funds' };
@@ -265,16 +265,28 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
       return { success: false, message: 'Invalid color, size, or number' };
     }
 
-
-    userTransaction.transactions.push({ color,number,size, amount: -amount,globalNumber:globalNumber,orignalNumber:winner,transactionUpdated:0});
+    userTransaction.transactions.push({ color, number, size, amount: -amount, globalNumber: globalNumber, orignalNumber: winner, transactionUpdated: 0 });
     await userTransaction.save();
+
+    // Save the entry in ColorEntryTransaction model
+    const colorEntry = new ColorEntryTransaction({
+      phone,
+      color,
+      number,
+      size,
+      amount: -amount,
+      globalNumber,
+      orignalNumber: winner,
+      transactionUpdated: 0
+    });
+    await colorEntry.save();
 
     sender.wallet -= amount;
     await sender.save();
-    io.emit('walletColorUpdated', { phone, newBalance: sender.wallet, color, size, number,globalNumber });
 
-    return { success: true, message: 'Money sent successfully', newBalance: sender.wallet, color, size, number,globalNumber };
-    
+    io.emit('walletColorUpdated', { phone, newBalance: sender.wallet, color, size, number, globalNumber });
+
+    return { success: true, message: 'Money sent successfully', newBalance: sender.wallet, color, size, number, globalNumber };
   } catch (error) {
     io.emit('walletColorUpdated', { error: error.message });
     throw new Error('Failed to send money. Please try again.');
@@ -334,6 +346,20 @@ const receiveMoney = async (io, phone, color, number, size, amount, globalNumber
       }
     }
 
+    // Save the updated transaction in ColorEntryTransaction model
+    if (transactionUpdated) {
+      await ColorEntryTransaction.updateOne(
+        { phone, globalNumber },
+        {
+          $set: {
+            orignalNumber: winner,
+            amount: winning === 0 ? -amount : winning,
+            transactionUpdated: 1
+          }
+        }
+      );
+    }
+
     // Handle referral bonus if the referred user exists
     const referredUser = await User.findOne({ refer_id: { $in: sender.user_id } });
     if (referredUser) {
@@ -363,13 +389,8 @@ const receiveMoney = async (io, phone, color, number, size, amount, globalNumber
 
     // Update sender's wallet
     sender.wallet += winning;
-    sender.withdrwarl_amount += winning;
+    sender.withdrawal_amount += winning;
     await sender.save();
-
-    // Save user transaction if it was updated
-    if (transactionUpdated) {
-      await userTransaction.save();
-    }
 
     // Emit socket event with updated wallet info
     io.emit('walletColorUpdated', {
@@ -387,7 +408,6 @@ const receiveMoney = async (io, phone, color, number, size, amount, globalNumber
     throw new Error('Server responded falsely');
   }
 };
-
 const receiveForMoney = async (io, phone, colors, numbers, sizes, amounts, globalNumber) => {
   let finalResBalance = 0;
   let finalResWinning = 0;
