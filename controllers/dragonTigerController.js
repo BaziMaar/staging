@@ -227,12 +227,6 @@ const sendDragonMoney = async (io, phone, color, amount) => {
     } else {
       sender.wallet -= amount;
       await sender.save();
-      const luckyEntry = new LuckyEntryTransaction({
-        phone,
-        color,
-        amount: -amount
-      });
-      await luckyEntry.save();
 
       io.emit('walletLuckyUpdated', { phone, newBalance: sender.wallet, color });
     
@@ -304,12 +298,7 @@ const sendDragonMoney = async (io, phone, color, amount) => {
       sender.withdrwarl_amount += winning;
       await sender.save();
       newUserTransaction.transactions.push({color: color, amount:winning});
-      const luckyEntry = new LuckyEntryTransaction({
-        phone,
-        color,
-        amount: winning
-      });
-      await luckyEntry.save();
+  
       // Use a batch save for better performance
       await Promise.all([newUserTransaction.save(), sender.save()]);
   
@@ -319,8 +308,7 @@ const sendDragonMoney = async (io, phone, color, amount) => {
     } catch (error) {
       throw new Error('Server responded falsely');
     }
-  };
-  
+  };  
   const getDragonTransactions = async (req, res) => {
     const { phone } = req.query;
   
