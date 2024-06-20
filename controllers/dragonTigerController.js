@@ -1,7 +1,7 @@
 const LuckyTransaction = require("../models/DragonTigerModel.js");
 const User = require("../models/userModel.js");  // Import the User model
 const Ref=require('../models/referModel')
-const LuckyEntryTransaction=require('../models/DragonTigerEntryModel.js')
+const DragonTigerEntryTransaction=require('../models/DragonTigerEntryModel.js')
 
 let firstBet = 0;
 let secondBet = 0;
@@ -220,6 +220,12 @@ const sendDragonMoney = async (io, phone, color, amount) => {
 
     userTransaction.transactions.push({ color, amount: -amount });
     await userTransaction.save(); // Removed unnecessary array wrapping
+    const dragonEntry = new DragonTigerEntryTransaction({
+      phone,
+      color,
+      amount: -amount
+    });
+    await dragonEntry.save();
     
     if (sender.wallet < amount) {
       io.emit('walletLuckyUpdated', {phone:phone, error: 'Insufficient Funds' });
@@ -297,6 +303,12 @@ const sendDragonMoney = async (io, phone, color, amount) => {
       sender.wallet +=winning;
       sender.withdrwarl_amount += winning;
       await sender.save();
+      const dragonEntry = new DragonTigerEntryTransaction({
+        phone,
+        color,
+        amount: winning
+      });
+      await dragonEntry.save();
       newUserTransaction.transactions.push({color: color, amount:winning});
   
       // Use a batch save for better performance
