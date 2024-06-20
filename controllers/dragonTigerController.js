@@ -205,28 +205,28 @@ const sendDragonMoney = async (io, phone, color, amount) => {
       });
     }
 
+  
+
     if (color === 0) {
-      am1 += amount;
+      am1+=amount
       firstBet += 9 * amount; // Adjusted the multiplier
     } else if (color === 1) {
-      am2 += amount;
+      am2+=amount
       secondBet += 2 * amount; // Adjusted the multiplier
     } else {
-      am3 += amount;
+      am3+=amount
       thirdBet += 2 * amount; // Adjusted the multiplier
     }
 
     userTransaction.transactions.push({ color, amount: -amount });
-    await userTransaction.save();
-
+    await userTransaction.save(); // Removed unnecessary array wrapping
+    
     if (sender.wallet < amount) {
-      io.emit('walletLuckyUpdated', { phone, error: 'Insufficient Funds' });
-      return { success: false, message: 'Insufficient Funds' };
+      io.emit('walletLuckyUpdated', {phone:phone, error: 'Insufficient Funds' });
+      return { success: false, message: 'InSufficient FUnds' };
     } else {
       sender.wallet -= amount;
       await sender.save();
-
-      // Save the entry in LuckyEntryTransaction model
       const luckyEntry = new LuckyEntryTransaction({
         phone,
         color,
@@ -235,8 +235,8 @@ const sendDragonMoney = async (io, phone, color, amount) => {
       await luckyEntry.save();
 
       io.emit('walletLuckyUpdated', { phone, newBalance: sender.wallet, color });
-
-      return { success: true, message: 'Money sent successfully', newBalance: sender.wallet, color };
+    
+      return { success: true, message: 'Money sent successfully',newBalance:sender.wallet,color };
     }
   } catch (error) {
     io.emit('walletLuckyUpdated', { error: 'Failed to send money. Please try again.' });
@@ -244,84 +244,82 @@ const sendDragonMoney = async (io, phone, color, amount) => {
   }
 };
   
-const receiveMoney = async (io, phone, color, amount) => {
-  let winning = 0;
-  try {
-    const [sender, userTransaction] = await Promise.all([
-      User.findOne({ phone }),
-      LuckyTransaction.findOne({ phone })
-    ]);
-    if (!sender) {
-      throw new Error('Sender not found');
-    }
-
-    // Initialize userTransaction if not found
-    let newUserTransaction = userTransaction;
-    if (!newUserTransaction) {
-      newUserTransaction = new LuckyTransaction({
-        phone,
-        transactions: []
-      });
-    }
-
-    if (color === winner) {
-      if (color === 0) {
-        winning = amount * 9;
-      } else {
-        winning = amount * 2;
+  const receiveMoney = async (io, phone, color, amount) => {
+    let winning=0;
+    try {
+      const [sender, userTransaction] = await Promise.all([
+        User.findOne({ phone }),
+        LuckyTransaction.findOne({ phone })
+      ]);
+      if (!sender) {
+        throw new Error('Sender not found');
       }
-    }
-
-    const referredUsers = await User.findOne({ refer_id: { $in: sender.user_id } });
-    if (referredUsers) {
-      const referralBonus = 0.05 * winning;
-
-      // Add the referral bonus to the referring user's account
-      referredUsers.referred_wallet += referralBonus;
-      let ref = await Ref.findOne({ phone: referredUsers.phone });
-      if (ref) {
-        ref.referred.push({
-          user_id: sender.user_id,
-          avatar: sender.avatar,
-          amount: referralBonus
+      // Initialize userTransaction if not found
+      let newUserTransaction = userTransaction;
+      if (!newUserTransaction) {
+        newUserTransaction = new LuckyTransaction({
+          phone,
+          transactions: []
         });
-      } else {
-        ref = new Ref({
-          phone: referredUsers.phone,
-          referred: [{
+      }
+      if(color===winner){
+        if(color===0){
+          winning=amount*9;
+        }
+        else{
+          winning=amount*2;
+        }
+
+      }
+  
+      const referredUsers = await User.findOne({ refer_id: { $in: sender.user_id } });
+      if (referredUsers) {
+        const referralBonus = 0.05 * winning;
+  
+        // Add the referral bonus to the referring user's account
+        referredUsers.referred_wallet += referralBonus;
+        let ref = await Ref.findOne({ phone: referredUsers.phone });
+        if (ref) {
+          ref.referred.push({
             user_id: sender.user_id,
             avatar: sender.avatar,
             amount: referralBonus
-          }]
-        });
+          });
+        } else {
+          ref = new Ref({
+            phone: referredUsers.phone,
+            referred: [{
+              user_id: sender.user_id,
+              avatar: sender.avatar,
+              amount: referralBonus
+            }]
+          });
+        }
+  
+        // Save the updated referring user and the Ref model
+        await Promise.all([referredUsers.save(), ref.save()]);
       }
-
-      // Save the updated referring user and the Ref model
-      await Promise.all([referredUsers.save(), ref.save()]);
+  
+      sender.wallet +=winning;
+      sender.withdrwarl_amount += winning;
+      await sender.save();
+      newUserTransaction.transactions.push({color: color, amount:winning});
+      const luckyEntry = new LuckyEntryTransaction({
+        phone,
+        color,
+        amount: winning
+      });
+      await luckyEntry.save();
+      // Use a batch save for better performance
+      await Promise.all([newUserTransaction.save(), sender.save()]);
+  
+      io.emit('walletLuckyUpdated', { phone, newBalance: sender.wallet });
+  
+      return { success: true, message: 'Money received successfully',newBalance:sender.wallet };
+    } catch (error) {
+      throw new Error('Server responded falsely');
     }
-
-    sender.wallet += winning;
-    sender.withdrawal_amount += winning;
-    await sender.save();
-    newUserTransaction.transactions.push({ color, amount: winning });
-
-    // Save the entry in LuckyEntryTransaction model
-    const luckyEntry = new LuckyEntryTransaction({
-      phone,
-      color,
-      amount: winning
-    });
-    await luckyEntry.save();
-
-    await Promise.all([newUserTransaction.save(), sender.save()]);
-
-    io.emit('walletLuckyUpdated', { phone, newBalance: sender.wallet });
-
-    return { success: true, message: 'Money received successfully', newBalance: sender.wallet };
-  } catch (error) {
-    throw new Error('Server responded falsely');
-  }
-};
+  };
   
   const getDragonTransactions = async (req, res) => {
     const { phone } = req.query;
