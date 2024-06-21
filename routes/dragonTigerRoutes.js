@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 
-const { generateAndBroadcastNumber, sendDragonMoney ,receiveMoney,getDragonTransactions} = require('../controllers/dragonTigerController');
+const { generateAndBroadcastNumber, sendDragonMoney ,receiveMoney,getDragonTransactions, getDragonEntry} = require('../controllers/dragonTigerController');
 const { verifyDeviceId } = require('../middlewares/verifyDeviceId');
 
 module.exports = (io) => {
@@ -16,6 +16,7 @@ module.exports = (io) => {
     res.send('Generate Lucky route');
   });
   router.get('/getDragonTrans',getDragonTransactions)
+  router.get('/getDragonEntry',getDragonEntry)
   // Route to handle sending money
   router.post('/sendDragonMoney',verifyDeviceId, async (req, res) => {
     const { phone, color, amount,avatar } = req.body;

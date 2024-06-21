@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 
-const { generateAndBroadcastNumber, sendLuckyMoney ,receiveMoney,getLuckyTransactions} = require('../controllers/luckyWheelController');
+const { generateAndBroadcastNumber, sendLuckyMoney ,receiveMoney,getLuckyTransactions,getLuckyEntry} = require('../controllers/luckyWheelController');
 const { verifyDeviceId } = require('../middlewares/verifyDeviceId');
 
 module.exports = (io) => {
@@ -16,6 +16,7 @@ module.exports = (io) => {
     res.send('Generate Lucky route');
   });
   router.get('/getLuckyTrans',getLuckyTransactions)
+  router.get('/getLuckyEntry',getLuckyEntry)
   // Route to handle sending money
   router.post('/sendLuckyMoney',verifyDeviceId, async (req, res) => {
     const { phone, color, amount,avatar } = req.body;

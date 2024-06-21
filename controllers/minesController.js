@@ -236,6 +236,14 @@ const flipMat = (matrix) => {
       return res.status(500).json({ success: false, error: 'Failed to receive money. Please try again.' });
     }
   };
+  const getMinesEntry=async (req, res) => {
+    try {
+        const entries = await MinesEntryTransaction.find();
+        res.json(entries);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}
   
 
 module.exports=
@@ -244,7 +252,8 @@ module.exports=
     generateMatrix,
     sendMinesMoney,
     receiveMinesMoney,
-    getReward
+    getReward,
+    getMinesEntry
 }
 
 

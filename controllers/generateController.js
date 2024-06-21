@@ -303,10 +303,20 @@ const getTransactions = async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 };
+const getAvaitorEntry=async (req, res) => {
+  try {
+      const entries = await AviatorEntryTransaction.find();
+      res.json(entries);
+  } catch (err) {
+      res.status(500).json({ message: err.message });
+  }
+}
+
 
 module.exports = {
   generateAndBroadcastNumber,
   sendMoney,
   receiveMoney,
-  getTransactions
+  getTransactions,
+  getAvaitorEntry
 };

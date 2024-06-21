@@ -502,7 +502,14 @@ const receiveForMoney = async (io, phone, colors, numbers, sizes, amounts, globa
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
-
+const getColorEntry=async (req, res) => {
+  try {
+      const entries = await ColorEntryTransaction.find();
+      res.json(entries);
+  } catch (err) {
+      res.status(500).json({ message: err.message });
+  }
+}
 
 
   
@@ -513,6 +520,7 @@ const receiveForMoney = async (io, phone, colors, numbers, sizes, amounts, globa
     getResultTransactions,
     initializeGlobalNumber,
     getColorTransactions,
-    receiveForMoney
+    receiveForMoney,
+    getColorEntry
   };
   

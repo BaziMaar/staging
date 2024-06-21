@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 
-const { generateAndBroadcastNumber, sendColorMoney ,receiveForMoney,getResultTransactions,getColorTransactions} = require('../controllers/colorController');
+const { generateAndBroadcastNumber, sendColorMoney ,receiveForMoney,getResultTransactions,getColorTransactions, getColorEntry} = require('../controllers/colorController');
 const { verifyDeviceId } = require('../middlewares/verifyDeviceId');
 
 module.exports = (io) => {
@@ -17,6 +17,8 @@ module.exports = (io) => {
   });
   router.get('/getColorResultTrans',getResultTransactions)
   router.get('/getColorTrans',getColorTransactions)
+  router.get('/getColorEntry',getColorEntry)
+
   // Route to handle sending money
   router.post('/sendColorMoney', async (req, res) => {
     const { phone, color,number,size, amount,avatar,globalNumber } = req.body;

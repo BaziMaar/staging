@@ -297,11 +297,20 @@ const receiveMoney = async (io, phone, color, amount) => {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   };
+  const getLuckyEntry=async (req, res) => {
+    try {
+        const entries = await LuckyEntryTransaction.find();
+        res.json(entries);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}
   
   module.exports = {
     generateAndBroadcastNumber,
     sendLuckyMoney,
     receiveMoney,
-    getLuckyTransactions
+    getLuckyTransactions,
+    getLuckyEntry
   };
   

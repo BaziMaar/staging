@@ -337,11 +337,20 @@ const sendDragonMoney = async (io, phone, color, amount) => {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   };
+  const getDragonEntry=async (req, res) => {
+    try {
+        const entries = await DragonTigerEntryTransaction.find();
+        res.json(entries);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}
   
   module.exports = {
     generateAndBroadcastNumber,
     sendDragonMoney,
     receiveMoney,
-    getDragonTransactions
+    getDragonTransactions,
+    getDragonEntry
   };
   
