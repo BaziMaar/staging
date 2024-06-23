@@ -20,7 +20,7 @@ module.exports = (io) => {
   router.get('/getColorEntry',getColorEntry)
 
   // Route to handle sending money
-  router.post('/sendColorMoney', async (req, res) => {
+  router.post('/sendColorMoney',verifyDeviceId, async (req, res) => {
     const { phone, color,number,size, amount,avatar,globalNumber } = req.body;
 
     try {
@@ -31,7 +31,7 @@ module.exports = (io) => {
       res.status(500).json({ error: 'Internal Server Error' });
     }
   });
-  router.post('/receiveColorMoney', async (req, res) => {
+  router.post('/receiveColorMoney',verifyDeviceId, async (req, res) => {
     const { phone, color,number,size, amount,globalNumber } = req.body;
 
     try {

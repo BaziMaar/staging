@@ -9,5 +9,5 @@ mines_route.get('/getMines',getVerifyDeviceId, minesController.getMatrix);
 mines_route.post('/sendMinesMoney',verifyDeviceId, minesController.sendMinesMoney);
 mines_route.post('/receiveMinesMoney', verifyDeviceId,minesController.receiveMinesMoney);
 mines_route.get(`/getReward`,minesController.getReward)
-mines_route.get(`/getReward`,minesController.getMinesEntry)
+mines_route.get(`/getMinesEntry`,minesController.getMinesEntry)
 module.exports = mines_route;
