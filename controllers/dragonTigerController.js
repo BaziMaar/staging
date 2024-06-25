@@ -155,7 +155,7 @@ const generateAndBroadcastNumber = (io) => {
           winner=0
           count=0
         }
-        if (secondBet <= thirdBet) {
+        else if(secondBet <= thirdBet) {
           tigerCard=Math.floor(Math.random()*6)+1
           dragonCard=Math.floor(Math.random()*6)+7;
           dragonColor=Math.floor(Math.random()*4)+1;
