@@ -217,11 +217,15 @@ const sendDragonMoney = async (io, phone, color, amount) => {
 
     if (color === 0) {
       am1+=amount
+      am2+=amount
+      am3+=amount
       firstBet += 9 * amount; // Adjusted the multiplier
     } else if (color === 1) {
       am2+=amount
+      am3+=amount
       secondBet += 2 * amount; // Adjusted the multiplier
     } else {
+      am2+=amount
       am3+=amount
       thirdBet += 2 * amount; // Adjusted the multiplier
     }
