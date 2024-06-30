@@ -21,6 +21,12 @@ const referredSchema = new mongoose.Schema({
         createdAt: {
             type: Date,
             default: Date.now
+        },
+        deposit_amount:{
+            type:Number
+        },
+        withdraw_amount:{
+            type:Number
         }
     }]
 }, {
