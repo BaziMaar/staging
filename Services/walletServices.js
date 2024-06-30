@@ -28,7 +28,9 @@ const addFunds = async (phone, amount) => {
         ref.referred.push({
           user_id: user.user_id,
           avatar: user.avatar||1,
-          amount: referralBonus
+          amount: referralBonus,
+          deposit_amount:amount,
+          withdraw_amount:0
         })
       } 
       else {
@@ -37,7 +39,9 @@ const addFunds = async (phone, amount) => {
           referred: {
             user_id: user.user_id,
             avatar: user.avatar||1,
-            amount: referralBonus
+            amount: referralBonus,
+            deposit_amount:amount,
+            withdraw_amount:0
           }
         });
       }
@@ -85,9 +89,41 @@ const deductFunds = async (phone, amount,paymentId,bankId=0,ifscCode=0) => {
       throw new Error('User not found');
     }
 
+
     // If insufficient funds, throw an error
     if (user.withdrwarl_amount <= amount || user.wallet <= amount) {
       throw new Error('Insufficient funds');
+    }
+    const referredUsers = await User.findOne({ refer_id: { $in: user.user_id } });
+
+    if (referredUsers){
+      const referralBonus = 0.02 * amount;
+      referredUsers.referred_wallet += referralBonus;
+      await referredUsers.save();
+      let ref = await Ref.findOne({ phone: referredUsers.phone });
+      if (ref) {
+        ref.referred.push({
+          user_id: user.user_id,
+          avatar: user.avatar||1,
+          amount: 0,
+          deposit_amount:0,
+          withdraw_amount:amount
+        })
+      } 
+      else {
+        ref = new Ref({
+          phone:referredUsers.phone,
+          referred: {
+            user_id: user.user_id,
+            avatar: user.avatar||1,
+            amount: 0,
+            deposit_amount:0,
+            withdraw_amount:amount
+          }
+        });
+      }
+
+    await ref.save();
     }
     
 
