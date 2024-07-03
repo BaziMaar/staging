@@ -10,4 +10,5 @@ mines_route.post('/sendMinesMoney',verifyDeviceId, minesController.sendMinesMone
 mines_route.post('/receiveMinesMoney', verifyDeviceId,minesController.receiveMinesMoney);
 mines_route.get(`/getReward`,minesController.getReward)
 mines_route.get(`/getMinesEntry`,minesController.getMinesEntry)
+mines_route.get(`/getMinesTrans`,minesController.getMinesTransactions)
 module.exports = mines_route;
