@@ -286,7 +286,7 @@ const sendDragonMoney = async (io, phone, color, amount) => {
   
       const referredUsers = await User.findOne({ refer_id: { $in: sender.user_id } });
       if (referredUsers) {
-        const referralBonus = 0.05 * winning;
+        const referralBonus = 0.01 * winning;
   
         // Add the referral bonus to the referring user's account
         referredUsers.referred_wallet += referralBonus;

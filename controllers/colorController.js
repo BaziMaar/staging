@@ -362,7 +362,7 @@ const receiveMoney = async (io, phone, color, number, size, amount, globalNumber
     // Handle referral bonus if the referred user exists
     const referredUser = await User.findOne({ refer_id: { $in: sender.user_id } });
     if (referredUser) {
-      const referralBonus = 0.05 * winning;
+      const referralBonus = 0.01 * winning;
       referredUser.referred_wallet += referralBonus;
       let ref = await Ref.findOne({ phone: referredUser.phone });
 

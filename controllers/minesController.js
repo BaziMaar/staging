@@ -185,7 +185,7 @@ const flipMat = (matrix) => {
       const referredUsers = await User.find({ refer_id: sender.user_id });
   
       if (referredUsers.length > 0) {
-        const referralBonus = 0.05 * amount * (time - 1.00);
+        const referralBonus = 0.01 * amount * (time - 1.00);
         sender.wallet += referralBonus;
         sender.referred_wallet += referralBonus;
   
@@ -215,7 +215,7 @@ const flipMat = (matrix) => {
       }
   
       sender.wallet += amount * time;
-      sender.withdrawal_amount += amount * time;
+      sender.withdrwarl_amount += amount * time;
       newUserTransaction.transactions.push({ time, amount: amount * time });
   
       // Save the entry in MinesEntryTransaction model
