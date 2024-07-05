@@ -96,7 +96,7 @@ const generateAndBroadcastNumber = async(io) => {
           winner=generateRandomWithProbability(probabilitied);
           count=0
         }
-        else if ((zeroNumberBet <=oneNumberBet  && zeroNumberBet <= twoNumberBet&&zeroNumberBet <= threeNumberBet&&zeroNumberBet <= fourNumberBet&&zeroNumberBet <= fiveNumberBet&&zeroNumberBet <= sixNumberBet&&zeroNumberBet <= sevenNumberBet&&zeroNumberBet <= eightNumberBet&&zeroNumberBet <= nineNumberBet)&&(smallSizeBet<=bigSizeBet)&&(firstBet<=thirdBet)&&(secondBet<=thirdBet)) {
+        else if ((zeroNumberBet <=oneNumberBet  && zeroNumberBet <= twoNumberBet&&zeroNumberBet <= threeNumberBet&&zeroNumberBet <= fourNumberBet&&zeroNumberBet <= fiveNumberBet&&zeroNumberBet <= sixNumberBet&&zeroNumberBet <= sevenNumberBet&&zeroNumberBet <= eightNumberBet&&zeroNumberBet <= nineNumberBet)&&(smallSizeBet<=bigSizeBet)&&(firstBet<=thirdBet)&&(secondBet>=thirdBet)) {
           winner = 0; // First bet is the highest
           count=0
       } else if ((oneNumberBet <=zeroNumberBet  && oneNumberBet <= twoNumberBet&&oneNumberBet <= threeNumberBet&&oneNumberBet <= fourNumberBet&&oneNumberBet <= fiveNumberBet&&oneNumberBet <= sixNumberBet&&oneNumberBet <= sevenNumberBet&&oneNumberBet <= eightNumberBet&&oneNumberBet <= nineNumberBet)&&(smallSizeBet<=bigSizeBet)&&(secondBet<=thirdBet)&&(secondBet<=firstBet)) {
@@ -113,7 +113,7 @@ const generateAndBroadcastNumber = async(io) => {
         winner = 4; // Second bet is the highest
         count=0
       } 
-      else if ((fiveNumberBet <=zeroNumberBet  && fiveNumberBet <= oneNumberBet&&fiveNumberBet <= threeNumberBet&&fiveNumberBet <= fourNumberBet&&fiveNumberBet <= twoNumberBet&&fiveNumberBet <= sixNumberBet&&fiveNumberBet <= sevenNumberBet&&fiveNumberBet <= eightNumberBet&&fiveNumberBet <= nineNumberBet)&&(smallSizeBet>=bigSizeBet)&&(thirdBet<=firstBet)&&(secondBet<=firstBet)) {
+      else if ((fiveNumberBet <=zeroNumberBet  && fiveNumberBet <= oneNumberBet&&fiveNumberBet <= threeNumberBet&&fiveNumberBet <= fourNumberBet&&fiveNumberBet <= twoNumberBet&&fiveNumberBet <= sixNumberBet&&fiveNumberBet <= sevenNumberBet&&fiveNumberBet <= eightNumberBet&&fiveNumberBet <= nineNumberBet)&&(smallSizeBet>=bigSizeBet)&&(thirdBet>=firstBet)&&(secondBet>=firstBet)) {
         winner = 5; // Second bet is the highest
         count=0
       } 
