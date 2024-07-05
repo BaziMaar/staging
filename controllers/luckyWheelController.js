@@ -23,6 +23,34 @@ function generateRandomWithProbability(probabilities) {
       }
   }
 }
+let lowCount = 0;
+let highCount = 0;
+
+function getRandomNumber() {
+  let number;
+  if (lowCount < 3 && highCount < 7) {
+    // Generate a number based on remaining counts
+    const isLowNumber = Math.random() < 0.3; // 3 out of 10 should be low numbers
+    if (isLowNumber && lowCount < 3) {
+      number = Math.floor(Math.random() * 3) + 1; // Generate a number between 1 and 3
+      lowCount++;
+    } else if (highCount < 7) {
+      number = Math.floor(Math.random() * 7) + 4; // Generate a number between 4 and 10
+      highCount++;
+    } else {
+      number = Math.floor(Math.random() * 3) + 1; // If highCount is full, generate low number
+      lowCount++;
+    }
+  } else if (lowCount < 3) {
+    number = Math.floor(Math.random() * 3) + 1; // Generate a number between 1 and 3
+    lowCount++;
+  } else {
+    number = Math.floor(Math.random() * 7) + 4; // Generate a number between 4 and 10
+    highCount++;
+  }
+
+  return number;
+}
 const generateAndBroadcastNumber = (io) => {
   let lastNumbers=[0,0,0,0,0,0,0,0,0,0,0,0]
   let targetNumber = 0;
@@ -111,8 +139,29 @@ const generateAndBroadcastNumber = (io) => {
 
         spin=true
         if((firstBet===0&&secondBet===0&&thirdBet===0)||count===1){
-          winner=generateRandomWithProbability(probabilitied);
-          count=0
+          const x=getRandomNumber()
+          if(x<=3){
+            if(firstBet!=0){
+              winner=0
+            }
+            else if(secondBet!=0){
+              winner=1
+            }
+            else{
+              winner=2
+            }
+          }
+          else{
+            if(firstBet!=0){
+              winner=2
+            }
+            else if(secondBet!=0){
+              winner=0
+            }
+            else{
+              winner=1
+            }
+          }
         }
         else if (secondBet <= firstBet && secondBet <= thirdBet) {
           winner = 1; // First bet is the highest

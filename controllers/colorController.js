@@ -299,40 +299,39 @@ const receiveMoney = async (io, phone, color, number, size, amount, globalNumber
   let winning = 0;
 
   try {
-    // Retrieve sender and user transaction in parallel
     const [sender, userTransaction] = await Promise.all([
       User.findOne({ phone }),
       LuckyTransaction.findOne({ phone, 'transactions.globalNumber': globalNumber })
     ]);
-
-    // If sender not found, throw an error
     if (!sender) {
       throw new Error('Sender not found');
     }
-
-    // Determine the winning amount based on the conditions
-    if (winner % 2 === 0 && color !== -1 && winner !== "") {
-      if (color === 0 && winner === 0) {
-        winning = amount * 2;
-      } else if (color === 2 && winner === 0) {
-        winning = amount * 1.5;
-      } else if (color % 2 === 0) {
-        winning = amount * 2;
-      }
-    } else if (color !== -1 && winner !== "") {
-      if (color === 0 && winner === 5) {
-        winning = amount * 2;
-      } else if (color === 1 && winner === 5) {
-        winning = amount * 1.5;
-      } else if (color % 2 === 1 && winner % 2 === 1) {
-        winning = amount * 2;
-      }
-    } else if (size === 0 && winner < 5 && winner !== "") {
-      winning = amount * 2;
-    } else if (size === 1 && winner > 5 && winner !== "") {
-      winning = amount * 2;
-    } else if (number === winner && winner !== "") {
+    if(color===0&&(winner===0||winner===5)){
+      winning=amount*2
+    }
+    else if(color===1&&winner%2===1&&winner!==5){
+      winning=amount*2
+    }
+    else if(color===2&&winner%2===0&&winner!==0){
+      winning=amount*2
+    }
+    else if(color===2&&winner===0){
+      winning=amount*1.5
+    }
+    else if(color===0&&winner===5){
+      winning=amount*1.5
+    }
+    else if (size === 0 && winner < 5 && winner !== "") {
+          winning = amount * 2;
+    }
+    else if (size === 1 && winner > 5 && winner !== "") {
+          winning = amount * 2;
+        }
+    else if (number === winner && winner !== "") {
       winning = amount * 9;
+    }
+    else{
+      winning=amount*0
     }
 
     // Update transaction if it exists
