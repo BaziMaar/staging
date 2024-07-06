@@ -190,28 +190,56 @@ const generateAndBroadcastNumber = (io) => {
           }
           else{
             if(firstBet!==0){
-              dragonCard=Math.floor(Math.random()*6)+1
-              tigerCard=Math.floor(Math.random()*6)+7;
-              dragonColor=Math.floor(Math.random()*4)+1;
-              tigerColor=Math.floor(Math.random()*4)+1;
-              winner = Math.random() < 0.5 ? 1 : 2; 
+              winner = Math.random() < 0.5 ? 1 : 2;
+              if(winner===1){
+                dragonCard=Math.floor(Math.random()*6)+7;
+                tigerCard=Math.floor(Math.random()*6)+1;
+                dragonColor=Math.floor(Math.random()*4)+1;
+                tigerColor=Math.floor(Math.random()*4)+1;
+              }
+              else{
+                dragonCard=Math.floor(Math.random()*6)+1
+                tigerCard=Math.floor(Math.random()*6)+7;
+                dragonColor=Math.floor(Math.random()*4)+1;
+                tigerColor=Math.floor(Math.random()*4)+1;
+              }
+
+               
               count=0
             }
             else if(secondBet!=0){
-              dragonCard=Math.floor(Math.random()*6)+7
-              tigerCard=Math.floor(Math.random()*6)+1;
-              dragonColor=Math.floor(Math.random()*4)+1;
-              tigerColor=Math.floor(Math.random()*4)+1;
               winner = Math.random() < 0.5 ? 0 : 2; 
+              if(winner===0){
+                dragonCard=Math.floor(Math.random()*6)+13
+                dragonCard=tigerCard
+                dragonColor=Math.floor(Math.random()*4)+1;
+                tigerColor=Math.floor(Math.random()*4)+1;
+              }
+              else{
+                dragonCard=Math.floor(Math.random()*6)+1
+                tigerCard=Math.floor(Math.random()*6)+7;
+                dragonColor=Math.floor(Math.random()*4)+1;
+                tigerColor=Math.floor(Math.random()*4)+1;
+              }
+              
+              
               count=0
             }
             else{
-              dragonCard=Math.floor(Math.random()*13)+1
-              tigerCard=dragonCard
-              dragonColor=Math.floor(Math.random()*4)+1;
-              tigerColor=Math.floor(Math.random()*4)+1;        
-                winner = Math.random() < 0.5 ? 0 : 1; 
-                count = 0
+              winner = Math.random() < 0.5 ? 0 : 1; 
+              if(winner===0){
+                dragonCard=Math.floor(Math.random()*6)+13
+                dragonCard=tigerCard
+                dragonColor=Math.floor(Math.random()*4)+1;
+                tigerColor=Math.floor(Math.random()*4)+1;
+              }
+              else{
+                dragonCard=Math.floor(Math.random()*6)+7
+                tigerCard=Math.floor(Math.random()*6)+1;
+                dragonColor=Math.floor(Math.random()*4)+1;
+                tigerColor=Math.floor(Math.random()*4)+1;
+              }
+              count=0
             }
           }
 
