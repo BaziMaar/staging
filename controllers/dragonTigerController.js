@@ -372,10 +372,10 @@ const sendDragonMoney = async (io, phone, color, amount) => {
       }
       if(color===winner){
         if(color===0){
-          winning=amount*9;
+          winning=amount*10;
         }
         else{
-          winning=amount*2;
+          winning=amount*1.9;
         }
 
       }
