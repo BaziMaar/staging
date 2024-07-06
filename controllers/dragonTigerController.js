@@ -16,6 +16,34 @@ let tigerCard=null;
 let dragonColor=null
 let tigerColor=null;
 let number=0;
+let lowCount = 0;
+let highCount = 0;
+
+function getRandomNumber() {
+  let number;
+  if (lowCount < 3 && highCount < 7) {
+    // Generate a number based on remaining counts
+    const isLowNumber = Math.random() < 0.3; // 3 out of 10 should be low numbers
+    if (isLowNumber && lowCount < 3) {
+      number = Math.floor(Math.random() * 3) + 1; // Generate a number between 1 and 3
+      lowCount++;
+    } else if (highCount < 7) {
+      number = Math.floor(Math.random() * 7) + 4; // Generate a number between 4 and 10
+      highCount++;
+    } else {
+      number = Math.floor(Math.random() * 3) + 1; // If highCount is full, generate low number
+      lowCount++;
+    }
+  } else if (lowCount < 3) {
+    number = Math.floor(Math.random() * 3) + 1; // Generate a number between 1 and 3
+    lowCount++;
+  } else {
+    number = Math.floor(Math.random() * 7) + 4; // Generate a number between 4 and 10
+    highCount++;
+  }
+
+  return number;
+}
 const generateAndBroadcastNumber = (io) => {
   let lastNumbers=[0,0,0,0,0,0,0,0,0,0,0,0]
   let targetNumber = 0;
@@ -105,7 +133,7 @@ const generateAndBroadcastNumber = (io) => {
         io.emit('dragonPlaced',{tie:firstBet,dragon:secondBet,tiger:thirdBet})
         io.emit('dragonTiger', { number: currentNumber, time: timeRemaining,dragonCard:dragonCard,tigerCard:tigerCard,dragonColor:dragonColor,tigerColor:tigerColor,spin:spin, result: winner,firstBet:a,secondBet:b,thirdBet:c,a:lastNumbers[0],b:lastNumbers[1],c:lastNumbers[2],d:lastNumbers[3],e:lastNumbers[4],f:lastNumbers[5],f:lastNumbers[5],g:lastNumbers[6],h:lastNumbers[7],i:lastNumbers[8],j:lastNumbers[9],k:lastNumbers[10],l:lastNumbers[11] ,arr1:arr1,arr2:arr2,arr3:arr3 });
         spin=true
-        if((firstBet===0&&secondBet===0&&thirdBet===0)||count===1){
+        if((firstBet===0&&secondBet===0&&thirdBet===0)){
           dragonCard=Math.floor(Math.random()*13)+1;
           tigerCard=Math.floor(Math.random()*13)+1;
           dragonColor=Math.floor(Math.random()*4)+1;
@@ -119,6 +147,62 @@ const generateAndBroadcastNumber = (io) => {
             winner=2
           }
           count=0
+        }
+        if(count===1){
+          const x=getRandomNumber()
+          if(x<=3){
+            if(firstBet!==0){
+              dragonCard=Math.floor(Math.random()*13)+1
+              tigerCard=dragonCard
+              dragonColor=Math.floor(Math.random()*4)+1;
+              tigerColor=Math.floor(Math.random()*4)+1;        
+                winner = 0; // Third bet is the highest
+                count=0
+            }
+            else if(secondBet!=0){
+              dragonCard=Math.floor(Math.random()*6)+7
+              tigerCard=Math.floor(Math.random()*6)+1;
+              dragonColor=Math.floor(Math.random()*4)+1;
+              tigerColor=Math.floor(Math.random()*4)+1;
+              winner = 1; 
+              count=0
+            }
+            else if(thirdBet!=0){
+              dragonCard=Math.floor(Math.random()*6)+1
+              tigerCard=Math.floor(Math.random()*6)+7;
+              dragonColor=Math.floor(Math.random()*4)+1;
+              tigerColor=Math.floor(Math.random()*4)+1;
+              winner = 2; 
+              count=0
+            }
+          }
+          else{
+            if(firstBet!==0){
+              dragonCard=Math.floor(Math.random()*6)+1
+              tigerCard=Math.floor(Math.random()*6)+7;
+              dragonColor=Math.floor(Math.random()*4)+1;
+              tigerColor=Math.floor(Math.random()*4)+1;
+              winner = 2; 
+              count=0
+            }
+            else if(secondBet!=0){
+              dragonCard=Math.floor(Math.random()*6)+7
+              tigerCard=Math.floor(Math.random()*6)+1;
+              dragonColor=Math.floor(Math.random()*4)+1;
+              tigerColor=Math.floor(Math.random()*4)+1;
+              winner = 1; 
+              count=0
+            }
+            else{
+              dragonCard=Math.floor(Math.random()*13)+1
+              tigerCard=dragonCard
+              dragonColor=Math.floor(Math.random()*4)+1;
+              tigerColor=Math.floor(Math.random()*4)+1;        
+                winner = 0; // Third bet is the highest
+                count=0
+            }
+          }
+
         }
         else if(number===6){
           if (secondBet <= firstBet && secondBet <= thirdBet) {
