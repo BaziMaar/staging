@@ -148,7 +148,7 @@ const generateAndBroadcastNumber = (io) => {
           }
           count=0
         }
-        if(count===1){
+        else if(count===1){
           const x=getRandomNumber()
           if(x<=3){
             if(firstBet!==0){
