@@ -155,17 +155,19 @@ const generateAndBroadcastNumber = (io) => {
             else{
               winner=2
             }
+            count=0
           }
           else{
             if(firstBet!=0){
-              winner=2
+              winner=Math.random() < 0.5 ? 1 : 2;
             }
             else if(secondBet!=0){
-              winner=0
+              winner=Math.random() < 0.5 ? 0 : 2;
             }
             else{
-              winner=1
+              winner=Math.random() < 0.5 ? 0 : 1;
             }
+            count=0
           }
         }
         else if (secondBet <= firstBet && secondBet <= thirdBet) {
