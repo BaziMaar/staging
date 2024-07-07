@@ -102,10 +102,11 @@ const userLogin = async (req, res) => {
       res.status(400).send(error.message);
     }
   };
-  const getUser=async(req,res)=>{
+  const getUser = async (req, res) => {
     try {
-      const { page = 1, limit = 100 } = req.query; // Default to page 1, limit 10
+      const { page = 1, limit = 10 } = req.query; // Default to page 1, limit 10
       const users = await User.find()
+                              .sort({ createdAt: -1 }) // Sort by createdAt in descending order
                               .skip((page - 1) * limit)
                               .limit(limit);
   
@@ -130,6 +131,7 @@ const userLogin = async (req, res) => {
       res.status(500).send({ error: 'Internal Server Error' });
     }
   }
+  
   
   async function generateUniqueUserID() {
     while (true) {
