@@ -7,49 +7,49 @@ let topBets = [{ phone: '', amount: 0,avatar:'' }, { phone: '', amount: 0,avatar
 function customBiasedNumber() {
   // Generate a random number between 0 and 1
   const probability = Math.random();
-   if (probability <= 0.10) {
+   if (probability <= 0.20) {
 
         // 3% chance: generate a number between 100 and 105
 
         return 100;
 
-    } else if (probability <= 0.27) {
+    } else if (probability <= 0.40) {
 
         // 16% chance: generate a number between 100 and 105
 
         return Math.floor(Math.random() * 6) + 100;
 
-    } else if (probability <= 0.39) {
+    } else if (probability <= 0.50) {
 
         // 3% chance: generate a number between 105 and 110
 
         return Math.floor(Math.random() * 6) + 105;
 
-    } else if (probability <= 0.45) {
+    } else if (probability <= 0.70) {
 
         // 6% chance: generate a number between 110 and 120
 
         return Math.floor(Math.random() * 11) + 110;
 
-    } else if (probability <= 0.50) {
+    } else if (probability <= 0.75) {
 
         // 5% chance: generate a number between 120 and 130
 
         return Math.floor(Math.random() * 11) + 120;
 
-    } else if (probability <= 0.60) {
+    } else if (probability <= 0.77) {
 
         // 7% chance: generate a number between 130 and 150
 
         return Math.floor(Math.random() * 21) + 130;
 
-    } else if (probability <= 0.70) {
+    } else if (probability <= 0.79) {
 
         // 14% chance: generate a number between 150 and 200
 
         return Math.floor(Math.random() * 51) + 150;
 
-    } else if (probability <= 0.77) {
+    } else if (probability <= 0.81) {
 
         // 18% chance: generate a number between 200 and 300
 
