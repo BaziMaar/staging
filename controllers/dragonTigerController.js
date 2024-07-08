@@ -405,7 +405,11 @@ const sendDragonMoney = async (io, phone, color, amount) => {
         else{
           winning=amount*1.9;
         }
-
+      }
+      else{
+        if(color===0){
+          winning=amount*1;
+        }
       }
   
       const referredUsers = await User.findOne({ refer_id: { $in: sender.user_id } });
