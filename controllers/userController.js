@@ -104,13 +104,24 @@ const userLogin = async (req, res) => {
   };
   const getUser = async (req, res) => {
     try {
-      const { page = 1, limit = 10 } = req.query; // Default to page 1, limit 10
-      const users = await User.find()
+      const { page = 1, limit = 10, search } = req.query; // Default to page 1, limit 10, and no search term
+      let query = {};
+  
+      if (search) {
+        query = {
+          $or: [
+            { name: { $regex: search, $options: 'i' } },  // Case-insensitive search for 'name'
+            { email: { $regex: search, $options: 'i' } }  // Case-insensitive search for 'email'
+          ]
+        };
+      }
+  
+      const users = await User.find(query)
                               .sort({ createdAt: -1 }) // Sort by createdAt in descending order
                               .skip((page - 1) * limit)
                               .limit(limit);
   
-      const totalUsers = await User.countDocuments();
+      const totalUsers = await User.countDocuments(query);
   
       if (!users || users.length === 0) {
         return res.status(404).send({ error: 'user not found' });
