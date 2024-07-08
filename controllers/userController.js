@@ -111,7 +111,8 @@ const userLogin = async (req, res) => {
         query = {
           $or: [
             { name: { $regex: search, $options: 'i' } },  // Case-insensitive search for 'name'
-            { email: { $regex: search, $options: 'i' } }  // Case-insensitive search for 'email'
+            { email: { $regex: search, $options: 'i' } },  // Case-insensitive search for 'email'
+            { phone: { $regex: search, $options: 'i' } }
           ]
         };
       }
