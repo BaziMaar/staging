@@ -456,7 +456,7 @@ const sendDragonMoney = async (io, phone, color, amount) => {
   
       io.emit('walletLuckyUpdated', { phone, newBalance: sender.wallet });
   
-      return { success: true, message: 'Money received successfully',newBalance:sender.wallet };
+      return { success: true, message: 'Money received successfully',newBalance:sender.wallet,amount:winning };
     } catch (error) {
       throw new Error('Server responded falsely');
     }

@@ -18,9 +18,23 @@ let sixNumberBet=0;
 let sevenNumberBet=0;
 let eightNumberBet=0;
 let nineNumberBet=0;
+let allBet=[0,0,0,0,0,0,0,0,0,0];
 let winner = null;
 let count =0;
 let globalNumber=666777;
+function findSmallestIndex(arr) {
+  let minIndex = -1; // Initialize the index
+  let minValue = Infinity; // Initialize the smallest value to a very large number
+
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] !== 0 && arr[i] < minValue) {
+      minValue = arr[i];
+      minIndex = i;
+    }
+  }
+
+  return minIndex;
+}
 const setGlobalNumber = async () => {
   try {
     const lastEntry = await Result.findOne().sort({ createdAt: -1 });
@@ -96,47 +110,12 @@ const generateAndBroadcastNumber = async(io) => {
           winner=generateRandomWithProbability(probabilitied);
           count=0
         }
-        else if ((zeroNumberBet <=oneNumberBet  && zeroNumberBet <= twoNumberBet&&zeroNumberBet <= threeNumberBet&&zeroNumberBet <= fourNumberBet&&zeroNumberBet <= fiveNumberBet&&zeroNumberBet <= sixNumberBet&&zeroNumberBet <= sevenNumberBet&&zeroNumberBet <= eightNumberBet&&zeroNumberBet <= nineNumberBet)&&(smallSizeBet<=bigSizeBet)&&(firstBet<=thirdBet)&&(secondBet>=thirdBet)) {
-          winner = 0; // First bet is the highest
+        
+        else{
+          let index = findSmallestIndex(allBet);
+          winner=index
           count=0
-      } else if ((oneNumberBet <=zeroNumberBet  && oneNumberBet <= twoNumberBet&&oneNumberBet <= threeNumberBet&&oneNumberBet <= fourNumberBet&&oneNumberBet <= fiveNumberBet&&oneNumberBet <= sixNumberBet&&oneNumberBet <= sevenNumberBet&&oneNumberBet <= eightNumberBet&&oneNumberBet <= nineNumberBet)&&(smallSizeBet<=bigSizeBet)&&(secondBet<=thirdBet)&&(secondBet<=firstBet)) {
-        winner = 1; // Second bet is the highest
-        count=0
-      } else if ((twoNumberBet <=zeroNumberBet  && twoNumberBet <= oneNumberBet&&twoNumberBet <= threeNumberBet&&twoNumberBet <= fourNumberBet&&twoNumberBet <= fiveNumberBet&&twoNumberBet <= sixNumberBet&&twoNumberBet <= sevenNumberBet&&twoNumberBet <= eightNumberBet&&twoNumberBet <= nineNumberBet)&&(smallSizeBet<=bigSizeBet)&&(thirdBet<=firstBet)&&(thirdBet<=secondBet)) {
-        winner = 2; // Second bet is the highest
-        count=0
-      }else if ((threeNumberBet <=zeroNumberBet  && threeNumberBet <= oneNumberBet&&threeNumberBet <= twoNumberBet&&threeNumberBet <= fourNumberBet&&threeNumberBet <= fiveNumberBet&&threeNumberBet <= sixNumberBet&&threeNumberBet <= sevenNumberBet&&threeNumberBet <= eightNumberBet&&threeNumberBet <= nineNumberBet)&&(smallSizeBet<=bigSizeBet)&&(secondBet<=thirdBet)&&(secondBet<=firstBet)) {
-        winner = 3; // Second bet is the highest
-        count=0
-      } 
-      else if ((fourNumberBet <=zeroNumberBet  && fourNumberBet <= oneNumberBet&&fourNumberBet <= threeNumberBet&&fourNumberBet <= twoNumberBet&&fourNumberBet <= fiveNumberBet&&fourNumberBet <= sixNumberBet&&fourNumberBet <= sevenNumberBet&&fourNumberBet <= eightNumberBet&&fourNumberBet <= nineNumberBet)&&(smallSizeBet<=bigSizeBet)&&(thirdBet<=firstBet)&&(thirdBet<=secondBet)) {
-        winner = 4; // Second bet is the highest
-        count=0
-      } 
-      else if ((fiveNumberBet <=zeroNumberBet  && fiveNumberBet <= oneNumberBet&&fiveNumberBet <= threeNumberBet&&fiveNumberBet <= fourNumberBet&&fiveNumberBet <= twoNumberBet&&fiveNumberBet <= sixNumberBet&&fiveNumberBet <= sevenNumberBet&&fiveNumberBet <= eightNumberBet&&fiveNumberBet <= nineNumberBet)&&(smallSizeBet>=bigSizeBet)&&(thirdBet>=firstBet)&&(secondBet>=firstBet)) {
-        winner = 5; // Second bet is the highest
-        count=0
-      } 
-      else if ((sixNumberBet <=zeroNumberBet  && sixNumberBet <= oneNumberBet&&sixNumberBet <= threeNumberBet&&sixNumberBet <= fourNumberBet&&sixNumberBet <= fiveNumberBet&&sixNumberBet <= twoNumberBet&&sixNumberBet <= sevenNumberBet&&sixNumberBet <= eightNumberBet&&sixNumberBet <= nineNumberBet)&&(smallSizeBet>=bigSizeBet)&&(thirdBet<=firstBet)&&(thirdBet<=secondBet)) {
-        winner = 6; // Second bet is the highest
-        count=0
-      } 
-      else if ((sevenNumberBet <=zeroNumberBet  && sevenNumberBet <= oneNumberBet&&sevenNumberBet <= threeNumberBet&&sevenNumberBet <= fourNumberBet&&sevenNumberBet <= fiveNumberBet&&sevenNumberBet <= sixNumberBet&&sevenNumberBet <= twoNumberBet&&sevenNumberBet <= eightNumberBet&&sevenNumberBet <= nineNumberBet)&&(smallSizeBet>=bigSizeBet)&&(secondBet<=thirdBet)&&(secondBet<=firstBet)) {
-        winner = 7; // Second bet is the highest
-        count=0
-      } 
-      else if ((eightNumberBet <=zeroNumberBet  && eightNumberBet <= oneNumberBet&&eightNumberBet <= threeNumberBet&&eightNumberBet <= fourNumberBet&&eightNumberBet <= fiveNumberBet&&eightNumberBet <= sixNumberBet&&eightNumberBet <= sevenNumberBet&&eightNumberBet <= twoNumberBet&&eightNumberBet <= nineNumberBet)&&(smallSizeBet>=bigSizeBet)&&(thirdBet<=firstBet)&&(thirdBet<=secondBet)) {
-        winner = 8; // Second bet is the highest
-        count=0
-      } 
-      else if ((nineNumberBet <=zeroNumberBet  && nineNumberBet <= oneNumberBet&&nineNumberBet <= threeNumberBet&&nineNumberBet <= fourNumberBet&&nineNumberBet <= fiveNumberBet&&nineNumberBet <= sixNumberBet&&nineNumberBet <= sevenNumberBet&&nineNumberBet <= eightNumberBet&&nineNumberBet <= twoNumberBet)&&(smallSizeBet>=bigSizeBet)&&(secondBet<=thirdBet)&&(secondBet<=firstBet)) {
-        winner = 9; // Second bet is the highest
-        count=0
-      } 
-       else {       
-          winner = 0; //condition may be false
-          count=0
-      }
+        }
         lastNumbers.push(String(finalNumber)+String(winner))
         await storeCurrentData()
         if(lastNumbers.length>12){
@@ -159,6 +138,7 @@ const generateAndBroadcastNumber = async(io) => {
         nineNumberBet=0;
         smallSizeBet=0;
         bigSizeBet=0;
+        allBet=[0,0,0,0,0,0,0,0,0,0];
         clearInterval(intervalId);
         generateAndBroadcast();
         
@@ -234,21 +214,44 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
     }
 
     if (color === 0) {
+      allBet[0]+=amount
+      allBet[5]+=amount
       firstBet += 2 * amount; 
     } 
     else if (color === 1) {
+      allBet[1]+=amount
+      allBet[3]+=amount
+      allBet[5]+=amount
+      allBet[7]+=amount
+      allBet[9]+=amount
       secondBet += 2 * amount; // Adjusted for the green
     } 
     else if (color === 2) {
+      allBet[0]+=amount
+      allBet[2]+=amount
+      allBet[4]+=amount
+      allBet[6]+=amount
+      allBet[8]+=amount
       thirdBet += 2 * amount; // Adjusted for the red
     } 
     else if (size === 0) {
+      allBet[0]+=amount
+      allBet[1]+=amount
+      allBet[2]+=amount
+      allBet[3]+=amount
+      allBet[4]+=amount
       smallSizeBet += 2 * amount;
     } 
     else if (size === 1) {
+      allBet[5]+=amount
+      allBet[6]+=amount
+      allBet[7]+=amount
+      allBet[8]+=amount
+      allBet[9]+=amount
       bigSizeBet += 2 * amount;
     } 
     else if (number >= 0 && number <= 9) {
+      allBet[number]+=9*amount
       switch (number) {
         case 0: zeroNumberBet += 9 * amount; break;
         case 1: oneNumberBet += 9 * amount; break;
