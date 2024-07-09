@@ -25,9 +25,11 @@ let globalNumber=666777;
 function getWinner(arrOfAmounts) {
   const random = Math.floor(Math.random() * 10);
   if (random === 0 || random === 5) {
-    getIndexFromZero(arrOfAmounts);
+    const ans=getIndexFromZero(arrOfAmounts);
+    return ans
   } else {
-    getIndexFromNonZero(arrOfAmounts);
+    const ans=getIndexFromNonZero(arrOfAmounts);
+    return ans
   }
 }
 
@@ -36,7 +38,7 @@ function getIndexFromNonZero(arr) {
   let minNonZeroIdx = -1;
 
   for (let i = 0; i < arr.length; i++) {
-    if (arr[i] > 0 && arr[i] < minNonZeroValue&&(i!==0||i!==5)) {
+    if (arr[i] > 0 && arr[i] < minNonZeroValue&&(i!==0&&i!==5)) {
       minNonZeroIdx = i;
       minNonZeroValue = arr[i];
     }
@@ -57,11 +59,13 @@ function getIndexFromNonZero(arr) {
   if (isItTheOnlyPlacedBet) {
     if (otherIdx.length === 0) {
       return Math.floor(Math.random() * 10);
-    } else {
+    } 
+    else {
       const randomIndex = otherIdx[Math.floor(Math.random() * otherIdx.length)];
       return randomIndex
     }
-  } else {
+  } 
+  else {
     const randomIndex = minNonZeroValuesIdx[Math.floor(Math.random() * minNonZeroValuesIdx.length)];
     return randomIndex
   }
@@ -241,7 +245,7 @@ const generateAndBroadcastNumber = async(io) => {
           count=0
         }
         else{
-          winner=findSpecialIndex(allBet)
+          winner=getWinner(allBet)
           count=0
 
         }
