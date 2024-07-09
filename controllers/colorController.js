@@ -442,32 +442,24 @@ const receiveMoney = async (io, phone, color, number, size, amount, globalNumber
     if (!sender) {
       throw new Error('Sender not found');
     }
-    if(color===0&&(winner===0||winner===5)){
-      winning=amount*2
-    }
-    else if(color===1&&winner%2===1&&winner!==5){
-      winning=amount*2
-    }
-    else if(color===2&&winner%2===0&&winner!==0){
-      winning=amount*2
-    }
-    else if(color===2&&winner===0){
-      winning=amount*1.5
-    }
-    else if(color===1&&winner===5){
-      winning=amount*1.5
-    }
-    else if (size === 0 && winner < 5 && winner !== "") {
-          winning = amount * 2;
-    }
-    else if (size === 1 && winner >= 5 && winner !== "") {
-          winning = amount * 2;
-        }
-    else if (number === winner && winner !== "") {
+    if (color === 0 && (winner === 0 || winner === 5)) {
+      winning = amount * 4.5;
+    } else if (color === 1 && winner % 2 === 1 && winner !== 5) {
+      winning = amount * 1.9;
+    } else if (color === 2 && winner % 2 === 0 && winner !== 0) {
+      winning = amount * 1.9;
+    } else if (color === 2 && winner === 0) {
+      winning = amount * 1.5;
+    } else if (color === 1 && winner === 5) {
+      winning = amount * 1.5;
+    } else if (size === 0 && winner < 5 && winner !== "") {
+      winning = amount * 1.9;
+    } else if (size === 1 && winner >= 5 && winner !== "") {
+      winning = amount * 1.9;
+    } else if (number === winner && winner !== "") {
       winning = amount * 9;
-    }
-    else{
-      winning=amount*0
+    } else {
+      winning = amount * 0;
     }
 
     // Update transaction if it exists
