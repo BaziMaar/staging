@@ -144,17 +144,17 @@ const generateAndBroadcastNumber = async(io) => {
     intervalId = setInterval(async() => {
       if (timeRemaining > 5) {
         timeRemaining--;
-        io.emit('colorPlaced',{voilet:firstBet,green:secondBet,red:thirdBet,zero:zeroNumberBet,one:oneNumberBet,two:twoNumberBet,three:threeNumberBet,four:fourNumberBet,five:fiveNumberBet,six:sixNumberBet,seven:sevenNumberBet,eight:eightNumberBet,nine:nineNumberBet,small:smallSizeBet,big:bigSizeBet})
+        io.emit('colorPlaced',{voilet:firstBet,green:secondBet,red:thirdBet,zero:allBet[0],one:allBet[1],two:allBet[2],three:allBet[3],four:allBet[4],five:allBet[5],six:allBet[6],seven:allBet[7],eight:allBet[8],nine:allBet[9],small:smallSizeBet,big:bigSizeBet})
         io.emit('colorBet', { number: currentNumber, time: timeRemaining,spin:spin, result: winner,globalNumbers:finalNumber,a:lastNumbers[0],b:lastNumbers[1],c:lastNumbers[2],d:lastNumbers[3],e:lastNumbers[4],f:lastNumbers[5],g:lastNumbers[6],h:lastNumbers[7],i:lastNumbers[8],j:lastNumbers[9],k:lastNumbers[10],l:lastNumbers[11]}); 
       }
       else if (timeRemaining>=0&&timeRemaining<5) {
         timeRemaining--;
-        io.emit('colorPlaced',{voilet:firstBet,green:secondBet,red:thirdBet,zero:zeroNumberBet,one:oneNumberBet,two:twoNumberBet,three:threeNumberBet,four:fourNumberBet,five:fiveNumberBet,six:sixNumberBet,seven:sevenNumberBet,eight:eightNumberBet,nine:nineNumberBet,small:smallSizeBet,big:bigSizeBet})
+        io.emit('colorPlaced',{voilet:firstBet,green:secondBet,red:thirdBet,zero:allBet[0],one:allBet[1],two:allBet[2],three:allBet[3],four:allBet[4],five:allBet[5],six:allBet[6],seven:allBet[7],eight:allBet[8],nine:allBet[9],small:smallSizeBet,big:bigSizeBet})
         io.emit('colorBet', { number: currentNumber, time: timeRemaining,spin:spin, result: winner,globalNumbers:finalNumber,a:lastNumbers[0],b:lastNumbers[1],c:lastNumbers[2],d:lastNumbers[3],e:lastNumbers[4],f:lastNumbers[5],g:lastNumbers[6],h:lastNumbers[7],i:lastNumbers[8],j:lastNumbers[9],k:lastNumbers[10],l:lastNumbers[11]});       }
       else if(timeRemaining===5){
         globalNumber++;
         timeRemaining--;
-        io.emit('colorPlaced',{voilet:firstBet,green:secondBet,red:thirdBet,zero:zeroNumberBet,one:oneNumberBet,two:twoNumberBet,three:threeNumberBet,four:fourNumberBet,five:fiveNumberBet,six:sixNumberBet,seven:sevenNumberBet,eight:eightNumberBet,nine:nineNumberBet,small:smallSizeBet,big:bigSizeBet})
+        io.emit('colorPlaced',{voilet:firstBet,green:secondBet,red:thirdBet,zero:allBet[0],one:allBet[1],two:allBet[2],three:allBet[3],four:allBet[4],five:allBet[5],six:allBet[6],seven:allBet[7],eight:allBet[8],nine:allBet[9],small:smallSizeBet,big:bigSizeBet})
         io.emit('colorBet', { number: currentNumber, time: timeRemaining,spin:spin, result: winner,globalNumbers:finalNumber,a:lastNumbers[0],b:lastNumbers[1],c:lastNumbers[2],d:lastNumbers[3],e:lastNumbers[4],f:lastNumbers[5],g:lastNumbers[6],h:lastNumbers[7],i:lastNumbers[8],j:lastNumbers[9],k:lastNumbers[10],l:lastNumbers[11]});    
         spin=true
         if((firstBet===0&&secondBet===0&&thirdBet===0&&smallSizeBet===0&&bigSizeBet===0&&zeroNumberBet===0&&oneNumberBet===0&&twoNumberBet===0&&threeNumberBet===0&&fourNumberBet===0&&fiveNumberBet===0&&sixNumberBet===0&&sevenNumberBet===0&&eightNumberBet===0&&nineNumberBet===0)||count===1){
