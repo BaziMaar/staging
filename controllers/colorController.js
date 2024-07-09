@@ -164,12 +164,12 @@ const generateAndBroadcastNumber = async(io) => {
         else{
           let number=generateRandomWithProbability(probabilitied)
           if(number===0||number===5){
-            let index = findSmallestIndexWithZero(allBet);
+            let index = findSpecialIndexOutZero(allBet);
             winner=index
             count=0
           }
           else{
-            let index=findSmallestIndex(allBet);
+            let index=findSpecialIndex(allBet);
             winner=index
             count=0
 
