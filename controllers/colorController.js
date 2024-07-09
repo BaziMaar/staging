@@ -107,62 +107,62 @@ function checkIsIdxGoodToWin(arr, i) {
   }
 }
 
-// function findSpecialIndex(arr) {
-//   let nonZeroCount = 0; // Count of non-zero elements
-//   let zeroIndices = []; // Indices of zero elements
-//   let nonZeroIndices = []; // Indices of non-zero elements
+function findSpecialIndex(arr) {
+  let nonZeroCount = 0; // Count of non-zero elements
+  let zeroIndices = []; // Indices of zero elements
+  let nonZeroIndices = []; // Indices of non-zero elements
 
-//   // First pass to count non-zero elements and collect zero and non-zero element indices
-//   for (let i = 0; i < arr.length; i++) {
-//     if (arr[i] !== 0) {
-//       nonZeroCount++;
-//       nonZeroIndices.push(i);
-//     } else {
-//       zeroIndices.push(i);
-//     }
-//   }
+  // First pass to count non-zero elements and collect zero and non-zero element indices
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] !== 0) {
+      nonZeroCount++;
+      nonZeroIndices.push(i);
+    } else {
+      zeroIndices.push(i);
+    }
+  }
 
-//   // If there is exactly one non-zero element, return a random index among the zero elements
-//   if (nonZeroCount === 1) {
-//     return zeroIndices[Math.floor(Math.random() * zeroIndices.length)];
-//   } 
+  // If there is exactly one non-zero element, return a random index among the zero elements
+  if (nonZeroCount === 1) {
+    return zeroIndices[Math.floor(Math.random() * zeroIndices.length)];
+  } 
 
-//   // If there are multiple non-zero elements, find the index of the smallest non-zero element
-//   let minIndex = nonZeroIndices[0];
-//   for (let i = 1; i < nonZeroIndices.length; i++) {
-//     if (arr[nonZeroIndices[i]] < arr[minIndex]) {
-//       minIndex = nonZeroIndices[i];
-//     }
-//   }
+  // If there are multiple non-zero elements, find the index of the smallest non-zero element
+  let minIndex = nonZeroIndices[0];
+  for (let i = 1; i < nonZeroIndices.length; i++) {
+    if (arr[nonZeroIndices[i]] < arr[minIndex]) {
+      minIndex = nonZeroIndices[i];
+    }
+  }
 
-//   return minIndex;
-// }
-// function findSpecialIndexOutZero(arr) {
-//   let nonZeroCount = 0;
-//   let zeroIndices = [];
-//   let nonZeroIndices = [];
-//   for (let i = 0; i < arr.length; i++) {
-//     if(i!==0 || i!==5){
-//       if (arr[i] !== 0) {
-//         nonZeroCount++;
-//         nonZeroIndices.push(i);
-//       } else {
-//         zeroIndices.push(i);
-//       }
-//     }
-//   }
-//   if (nonZeroCount === 1) {
-//     return zeroIndices[Math.floor(Math.random() * zeroIndices.length)];
-//   }
-//   let minIndex = nonZeroIndices[0];
-//   for (let i = 1; i < nonZeroIndices.length; i++) {
-//     if (arr[nonZeroIndices[i]] < arr[minIndex]) {
-//       minIndex = nonZeroIndices[i];
-//     }
-//   }
+  return minIndex;
+}
+function findSpecialIndexOutZero(arr) {
+  let nonZeroCount = 0;
+  let zeroIndices = [];
+  let nonZeroIndices = [];
+  for (let i = 0; i < arr.length; i++) {
+    if(i!==0 || i!==5){
+      if (arr[i] !== 0) {
+        nonZeroCount++;
+        nonZeroIndices.push(i);
+      } else {
+        zeroIndices.push(i);
+      }
+    }
+  }
+  if (nonZeroCount === 1) {
+    return zeroIndices[Math.floor(Math.random() * zeroIndices.length)];
+  }
+  let minIndex = nonZeroIndices[0];
+  for (let i = 1; i < nonZeroIndices.length; i++) {
+    if (arr[nonZeroIndices[i]] < arr[minIndex]) {
+      minIndex = nonZeroIndices[i];
+    }
+  }
 
-//   return minIndex;
-// }
+  return minIndex;
+}
 
 
 const setGlobalNumber = async () => {
@@ -241,7 +241,7 @@ const generateAndBroadcastNumber = async(io) => {
           count=0
         }
         else{
-          winner=getWinner(allBet)
+          winner=findSpecialIndex(allBet)
           count=0
 
         }
