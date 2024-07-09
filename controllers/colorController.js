@@ -22,62 +22,147 @@ let allBet=[0,0,0,0,0,0,0,0,0,0];
 let winner = null;
 let count =0;
 let globalNumber=666777;
-function findSpecialIndex(arr) {
-  let nonZeroCount = 0; // Count of non-zero elements
-  let zeroIndices = []; // Indices of zero elements
-  let nonZeroIndices = []; // Indices of non-zero elements
-
-  // First pass to count non-zero elements and collect zero and non-zero element indices
-  for (let i = 0; i < arr.length; i++) {
-    if (arr[i] !== 0) {
-      nonZeroCount++;
-      nonZeroIndices.push(i);
-    } else {
-      zeroIndices.push(i);
-    }
+function getWinner(arrOfAmounts) {
+  const random = Math.floor(Math.random() * 10);
+  if (random === 0 || random === 5) {
+    getIndexFromZero(arrOfAmounts);
+  } else {
+    getIndexFromNonZero(arrOfAmounts);
   }
-
-  // If there is exactly one non-zero element, return a random index among the zero elements
-  if (nonZeroCount === 1) {
-    return zeroIndices[Math.floor(Math.random() * zeroIndices.length)];
-  } 
-
-  // If there are multiple non-zero elements, find the index of the smallest non-zero element
-  let minIndex = nonZeroIndices[0];
-  for (let i = 1; i < nonZeroIndices.length; i++) {
-    if (arr[nonZeroIndices[i]] < arr[minIndex]) {
-      minIndex = nonZeroIndices[i];
-    }
-  }
-
-  return minIndex;
 }
-function findSpecialIndexOutZero(arr) {
-  let nonZeroCount = 0;
-  let zeroIndices = [];
-  let nonZeroIndices = [];
+
+function getIndexFromNonZero(arr) {
+  let minNonZeroValue = Infinity;
+  let minNonZeroIdx = -1;
+
   for (let i = 0; i < arr.length; i++) {
-    if(i!==0 || i!==5){
-      if (arr[i] !== 0) {
-        nonZeroCount++;
-        nonZeroIndices.push(i);
-      } else {
-        zeroIndices.push(i);
+    if (arr[i] > 0 && arr[i] < minNonZeroValue&&(i!==0||i!==5)) {
+      minNonZeroIdx = i;
+      minNonZeroValue = arr[i];
+    }
+  }
+
+  const minNonZeroValuesIdx = [];
+  const otherIdx = [];
+
+  for (let i = 0; i < arr.length; i++) {
+    if (arr[i] === minNonZeroValue&&(i!==0||i!==5)) {
+      minNonZeroValuesIdx.push(i);
+    } else if((i!==0 || i!==5)&&arr[i]===0) {
+      otherIdx.push(i);
+    }
+  }
+
+  const isItTheOnlyPlacedBet = checkOnlyPlacedBet(arr, minNonZeroIdx);
+  if (isItTheOnlyPlacedBet) {
+    if (otherIdx.length === 0) {
+      return Math.floor(Math.random() * 10);
+    } else {
+      const randomIndex = otherIdx[Math.floor(Math.random() * otherIdx.length)];
+      return randomIndex
+    }
+  } else {
+    const randomIndex = minNonZeroValuesIdx[Math.floor(Math.random() * minNonZeroValuesIdx.length)];
+    return randomIndex
+  }
+}
+
+function checkOnlyPlacedBet(arr, i) {
+  for (let j = 0; j < arr.length; j++) {
+    if (arr[j] !== 0 && arr[j] !== arr[i]) {
+      return false; 
+    }
+  }
+  return true;
+}
+
+function getIndexFromZero(arr) {
+  const isZeroGood = checkIsIdxGoodToWin(arr, 0);
+  const isFiveGood = checkIsIdxGoodToWin(arr, 5);
+
+  if (isZeroGood && isFiveGood) {
+    const result = Math.random() < 0.5 ? 0 : 5;
+    return result
+  } else if (isZeroGood && !isFiveGood) {
+    return 0
+  } else if (!isZeroGood && isFiveGood) {
+    return 5
+  } else {
+    const ans = getIndexFromNonZero(arr);
+    return ans
+  }
+}
+
+function checkIsIdxGoodToWin(arr, i) {
+  if (arr[i] === 0) {
+    return true;
+  } else {
+    let min = arr[i];
+    for (let j = 0; j < arr.length; j++) {
+      if (arr[j] > 0 && arr[j] <= arr[i]) {
+        min = arr[j];
       }
     }
+    return arr[i] === min;
   }
-  if (nonZeroCount === 1) {
-    return zeroIndices[Math.floor(Math.random() * zeroIndices.length)];
-  }
-  let minIndex = nonZeroIndices[0];
-  for (let i = 1; i < nonZeroIndices.length; i++) {
-    if (arr[nonZeroIndices[i]] < arr[minIndex]) {
-      minIndex = nonZeroIndices[i];
-    }
-  }
-
-  return minIndex;
 }
+
+// function findSpecialIndex(arr) {
+//   let nonZeroCount = 0; // Count of non-zero elements
+//   let zeroIndices = []; // Indices of zero elements
+//   let nonZeroIndices = []; // Indices of non-zero elements
+
+//   // First pass to count non-zero elements and collect zero and non-zero element indices
+//   for (let i = 0; i < arr.length; i++) {
+//     if (arr[i] !== 0) {
+//       nonZeroCount++;
+//       nonZeroIndices.push(i);
+//     } else {
+//       zeroIndices.push(i);
+//     }
+//   }
+
+//   // If there is exactly one non-zero element, return a random index among the zero elements
+//   if (nonZeroCount === 1) {
+//     return zeroIndices[Math.floor(Math.random() * zeroIndices.length)];
+//   } 
+
+//   // If there are multiple non-zero elements, find the index of the smallest non-zero element
+//   let minIndex = nonZeroIndices[0];
+//   for (let i = 1; i < nonZeroIndices.length; i++) {
+//     if (arr[nonZeroIndices[i]] < arr[minIndex]) {
+//       minIndex = nonZeroIndices[i];
+//     }
+//   }
+
+//   return minIndex;
+// }
+// function findSpecialIndexOutZero(arr) {
+//   let nonZeroCount = 0;
+//   let zeroIndices = [];
+//   let nonZeroIndices = [];
+//   for (let i = 0; i < arr.length; i++) {
+//     if(i!==0 || i!==5){
+//       if (arr[i] !== 0) {
+//         nonZeroCount++;
+//         nonZeroIndices.push(i);
+//       } else {
+//         zeroIndices.push(i);
+//       }
+//     }
+//   }
+//   if (nonZeroCount === 1) {
+//     return zeroIndices[Math.floor(Math.random() * zeroIndices.length)];
+//   }
+//   let minIndex = nonZeroIndices[0];
+//   for (let i = 1; i < nonZeroIndices.length; i++) {
+//     if (arr[nonZeroIndices[i]] < arr[minIndex]) {
+//       minIndex = nonZeroIndices[i];
+//     }
+//   }
+
+//   return minIndex;
+// }
 
 
 const setGlobalNumber = async () => {
@@ -156,18 +241,8 @@ const generateAndBroadcastNumber = async(io) => {
           count=0
         }
         else{
-          let number=generateRandomWithProbability(probabilitied)
-          if(number===0||number===5){
-            let index = findSpecialIndex(allBet);
-            winner=index
-            count=0
-          }
-          else{
-            let index=findSpecialIndexOutZero(allBet);
-            winner=index
-            count=0
-
-          }
+          winner=getWinner(allBet)
+          count=0
 
         }
         lastNumbers.push(String(finalNumber)+String(winner))
