@@ -22,19 +22,70 @@ let allBet=[0,0,0,0,0,0,0,0,0,0];
 let winner = null;
 let count =0;
 let globalNumber=666777;
-function findSmallestIndex(arr) {
-  let minIndex = -1; // Initialize the index
-  let minValue = Infinity; // Initialize the smallest value to a very large number
+function findSpecialIndex(arr) {
+  let nonZeroCount = 0; // Count of non-zero elements
+  let zeroIndices = []; // Indices of zero elements
+  let nonZeroIndices = []; // Indices of non-zero elements
 
+  // First pass to count non-zero elements and collect zero and non-zero element indices
   for (let i = 0; i < arr.length; i++) {
-    if (arr[i] !== 0 && arr[i] < minValue) {
-      minValue = arr[i];
-      minIndex = i;
+    if (arr[i] !== 0) {
+      nonZeroCount++;
+      nonZeroIndices.push(i);
+    } else {
+      zeroIndices.push(i);
+    }
+  }
+
+  // If there is exactly one non-zero element, return a random index among the zero elements
+  if (nonZeroCount === 1) {
+    return zeroIndices[Math.floor(Math.random() * zeroIndices.length)];
+  } 
+
+  // If there are multiple non-zero elements, find the index of the smallest non-zero element
+  let minIndex = nonZeroIndices[0];
+  for (let i = 1; i < nonZeroIndices.length; i++) {
+    if (arr[nonZeroIndices[i]] < arr[minIndex]) {
+      minIndex = nonZeroIndices[i];
     }
   }
 
   return minIndex;
 }
+function findSpecialIndexOutZero(arr) {
+  let nonZeroCount = 0; // Count of non-zero elements
+  let zeroIndices = []; // Indices of zero elements
+  let nonZeroIndices = []; // Indices of non-zero elements
+
+  // First pass to count non-zero elements and collect zero and non-zero element indices
+  for (let i = 0; i < arr.length; i++) {
+    if(i!==0 || i!==5){
+      if (arr[i] !== 0) {
+        nonZeroCount++;
+        nonZeroIndices.push(i);
+      } else {
+        zeroIndices.push(i);
+      }
+    }
+  }
+
+  // If there is exactly one non-zero element, return a random index among the zero elements
+  if (nonZeroCount === 1) {
+    return zeroIndices[Math.floor(Math.random() * zeroIndices.length)];
+  } 
+
+  // If there are multiple non-zero elements, find the index of the smallest non-zero element
+  let minIndex = nonZeroIndices[0];
+  for (let i = 1; i < nonZeroIndices.length; i++) {
+    if (arr[nonZeroIndices[i]] < arr[minIndex]) {
+      minIndex = nonZeroIndices[i];
+    }
+  }
+
+  return minIndex;
+}
+
+
 const setGlobalNumber = async () => {
   try {
     const lastEntry = await Result.findOne().sort({ createdAt: -1 });
@@ -110,11 +161,20 @@ const generateAndBroadcastNumber = async(io) => {
           winner=generateRandomWithProbability(probabilitied);
           count=0
         }
-        
         else{
-          let index = findSmallestIndex(allBet);
-          winner=index
-          count=0
+          let number=generateRandomWithProbability(probabilitied)
+          if(number===0||number===5){
+            let index = findSmallestIndexWithZero(allBet);
+            winner=index
+            count=0
+          }
+          else{
+            let index=findSmallestIndex(allBet);
+            winner=index
+            count=0
+
+          }
+
         }
         lastNumbers.push(String(finalNumber)+String(winner))
         await storeCurrentData()
@@ -214,40 +274,40 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
     }
 
     if (color === 0) {
-      allBet[0]+=amount
-      allBet[5]+=amount
+      allBet[0]+=4.5*amount
+      allBet[5]+=4.5*amount
       firstBet += 2 * amount; 
     } 
     else if (color === 1) {
-      allBet[1]+=amount
-      allBet[3]+=amount
-      allBet[5]+=amount
-      allBet[7]+=amount
-      allBet[9]+=amount
+      allBet[1]+=1.9*amount
+      allBet[3]+=1.9*amount
+      allBet[5]+=1.5*amount
+      allBet[7]+=1.9*amount
+      allBet[9]+=1.9*amount
       secondBet += 2 * amount; // Adjusted for the green
     } 
     else if (color === 2) {
-      allBet[0]+=amount
-      allBet[2]+=amount
-      allBet[4]+=amount
-      allBet[6]+=amount
-      allBet[8]+=amount
+      allBet[0]+=1.5*amount
+      allBet[2]+=1.9*amount
+      allBet[4]+=1.9*amount
+      allBet[6]+=1.9*amount
+      allBet[8]+=1.9*amount
       thirdBet += 2 * amount; // Adjusted for the red
     } 
     else if (size === 0) {
-      allBet[0]+=amount
-      allBet[1]+=amount
-      allBet[2]+=amount
-      allBet[3]+=amount
-      allBet[4]+=amount
+      allBet[0]+=1.9*amount
+      allBet[1]+=1.9*amount
+      allBet[2]+=1.9*amount
+      allBet[3]+=1.9*amount
+      allBet[4]+=1.9*amount
       smallSizeBet += 2 * amount;
     } 
     else if (size === 1) {
-      allBet[5]+=amount
-      allBet[6]+=amount
-      allBet[7]+=amount
-      allBet[8]+=amount
-      allBet[9]+=amount
+      allBet[5]+=1.9*amount
+      allBet[6]+=1.9*amount
+      allBet[7]+=1.9*amount
+      allBet[8]+=1.9*amount
+      allBet[9]+=1.9*amount
       bigSizeBet += 2 * amount;
     } 
     else if (number >= 0 && number <= 9) {
