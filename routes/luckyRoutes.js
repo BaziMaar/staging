@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 
-const { generateAndBroadcastNumber, sendLuckyMoney ,receiveMoney,getLuckyTransactions,getLuckyEntry} = require('../controllers/luckyWheelController');
+const { generateAndBroadcastNumber, sendLuckyMoney ,receiveForMoney,getLuckyTransactions,getLuckyEntry} = require('../controllers/luckyWheelController');
 const { verifyDeviceId } = require('../middlewares/verifyDeviceId');
 
 module.exports = (io) => {
@@ -33,7 +33,7 @@ module.exports = (io) => {
     const { phone, color, amount } = req.body;
 
     try {
-      const response=await receiveMoney(io, phone,color, amount);
+      const response=await receiveForMoney(io, phone,color, amount);
       res.status(200).json({ response:response });
     } catch (error) {
       console.error('Error sending money:', error);

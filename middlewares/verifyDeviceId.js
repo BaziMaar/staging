@@ -40,10 +40,7 @@ const verifyDeviceId = async (req, res, next) => {
 
 const getVerifyDeviceId = async (req, res, next) => {
     try {
-        // Get the phone number and device ID from the request body
         const { phone, deviceId } = req.query;
-
-        // Find the user by phone number
         const existingUser = await User.findOne({ phone });
 
         if (!existingUser) {

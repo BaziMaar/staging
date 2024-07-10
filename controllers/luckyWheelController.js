@@ -270,6 +270,16 @@ const sendLuckyMoney = async (io, phone, color, amount) => {
     throw new Error('Failed to send money. Please try again.');
   }
 };
+const receiveForMoney = async (io, phone, colors,amounts) => {
+  let finalResBalance = 0;
+  let finalResWinning = 0;
+  for (let i = 0; i < colors.length; i++) {
+      const resultColor = await receiveMoney(io, phone, colors[i], amounts[i]); 
+      finalResBalance=resultColor.newBalance
+      finalResWinning+=resultColor.amount   
+  }
+  return { newBalance:finalResBalance,amount:finalResWinning};
+};
 const receiveMoney = async (io, phone, color, amount) => {
   let winning = 0;
   try {
@@ -379,6 +389,7 @@ const receiveMoney = async (io, phone, color, amount) => {
     sendLuckyMoney,
     receiveMoney,
     getLuckyTransactions,
-    getLuckyEntry
+    getLuckyEntry,
+    receiveForMoney
   };
   
