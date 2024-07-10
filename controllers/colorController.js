@@ -544,7 +544,7 @@ const receiveForMoney = async (io, phone, colors, numbers, sizes, amounts, globa
   let finalResBalance = 0;
   let finalResWinning = 0;
   // Handle colors
-  for (let i = 0; i < colors.length; i++) {
+  for (let i = 0; i < amounts.length; i++) {
       const resultColor = await receiveMoney(io, phone, colors[i], numbers[i],sizes[i], amounts[i], globalNumber); 
       finalResBalance=resultColor.newBalance
       finalResWinning+=resultColor.amount   
