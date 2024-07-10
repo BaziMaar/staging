@@ -466,7 +466,7 @@ const receiveMoney = async (io, phone, color, number, size, amount, globalNumber
     let transactionUpdated = false;
     if (userTransaction) {
       const transaction = userTransaction.transactions.find(t => 
-        String(t.globalNumber).trim() === String(globalNumber).trim() && t.transactionUpdated ===0
+        String(t.globalNumber).trim() === String(globalNumber).trim() && t.transactionUpdated==0
       );
       if (transaction) {
         transaction.orignalNumber = winner;
