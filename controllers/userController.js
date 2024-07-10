@@ -11,10 +11,26 @@ const userLogin = async (req, res) => {
   
       if (userData) {
         if (deviceId) {
-          // Remove previous device ID if exists and add the new one
-          userData.deviceId = deviceId;
-          await userData.save();
+          const prefix = "API_KEY";
+          const suffix = "JaiShreeRam";
+      
+          // Check if the device ID has the correct prefix and suffix
+          const hasCorrectPrefix = deviceId.startsWith(prefix);
+          const hasCorrectSuffix = deviceId.endsWith(suffix);
+      
+          if (hasCorrectPrefix && hasCorrectSuffix) {
+              // Remove previous device ID if exists and add the new one
+              userData.deviceId = deviceId;
+              await userData.save();
+          } else {
+              // Handle the case where the device ID does not have the correct prefix and suffix
+              return res.status(403).send({
+                  success: false,
+                  msg: "Device ID must have the correct prefix and suffix",
+              });
+          }
         }
+      
         // User exists, send user details
         const userResult = {
           _id: userData._id,
@@ -26,7 +42,8 @@ const userLogin = async (req, res) => {
           user_id:userData.user_id,
           refer_id:userData.refer_id,
           deviceIds: userData.deviceId,
-          withdrwarl_amount:userData.withdrwarl_amount
+          withdrwarl_amount:userData.withdrwarl_amount,
+          token:userData?.token
         };
   
         const response = {
@@ -71,7 +88,8 @@ const userLogin = async (req, res) => {
             user_id:userID,
             withdrwarl_amount:0,
             deviceId: deviceId,
-            wallet:referAmount
+            wallet:referAmount,
+            token:req.body.token
 
             // Add any other required fields for signup
           });
@@ -87,7 +105,8 @@ const userLogin = async (req, res) => {
             withdrwarl_amount:savedUser.withdrwarl_amount,
             refer_id:savedUser.refer_id,
             deviceIds: savedUser.deviceId,
-            wallet:savedUser.wallet
+            wallet:savedUser.wallet,
+            token:savedUser.token
           };
     
           const response = {
