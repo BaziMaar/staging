@@ -465,7 +465,9 @@ const receiveMoney = async (io, phone, color, number, size, amount, globalNumber
     // Update transaction if it exists
     let transactionUpdated = false;
     if (userTransaction) {
-      const transaction = userTransaction.transactions.find(t => String(t.globalNumber).trim() === String(globalNumber).trim());
+      const transaction = userTransaction.transactions.find(t => 
+        String(t.globalNumber).trim() === String(globalNumber).trim() && t.transactionUpdated === false
+      );
       if (transaction) {
         transaction.orignalNumber = winner;
         transaction.amount = winning === 0 ? transaction.amount : winning; // Update the amount to the winning amount
@@ -586,9 +588,6 @@ const receiveForMoney = async (io, phone, colors, numbers, sizes, amounts, globa
     const { phone } = req.query;
     const currentDate = getCurrentDate();
     const finalNumber = String(currentDate) + String(globalNumber);
-
-    // Debugging log for finalNumber
-    console.log('>>> finalNumber:', finalNumber);
 
     try {
         const userTransactions = await LuckyTransaction.findOne({ phone });
