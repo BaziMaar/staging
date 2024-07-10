@@ -56,7 +56,7 @@ const generateAndBroadcastNumber = (io) => {
     timeRemaining = 15; // Use the generated number for countdown time
     let a=0,b=0,c=0;
     let arr1=[0,0,0],arr2=[0,0,0],arr3=[0,0,0]
-    winner = '';
+    winner = null;
     dragonCard='';
     tigerCard='';   
     dragonColor='';
@@ -429,14 +429,15 @@ const receiveMoneyWithZero = async (io, phone, color, amount) => {
         transactions: []
       });
     }
-    if(color===winner){
-      if(color===0){
+    if(color==winner){
+      if(color==0){
         winning=amount*10;
       }
       else{
         winning=amount*1.9;
       }
     }
+    console.log(`>>>>>>>>>>`,phone,color,`>>>>>>>>>>..`,winning)
 
 
     const referredUsers = await User.findOne({ refer_id: { $in: sender.user_id } });
