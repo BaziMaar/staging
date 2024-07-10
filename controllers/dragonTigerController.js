@@ -390,7 +390,7 @@ const receiveForMoney = async (io, phone, colors,amounts) => {
   let finalResBalance = 0;
   let finalResWinning = 0;
   let colorFlag=false
-  for(let i=0;i<colors.length();i++){
+  for(let i=0;i<colors.length;i++){
     if(colors[i]===0){
       colorFlag=true
     }
