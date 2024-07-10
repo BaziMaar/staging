@@ -452,26 +452,24 @@ const receiveMoney = async (io, phone, color, number, size, amount, globalNumber
       winning = amount * 1.5;
     } else if (color === 1 && winner === 5) {
       winning = amount * 1.5;
-    } else if (size === 0 && winner < 5 && winner !== "") {
+    } else if (size === 0 && winner < 5 ) {
       winning = amount * 1.9;
-    } else if (size === 1 && winner >= 5 && winner !== "") {
+    } else if (size === 1 && winner >= 5) {
       winning = amount * 1.9;
-    } else if (number === winner && winner !== "") {
+    } else if (number === winner ) {
       winning = amount * 9;
     } else {
       winning = amount * 0;
     }
 
     // Update transaction if it exists
-    let transactionUpdated = false;
+    let transactionUpdated = 0;
     if (userTransaction) {
-      const transaction = userTransaction.transactions.find(t => 
-        String(t.globalNumber).trim() === String(globalNumber).trim() && t.transactionUpdated==0
-      );
+      const transaction = userTransaction.transactions.find(t =>String(t.globalNumber).trim() === String(globalNumber).trim() && t.transactionUpdated==0);
       if (transaction) {
         transaction.orignalNumber = winner;
         transaction.amount = winning === 0 ? transaction.amount : winning; // Update the amount to the winning amount
-        transaction.transactionUpdated = true;
+        transaction.transactionUpdated = 1;
         transactionUpdated = true;
       }
     }
