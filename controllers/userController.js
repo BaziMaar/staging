@@ -11,7 +11,7 @@ const userLogin = async (req, res) => {
   
       if (userData) {
         if (deviceId) {
-          const prefix = "API_KEY";
+          const prefix = "APIKEY_";
           const suffix = "JaiShreeRam";
       
           // Check if the device ID has the correct prefix and suffix
@@ -178,7 +178,29 @@ const userLogin = async (req, res) => {
       // If the user ID already exists, generate a new one in the next iteration
     }
   }
-  
+  const refreshToken=async(req,res)=>{
+    const phone=req.body.phone
+    const existingUser = await User.findOne({ phone: phone });
+    const token=req.body.token
+    if(token){
+      existingUser.token=token
+    }
+    const savedUser=existingUser.save()
+    const userResult = {
+      _id: savedUser._id,
+      name: savedUser.name,
+      phone: savedUser.phone,
+      email:savedUser.email,
+      avatar:savedUser.avatar,
+      user_id:savedUser.user_id,
+      withdrwarl_amount:savedUser.withdrwarl_amount,
+      refer_id:savedUser.refer_id,
+      deviceIds: savedUser.deviceId,
+      wallet:savedUser.wallet,
+      token:savedUser.token
+    };
+    res.status(200).send(userResult);
+  }
   const updateProfile=async (req,res)=>{
     const phone = req.body.phone;
     const existingUser = await User.findOne({ phone: phone });
