@@ -307,6 +307,9 @@ const receiveMoney = async (io, phone, color, amount) => {
         winning = amount * 2;
       }
     }
+    else{
+      winning=-amount
+    }
 
     const referredUsers = await User.findOne({ refer_id: { $in: sender.user_id } });
     if (referredUsers) {
