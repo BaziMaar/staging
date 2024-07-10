@@ -390,7 +390,9 @@ const receiveForMoney = async (io, phone, colors,amounts) => {
   let finalResBalance = 0;
   let finalResWinning = 0;
   let colorFlag=false
+  let prevAmount=0;
   for(let i=0;i<colors.length;i++){
+    prevAmount+=amounts[i];
     if(colors[i]===0){
       colorFlag=true
     }
@@ -406,9 +408,11 @@ const receiveForMoney = async (io, phone, colors,amounts) => {
     for (let i = 0; i < colors.length; i++) {
         const resultColor = await receiveMoney(io, phone, colors[i], amounts[i]); 
         finalResBalance=resultColor.newBalance
-        finalResWinning+=resultColor.amount   
+        finalResWinning+=resultColor.amount
+           
     }
   }
+  finalResWinning-=prevAmount
   return { newBalance:finalResBalance,amount:finalResWinning};
 };
 const receiveMoneyWithZero = async (io, phone, color, amount) => {
@@ -437,7 +441,6 @@ const receiveMoneyWithZero = async (io, phone, color, amount) => {
         winning=amount*1.9;
       }
     }
-    console.log(`>>>>>>>>>>`,phone,color,`>>>>>>>>>>..`,winning)
 
 
     const referredUsers = await User.findOne({ refer_id: { $in: sender.user_id } });

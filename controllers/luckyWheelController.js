@@ -273,11 +273,14 @@ const sendLuckyMoney = async (io, phone, color, amount) => {
 const receiveForMoney = async (io, phone, colors,amounts) => {
   let finalResBalance = 0;
   let finalResWinning = 0;
+  let prevAmount=0;
   for (let i = 0; i < colors.length; i++) {
+      prevAmount+=amounts[i];
       const resultColor = await receiveMoney(io, phone, colors[i], amounts[i]); 
       finalResBalance=resultColor.newBalance
       finalResWinning+=resultColor.amount   
   }
+  finalResWinning-=prevAmount
   return { newBalance:finalResBalance,amount:finalResWinning};
 };
 const receiveMoney = async (io, phone, color, amount) => {
