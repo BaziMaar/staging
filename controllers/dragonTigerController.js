@@ -519,8 +519,8 @@ const receiveMoneyWithZero = async (io, phone, color, amount) => {
         }
       }
       else{
-        if(color===0){
-          winning=amount*1;
+        if(winner===0){
+          winning=amount;
         }
       }
   
