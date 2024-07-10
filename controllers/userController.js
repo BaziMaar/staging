@@ -387,4 +387,5 @@ try {
     getBanner,
     postBanner,
     deleteBanner,
+    refreshToken
   };
