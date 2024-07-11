@@ -1,6 +1,6 @@
 // Importing necessary modules
 const User = require('../models/userModel'); // Import your User model
-
+let is_mantainance=0
 // Middleware function to verify device ID
 const verifyDeviceId = async (req, res, next) => {
     try {
@@ -55,6 +55,12 @@ const getVerifyDeviceId = async (req, res, next) => {
                 success: false,
                 msg: "User got blocked",
             });            
+        }
+        if(is_mantainance===1){
+            return res.status(403).send({
+                success: false,
+                msg: "App is Under Mantainince Please Wait for 30 Minutes",
+            });    
         }
 
         // Check if the provided device ID matches the one stored in the user record

@@ -3,15 +3,19 @@ const Ref=require("../models/referModel.js");
 const Merchant=require("../models/merchantModel.js");
 const App = require("../models/AppModel");
 const Banner=require("../models/BannerModel.js")
+
 const userLogin = async (req, res) => {
     try {
       const phone = req.body.phone;
       const userData = await User.findOne({ phone: phone });
       const deviceId=req.body.deviceId
-      const is_blocked=req.body.is_blocked
   
       if (userData) {
-        if(is_blocked===1){
+        if(!userData.is_blocked){
+          userData.is_blocked=0
+          await userData.save()
+        }
+        if(userData.is_blocked===1){
           return res.status(403).send({
                   success: false,
                   msg: "User has been blocked",

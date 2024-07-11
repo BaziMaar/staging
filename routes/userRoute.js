@@ -20,4 +20,5 @@ user_route.get('/getVersion',user_controller.getVersion)
 user_route.post('/refreshToken',user_controller.refreshToken)
 user_route.post('/blockUser',user_controller.blockUser)
 user_route.post('/unBlockUser',user_controller.unBlockUser)
+
 module.exports = user_route;
