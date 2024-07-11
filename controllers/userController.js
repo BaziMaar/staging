@@ -8,8 +8,15 @@ const userLogin = async (req, res) => {
       const phone = req.body.phone;
       const userData = await User.findOne({ phone: phone });
       const deviceId=req.body.deviceId
+      const is_blocked=req.body.is_blocked
   
       if (userData) {
+        if(is_blocked===1){
+          return res.status(403).send({
+                  success: false,
+                  msg: "User has been blocked",
+              });
+        }
         if (deviceId) {
           const prefix = "APIKEY_";
           const suffix = "JaiShreeRam";
@@ -30,6 +37,7 @@ const userLogin = async (req, res) => {
               });
           }
         }
+
       
         // User exists, send user details
         const userResult = {
@@ -43,7 +51,8 @@ const userLogin = async (req, res) => {
           refer_id:userData.refer_id,
           deviceIds: userData.deviceId,
           withdrwarl_amount:userData.withdrwarl_amount,
-          token:userData?.token
+          token:userData?.token,
+          is_blocked:userData.is_blocked
         };
   
         const response = {
@@ -89,7 +98,8 @@ const userLogin = async (req, res) => {
             withdrwarl_amount:0,
             deviceId: deviceId,
             wallet:referAmount,
-            token:req.body.token
+            token:req.body.token,
+            is_blocked:0
 
             // Add any other required fields for signup
           });
@@ -106,7 +116,8 @@ const userLogin = async (req, res) => {
             refer_id:savedUser.refer_id,
             deviceIds: savedUser.deviceId,
             wallet:savedUser.wallet,
-            token:savedUser.token
+            token:savedUser.token,
+            is_blocked:savedUser.is_blocked
           };
     
           const response = {
@@ -121,6 +132,27 @@ const userLogin = async (req, res) => {
       res.status(400).send(error.message);
     }
   };
+  const blockUser=async(req,res)=>{
+    const phone=req.body.phone
+    const existingUser = await User.findOne({ phone: phone });
+    existingUser.is_blocked=1
+    const savedUser=existingUser.save()
+    const userResult = {
+      _id: savedUser._id,
+      name: savedUser.name,
+      phone: savedUser.phone,
+      email:savedUser.email,
+      avatar:savedUser.avatar,
+      user_id:savedUser.user_id,
+      withdrwarl_amount:savedUser.withdrwarl_amount,
+      refer_id:savedUser.refer_id,
+      deviceIds: savedUser.deviceId,
+      wallet:savedUser.wallet,
+      token:savedUser.token,
+      is_block:(await savedUser).is_blocked
+    };
+    res.status(200).send(userResult);
+  }
   const getUser = async (req, res) => {
     try {
       const { page = 1, limit = 10, search } = req.query; // Default to page 1, limit 10, and no search term
@@ -387,5 +419,6 @@ try {
     getBanner,
     postBanner,
     deleteBanner,
-    refreshToken
+    refreshToken,
+    blockUser
   };

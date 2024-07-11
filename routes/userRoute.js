@@ -18,4 +18,5 @@ user_route.post('/removeUpi',user_controller.deleteUpi)
 user_route.post('/App',user_controller.updateApp)
 user_route.get('/getVersion',user_controller.getVersion)
 user_route.post('/refreshToken',user_controller.refreshToken)
+iser_route.post('/blockUser',user_controller.blockUser)
 module.exports = user_route;
