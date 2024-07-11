@@ -10,7 +10,8 @@ let count =0;
 let am1=0
 let am2=0 
 let am3=0
-const probabilitied = [0.20, 0.50, 0.30]; 
+let number=0
+const probabilitied = [0.10, 0.45, 0.45]; 
 function generateRandomWithProbability(probabilities) {
   const rand = Math.random();
   let cumulativeProbability = 0;
@@ -170,16 +171,31 @@ const generateAndBroadcastNumber = (io) => {
             count=0
           }
         }
-        else if (secondBet <= firstBet && secondBet <= thirdBet) {
-          winner = 1; // First bet is the highest
+        else if(number===6){
+          if (secondBet <= firstBet && secondBet <= thirdBet) {
+            winner = 1; // First bet is the highest
+            count=0
+        } else if (thirdBet <= firstBet && thirdBet <= secondBet) {
+          winner = 2; // Second bet is the highest
           count=0
-      } else if (thirdBet <= firstBet && thirdBet <= secondBet) {
-        winner = 2; // Second bet is the highest
-        count=0
-      } else {       
-          winner = 0; // Third bet is the highest
+        } else {       
+            winner = 0; // Third bet is the highest
+            count=0
+        }
+        }
+        else{
+          if (secondBet <= firstBet && secondBet <= thirdBet) {
+            winner = 1; // First bet is the highest
+            count=0
+        } else if (thirdBet <= firstBet && thirdBet <= secondBet) {
+          winner = 2; // Second bet is the highest
           count=0
-      }
+        } else {       
+            winner = Math.floor(Math.random*2)+1; // Third bet is the highest
+            count=0
+        }
+        }
+        
         lastNumbers.push(winner)
         if(lastNumbers.length>12){
           lastNumbers.shift();
