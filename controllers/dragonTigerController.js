@@ -210,7 +210,7 @@ const generateAndBroadcastNumber = (io) => {
             else if(secondBet!=0){
               winner = Math.random() < 0.5 ? 0 : 2; 
               if(winner===0){
-                dragonCard=Math.floor(Math.random()*6)+13
+                dragonCard=Math.floor(Math.random()*13)+1
                 dragonCard=tigerCard
                 dragonColor=Math.floor(Math.random()*4)+1;
                 tigerColor=Math.floor(Math.random()*4)+1;
@@ -228,7 +228,7 @@ const generateAndBroadcastNumber = (io) => {
             else{
               winner = Math.random() < 0.5 ? 0 : 1; 
               if(winner===0){
-                dragonCard=Math.floor(Math.random()*6)+13
+                dragonCard=Math.floor(Math.random()*13)+1
                 dragonCard=tigerCard
                 dragonColor=Math.floor(Math.random()*4)+1;
                 tigerColor=Math.floor(Math.random()*4)+1;
