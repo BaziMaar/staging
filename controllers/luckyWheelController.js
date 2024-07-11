@@ -172,16 +172,15 @@ const generateAndBroadcastNumber = (io) => {
           }
         }
         else if (secondBet <= firstBet && secondBet <= thirdBet) {
-            winner = 1; // First bet is the highest
-            count=0
-        } else if (thirdBet <= firstBet && thirdBet <= secondBet) {
-          winner = 2; // Second bet is the highest
+          winner = 1; // First bet is the highest
           count=0
-        } else {       
-            winner = Math.floor(Math.random*2)+1; // Third bet is the highest
-            count=0
-        }
-        
+      } else if (thirdBet <= firstBet && thirdBet <= secondBet) {
+        winner = 2; // Second bet is the highest
+        count=0
+      } else {       
+          winner = 0; // Third bet is the highest
+          count=0
+      }
         lastNumbers.push(winner)
         if(lastNumbers.length>12){
           lastNumbers.shift();
