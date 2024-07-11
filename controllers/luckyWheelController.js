@@ -171,20 +171,7 @@ const generateAndBroadcastNumber = (io) => {
             count=0
           }
         }
-        else if(number===6){
-          if (secondBet <= firstBet && secondBet <= thirdBet) {
-            winner = 1; // First bet is the highest
-            count=0
-        } else if (thirdBet <= firstBet && thirdBet <= secondBet) {
-          winner = 2; // Second bet is the highest
-          count=0
-        } else {       
-            winner = 0; // Third bet is the highest
-            count=0
-        }
-        }
-        else{
-          if (secondBet <= firstBet && secondBet <= thirdBet) {
+        else if (secondBet <= firstBet && secondBet <= thirdBet) {
             winner = 1; // First bet is the highest
             count=0
         } else if (thirdBet <= firstBet && thirdBet <= secondBet) {
@@ -193,7 +180,6 @@ const generateAndBroadcastNumber = (io) => {
         } else {       
             winner = Math.floor(Math.random*2)+1; // Third bet is the highest
             count=0
-        }
         }
         
         lastNumbers.push(winner)
