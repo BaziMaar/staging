@@ -50,6 +50,12 @@ const getVerifyDeviceId = async (req, res, next) => {
                 msg: "User not found",
             });
         }
+        if(existingUser.is_blocked===1){
+            return res.status(403).send({
+                success: false,
+                msg: "User got blocked",
+            });            
+        }
 
         // Check if the provided device ID matches the one stored in the user record
         if (existingUser.deviceId !== deviceId) {
