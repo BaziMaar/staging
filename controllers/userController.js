@@ -82,7 +82,7 @@ const userLogin = async (req, res) => {
 
         let userID=await generateUniqueUserID()
         const referId = req.body.referId || req.body.refer_id
-        let referAmount=41;
+        let referAmount=51;
         if(referId){
         const referedUser = await User.findOne({ user_id: referId });
         
@@ -90,8 +90,6 @@ const userLogin = async (req, res) => {
           // Check if referId is not already in the array
           if (!referedUser.refer_id.includes(userID)) {
             referedUser.refer_id.push(userID);
-            referAmount+=10;
-        
             // Save the updated user
             await referedUser.save();
           }
