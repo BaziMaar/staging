@@ -211,7 +211,7 @@ const generateAndBroadcastNumber = (io) => {
               winner = Math.random() < 0.5 ? 0 : 2; 
               if(winner===0){
                 dragonCard=Math.floor(Math.random()*13)+1
-                dragonCard=tigerCard
+                tigerCard=dragonCard
                 dragonColor=Math.floor(Math.random()*4)+1;
                 tigerColor=Math.floor(Math.random()*4)+1;
               }
