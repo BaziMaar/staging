@@ -9,8 +9,13 @@ const userLogin = async (req, res) => {
       const phone = req.body.phone;
       const userData = await User.findOne({ phone: phone });
       const deviceId=req.body.deviceId
+      const token=req.body.token
   
       if (userData) {
+        if(token){
+          userData.token=token 
+          await userData.save()
+        }
         if(!userData.is_blocked){
           userData.is_blocked=0
           await userData.save()
