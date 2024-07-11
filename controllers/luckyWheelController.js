@@ -280,7 +280,9 @@ const receiveForMoney = async (io, phone, colors,amounts) => {
       finalResBalance=resultColor.newBalance
       finalResWinning+=resultColor.amount   
   }
-  finalResWinning-=prevAmount
+  if(finalResWinning==0){
+    finalResWinning-=prevAmount
+  }
   return { newBalance:finalResBalance,amount:finalResWinning};
 };
 const receiveMoney = async (io, phone, color, amount) => {
