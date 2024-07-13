@@ -182,46 +182,86 @@ const userLogin = async (req, res) => {
     res.status(200).send(userResult);
   }
   const getUser = async (req, res) => {
-    try {
-      const { page = 1, limit = 10, search } = req.query; // Default to page 1, limit 10, and no search term
-      let query = {};
-  
-      if (search) {
-        query = {
-          $or: [
-            { name: { $regex: search, $options: 'i' } },  // Case-insensitive search for 'name'
-            { email: { $regex: search, $options: 'i' } },  // Case-insensitive search for 'email'
-            { phone: { $regex: search, $options: 'i' } }
-          ]
-        };
-      }
-  
-      const users = await User.find(query)
-                              .sort({ createdAt: -1 }) // Sort by createdAt in descending order
-                              .skip((page - 1) * limit)
-                              .limit(limit);
-  
-      const totalUsers = await User.countDocuments(query);
-  
-      if (!users || users.length === 0) {
-        return res.status(404).send({ error: 'user not found' });
-      }
-  
-      const response = {
-        success: true,
-        data: users,
-        total: totalUsers,
-        page: page,
-        totalPages: Math.ceil(totalUsers / limit),
+  try {
+    const { page = 1, limit = 10, search, timePeriod } = req.query; // Default to page 1, limit 10, and no search term
+    let query = {};
+
+    // Calculate date ranges based on timePeriod
+    let startDate, endDate;
+    const now = moment();
+    
+    if (timePeriod === 'today') {
+      startDate = now.startOf('day').toDate();
+      endDate = now.endOf('day').toDate();
+    } else if (timePeriod === 'week') {
+      startDate = now.startOf('week').toDate();
+      endDate = now.endOf('week').toDate();
+    }
+
+    if (startDate && endDate) {
+      query.createdAt = {
+        $gte: startDate,
+        $lte: endDate
       };
-  
-      res.status(200).send(response);
     }
-    catch (error) {
-      console.error('Error getting user :', error);
-      res.status(500).send({ error: 'Internal Server Error' });
+
+    if (search) {
+      query.$or = [
+        { name: { $regex: search, $options: 'i' } },  // Case-insensitive search for 'name'
+        { email: { $regex: search, $options: 'i' } },  // Case-insensitive search for 'email'
+        { phone: { $regex: search, $options: 'i' } }
+      ];
     }
+
+    // Main query for users
+    const users = await User.find(query)
+                            .sort({ createdAt: -1 }) // Sort by createdAt in descending order
+                            .skip((page - 1) * limit)
+                            .limit(limit);
+
+    const totalUsers = await User.countDocuments(query);
+
+    if (!users || users.length === 0) {
+      return res.status(404).send({ error: 'user not found' });
+    }
+
+    // Calculate today's and this week's user counts
+    const todayStart = now.startOf('day').toDate();
+    const todayEnd = now.endOf('day').toDate();
+    const weekStart = now.startOf('week').toDate();
+    const weekEnd = now.endOf('week').toDate();
+
+    const todayUserCount = await User.countDocuments({
+      createdAt: {
+        $gte: todayStart,
+        $lte: todayEnd
+      }
+    });
+
+    const weekUserCount = await User.countDocuments({
+      createdAt: {
+        $gte: weekStart,
+        $lte: weekEnd
+      }
+    });
+
+    const response = {
+      success: true,
+      data: users,
+      total: totalUsers,
+      page: page,
+      totalPages: Math.ceil(totalUsers / limit),
+      todayUserCount: todayUserCount,
+      weekUserCount: weekUserCount
+    };
+
+    res.status(200).send(response);
   }
+  catch (error) {
+    console.error('Error getting user :', error);
+    res.status(500).send({ error: 'Internal Server Error' });
+  }
+};
   
   
   async function generateUniqueUserID() {
