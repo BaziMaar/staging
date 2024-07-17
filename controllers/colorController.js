@@ -32,6 +32,34 @@ function getWinner(arrOfAmounts) {
     return ans
   }
 }
+let lowCount = 0;
+let highCount = 0;
+
+function getRandomNumber() {
+  let number;
+  if (lowCount < 3 && highCount < 7) {
+    // Generate a number based on remaining counts
+    const isLowNumber = Math.random() < 0.3; // 3 out of 10 should be low numbers
+    if (isLowNumber && lowCount < 3) {
+      number = Math.floor(Math.random() * 3) + 1; // Generate a number between 1 and 3
+      lowCount++;
+    } else if (highCount < 7) {
+      number = Math.floor(Math.random() * 7) + 4; // Generate a number between 4 and 10
+      highCount++;
+    } else {
+      number = Math.floor(Math.random() * 3) + 1; // If highCount is full, generate low number
+      lowCount++;
+    }
+  } else if (lowCount < 3) {
+    number = Math.floor(Math.random() * 3) + 1; // Generate a number between 1 and 3
+    lowCount++;
+  } else {
+    number = Math.floor(Math.random() * 7) + 4; // Generate a number between 4 and 10
+    highCount++;
+  }
+
+  return number;
+}
 
 function getIndexFromNonZero(arr) {
   let minNonZeroValue = Infinity;
@@ -206,6 +234,13 @@ function generateRandomWithProbability(probabilities) {
       }
   }
 }
+function getRandomIndexExcluding(excludeIndex) {
+  let randomIndex;
+  do {
+      randomIndex = Math.floor(Math.random() * 10);
+  } while (randomIndex !== excludeIndex);
+  return randomIndex;
+}
 const generateAndBroadcastNumber = async(io) => {
   let lastNumbers=[0,0,0,0,0,0,0,0,0,0,0,0]
   let targetNumber = 0;
@@ -240,10 +275,74 @@ const generateAndBroadcastNumber = async(io) => {
         io.emit('colorPlaced',{voilet:firstBet,green:secondBet,red:thirdBet,zero:allBet[0],one:allBet[1],two:allBet[2],three:allBet[3],four:allBet[4],five:allBet[5],six:allBet[6],seven:allBet[7],eight:allBet[8],nine:allBet[9],small:smallSizeBet,big:bigSizeBet})
         io.emit('colorBet', { number: currentNumber, time: timeRemaining,spin:spin, result: winner,globalNumbers:finalNumber,a:lastNumbers[0],b:lastNumbers[1],c:lastNumbers[2],d:lastNumbers[3],e:lastNumbers[4],f:lastNumbers[5],g:lastNumbers[6],h:lastNumbers[7],i:lastNumbers[8],j:lastNumbers[9],k:lastNumbers[10],l:lastNumbers[11]});    
         spin=true
-        if((firstBet===0&&secondBet===0&&thirdBet===0&&smallSizeBet===0&&bigSizeBet===0&&zeroNumberBet===0&&oneNumberBet===0&&twoNumberBet===0&&threeNumberBet===0&&fourNumberBet===0&&fiveNumberBet===0&&sixNumberBet===0&&sevenNumberBet===0&&eightNumberBet===0&&nineNumberBet===0)||count===1){
+        if((firstBet===0&&secondBet===0&&thirdBet===0&&smallSizeBet===0&&bigSizeBet===0&&zeroNumberBet===0&&oneNumberBet===0&&twoNumberBet===0&&threeNumberBet===0&&fourNumberBet===0&&fiveNumberBet===0&&sixNumberBet===0&&sevenNumberBet===0&&eightNumberBet===0&&nineNumberBet===0)){
           winner=generateRandomWithProbability(probabilitied);
           count=0
         }
+        else if(count===1){
+          const x=getRandomNumber()
+          if(x<=3){
+            if(allBet[0]!==0&&allBet[2]!==0&&allBet[4]!=0&&allBet[6]!==0&&allBet[8]!==0){
+              const y=(Math.floor(Math.random())*5)*2
+              return y
+            }
+            else if(allBet[1]!==0&&allBet[3]!==0&&allBet[5]!=0&&allBet[7]!=0&&allBet[9]!=0){
+              const y=((Math.floor(Math.random())*5)*2)+1
+              return y
+            }
+            else if(allBet[0]!==0&&allBet[5]!==0){
+              const y=Math.random()<0.5?0:5
+              return y
+            }
+            else if(allBet[0]!==0&&allBet[1]!==0&&allBet[2]!==0&&allBet[3]!==0&&allBet[4]!==0){
+              const y=Math.floor(Math.random()*5)
+              return y
+            }
+            else if(allBet[5]!==0&&allBet[6]!==0&&allBet[7]!==0&&allBet[8]!=0&&allBet[9]!==0){
+              const y=Math.floor(Math.random()*5)+5
+              return y
+            }
+            else{
+              for(let i=0;i<10;i++){
+                if(allBet[i]!==0){
+                  let randomIndex = getRandomIndexExcluding(i);
+                  return randomIndex
+              }
+            }
+          }
+          count=0
+        }
+        else{
+          if(allBet[0]!==0&&allBet[2]!==0&&allBet[4]!=0&&allBet[6]!==0&&allBet[8]!==0){
+            const y=((Math.floor(Math.random())*5)*2)+1
+            return y
+          }
+          else if(allBet[1]!==0&&allBet[3]!==0&&allBet[5]!=0&&allBet[7]!=0&&allBet[9]!=0){
+            const y=(Math.floor(Math.random())*5)*2
+            return y
+          }
+          else if(allBet[0]!==0&&allBet[5]!==0){
+            const y=Math.random()<0.5?2:7
+            return y
+          }
+          else if(allBet[0]!==0&&allBet[1]!==0&&allBet[2]!==0&&allBet[3]!==0&&allBet[4]!==0){
+            const y=Math.floor(Math.random()*5)+5
+            return y
+          }
+          else if(allBet[5]!==0&&allBet[6]!==0&&allBet[7]!==0&&allBet[8]!=0&&allBet[9]!==0){
+            const y=Math.floor(Math.random()*5)+5
+            return y
+          }
+          else{
+            for(let i=0;i<10;i++){
+              if(allBet[i]!==0){
+                let randomIndex = getRandomIndexExcluding(i);
+                return randomIndex
+            }
+          }
+        }
+      }
+    }
         else{
           winner=getWinner(allBet)
           count=0
