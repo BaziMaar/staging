@@ -284,29 +284,29 @@ const generateAndBroadcastNumber = async(io) => {
           if(x<=3){
             if(allBet[0]!==0&&allBet[2]!==0&&allBet[4]!=0&&allBet[6]!==0&&allBet[8]!==0){
               const y=(Math.floor(Math.random())*5)*2
-              return y
+              winner=y
             }
             else if(allBet[1]!==0&&allBet[3]!==0&&allBet[5]!=0&&allBet[7]!=0&&allBet[9]!=0){
               const y=((Math.floor(Math.random())*5)*2)+1
-              return y
+              winner=y
             }
             else if(allBet[0]!==0&&allBet[5]!==0){
               const y=Math.random()<0.5?0:5
-              return y
+              winner=y
             }
             else if(allBet[0]!==0&&allBet[1]!==0&&allBet[2]!==0&&allBet[3]!==0&&allBet[4]!==0){
               const y=Math.floor(Math.random()*5)
-              return y
+              winner=y
             }
             else if(allBet[5]!==0&&allBet[6]!==0&&allBet[7]!==0&&allBet[8]!=0&&allBet[9]!==0){
               const y=Math.floor(Math.random()*5)+5
-              return y
+              winner=y
             }
             else{
               for(let i=0;i<10;i++){
                 if(allBet[i]!==0){
                   let randomIndex = getRandomIndexExcluding(i);
-                  return randomIndex
+                  winner=randomIndex
               }
             }
           }
@@ -315,32 +315,33 @@ const generateAndBroadcastNumber = async(io) => {
         else{
           if(allBet[0]!==0&&allBet[2]!==0&&allBet[4]!=0&&allBet[6]!==0&&allBet[8]!==0){
             const y=((Math.floor(Math.random())*5)*2)+1
-            return y
+            winner=y
           }
           else if(allBet[1]!==0&&allBet[3]!==0&&allBet[5]!=0&&allBet[7]!=0&&allBet[9]!=0){
             const y=(Math.floor(Math.random())*5)*2
-            return y
+            winner=y
           }
           else if(allBet[0]!==0&&allBet[5]!==0){
             const y=Math.random()<0.5?2:7
-            return y
+            winner=y
           }
           else if(allBet[0]!==0&&allBet[1]!==0&&allBet[2]!==0&&allBet[3]!==0&&allBet[4]!==0){
             const y=Math.floor(Math.random()*5)+5
-            return y
+            winner=y
           }
           else if(allBet[5]!==0&&allBet[6]!==0&&allBet[7]!==0&&allBet[8]!=0&&allBet[9]!==0){
             const y=Math.floor(Math.random()*5)+5
-            return y
+            winner=y
           }
           else{
             for(let i=0;i<10;i++){
               if(allBet[i]!==0){
                 let randomIndex = getRandomIndexExcluding(i);
-                return randomIndex
+                winner=randomIndex
             }
           }
         }
+        count=0
       }
     }
         else{
