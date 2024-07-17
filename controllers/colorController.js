@@ -447,45 +447,41 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
     }
 
     if (color === 0) {
-      const p=4.5*amount
-      allBet[0]+=p.toFixed(2)
-      allBet[5]+=p.toFixed(2)
+
+      allBet[0]+=4.5*amount
+      allBet[5]+=4.5*amount
       firstBet += 2 * amount; 
     } 
     else if (color === 1) {
-      const p=1.9*amount 
-      allBet[1]+=p.toFixed(2)
-      allBet[3]+=p.toFixed(2)
-      allBet[5]+=p.toFixed(2)
-      allBet[7]+=p.toFixed(2)
-      allBet[9]+=p.toFixed(2)
+      allBet[1]+=1.9*amount
+      allBet[3]+=1.9*amount
+      allBet[5]+=1.5*amount
+      allBet[7]+=1.9*amount
+      allBet[9]+=1.9*amount
       secondBet += 2 * amount; // Adjusted for the green
     } 
     else if (color === 2) {
-      const p=1.9*amount
-      allBet[0]+=p.toFixed(2)
-      allBet[2]+=p.toFixed(2)
-      allBet[4]+=p.toFixed(2)
-      allBet[6]+=p.toFixed(2)
-      allBet[8]+=p.toFixed(2)
+      allBet[0]+=1.5*amount
+      allBet[2]+=1.9*amount
+      allBet[4]+=1.9*amount
+      allBet[6]+=1.9*amount
+      allBet[8]+=1.9*amount
       thirdBet += 2 * amount; // Adjusted for the red
     } 
     else if (size === 0) {
-      const p=1.9*amount
-      allBet[0]+=p.toFixed(2)
-      allBet[1]+=p.toFixed(2)
-      allBet[2]+=p.toFixed(2)
-      allBet[3]+=p.toFixed(2)
-      allBet[4]+=p.toFixed(2)
+      allBet[0]+=1.9*amount
+      allBet[1]+=1.9*amount
+      allBet[2]+=1.9*amount
+      allBet[3]+=1.9*amount
+      allBet[4]+=1.9*amount
       smallSizeBet += 2 * amount;
     } 
     else if (size === 1) {
-      const p=1.9*amount
-      allBet[5]+=p.toFixed(2)
-      allBet[6]+=p.toFixed(2)
-      allBet[7]+=p.toFixed(2)
-      allBet[8]+=p.toFixed(2)
-      allBet[9]+=p.toFixed(2)
+      allBet[5]+=1.9*amount
+      allBet[6]+=1.9*amount
+      allBet[7]+=1.9*amount
+      allBet[8]+=1.9*amount
+      allBet[9]+=1.9*amount
       bigSizeBet += 2 * amount;
     } 
     else if (number >= 0 && number <= 9) {
