@@ -281,7 +281,7 @@ const generateAndBroadcastNumber = async(io) => {
         }
         else if(count===1){
           const x=getRandomNumber()
-          if(x<=3){
+          if(x<=2){
             if(allBet[0]!==0&&allBet[2]!==0&&allBet[4]!=0&&allBet[6]!==0&&allBet[8]!==0){
               const y=(Math.floor(Math.random())*5)*2
               winner=y
