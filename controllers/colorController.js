@@ -101,7 +101,7 @@ function getIndexFromNonZero(arr) {
 
 function checkOnlyPlacedBet(arr, i) {
   for (let j = 0; j < arr.length; j++) {
-    if (arr[j] !== 0 && arr[j] !== arr[i]) {
+    if (arr[j] !== 0 && arr[j] !== arr[i]&&(i!==0||i!==5)) {
       return false; 
     }
   }
