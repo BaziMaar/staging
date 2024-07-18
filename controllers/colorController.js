@@ -76,9 +76,9 @@ function getIndexFromNonZero(arr) {
   const otherIdx = [];
 
   for (let i = 0; i < arr.length; i++) {
-    if (arr[i] === minNonZeroValue&&(i!==0||i!==5)) {
+    if (arr[i] === minNonZeroValue&&(i!==0&&i!==5)) {
       minNonZeroValuesIdx.push(i);
-    } else if((i!==0 || i!==5)&&arr[i]===0) {
+    } else if((i!==0 && i!==5)&&arr[i]===0) {
       otherIdx.push(i);
     }
   }
@@ -101,7 +101,7 @@ function getIndexFromNonZero(arr) {
 
 function checkOnlyPlacedBet(arr, i) {
   for (let j = 0; j < arr.length; j++) {
-    if (arr[j] !== 0 && arr[j] !== arr[i]&&(i!==0||i!==5)) {
+    if (arr[j] !== 0 && arr[j] !== arr[i]&&(i!==0&&i!==5)) {
       return false; 
     }
   }
