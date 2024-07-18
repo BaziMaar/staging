@@ -66,7 +66,7 @@ function getIndexFromNonZero(arr) {
   let minNonZeroIdx = -1;
 
   for (let i = 0; i < arr.length; i++) {
-    if (arr[i] > 0 && arr[i] < minNonZeroValue&&(i!==0&&i!==5)) {
+    if (arr[i] > 0 && arr[i] < minNonZeroValue&&(i!==0||i!==5)) {
       minNonZeroIdx = i;
       minNonZeroValue = arr[i];
     }
