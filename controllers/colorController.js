@@ -238,7 +238,7 @@ function getRandomIndexExcluding(excludeIndex) {
   let randomIndex;
   do {
       randomIndex = Math.floor(Math.random() * 10);
-  } while (randomIndex !== excludeIndex);
+  } while (randomIndex === excludeIndex);
   return randomIndex;
 }
 const generateAndBroadcastNumber = async(io) => {
