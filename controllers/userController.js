@@ -83,7 +83,7 @@ const userLogin = async (req, res) => {
 
         let userID=await generateUniqueUserID()
         const referId = req.body.referId || req.body.refer_id
-        let referAmount=51;
+        let referAmount=41;
         if(referId){
         const referedUser = await User.findOne({ user_id: referId });
         
