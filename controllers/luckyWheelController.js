@@ -154,7 +154,7 @@ const generateAndBroadcastNumber = (io) => {
         if(dtAuto===true){
           winner=Math.floor(Math.random()*2)+1;
         }
-        if(firstBet===0&&secondBet===0&&thirdBet===0){
+        else if(firstBet===0&&secondBet===0&&thirdBet===0){
           const y=generateRandomWithProbability(probabilities)
           winner=y  
         }
