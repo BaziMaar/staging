@@ -22,6 +22,16 @@ let allBet=[0,0,0,0,0,0,0,0,0,0];
 let winner = null;
 let count =0;
 let globalNumber=666777;
+let dtAuto;
+const fetchAutoData = async () => {
+  try {
+    const latestEntry = await AutoModel.findOne()
+    dtAuto=latestEntry.auto_color;
+  } catch (error) {
+    console.error('Error:', error.message);
+  }
+};
+fetchAutoData()
 function getWinner(arrOfAmounts) {
   const random = Math.floor(Math.random() * 10);
   if (random === 0 || random === 5) {
@@ -275,6 +285,10 @@ const generateAndBroadcastNumber = async(io) => {
         io.emit('colorPlaced',{voilet:firstBet,green:secondBet,red:thirdBet,zero:allBet[0],one:allBet[1],two:allBet[2],three:allBet[3],four:allBet[4],five:allBet[5],six:allBet[6],seven:allBet[7],eight:allBet[8],nine:allBet[9],small:smallSizeBet,big:bigSizeBet})
         io.emit('colorBet', { number: currentNumber, time: timeRemaining,spin:spin, result: winner,globalNumbers:finalNumber,a:lastNumbers[0],b:lastNumbers[1],c:lastNumbers[2],d:lastNumbers[3],e:lastNumbers[4],f:lastNumbers[5],g:lastNumbers[6],h:lastNumbers[7],i:lastNumbers[8],j:lastNumbers[9],k:lastNumbers[10],l:lastNumbers[11]});    
         spin=true
+        if(dtAuto){
+          winner=Math.floor(Math.random()*10)
+          count=0
+        }
         if((firstBet===0&&secondBet===0&&thirdBet===0&&smallSizeBet===0&&bigSizeBet===0&&zeroNumberBet===0&&oneNumberBet===0&&twoNumberBet===0&&threeNumberBet===0&&fourNumberBet===0&&fiveNumberBet===0&&sixNumberBet===0&&sevenNumberBet===0&&eightNumberBet===0&&nineNumberBet===0)){
           winner=generateRandomWithProbability(probabilitied);
           count=0
