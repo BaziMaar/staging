@@ -66,6 +66,7 @@ const luckyRoute = require('./routes/luckyRoutes');
 const colorRoute = require('./routes/colorRoutes');
 const dragonTigerRoute = require('./routes/dragonTigerRoutes');
 const notificationRoute=require('./routes/notificationRoutes')
+const autoRoute=require('./routes/autoRoutes')
 app.use('/user', userRoutes);
 app.use('/wallet', walletRoute);
 app.use('/mines', minesRoute);
@@ -73,7 +74,7 @@ app.use('/lucky', luckyRoute(io));
 app.use('/color', colorRoute(io));
 app.use('/dragon', dragonTigerRoute(io));
 app.use('/notification', notificationRoute);
-
+app.use('/auto',autoRoute)
 // Start the Express server on port 3000
 const EXPRESS_PORT = 3000;
 expressServer.listen(EXPRESS_PORT, () => {
