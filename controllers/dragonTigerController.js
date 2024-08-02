@@ -160,7 +160,7 @@ const generateAndBroadcastNumber = (io) => {
             tigerColor=Math.floor(Math.random()*4)+1;
           }
         }
-        if((firstBet===0&&secondBet===0&&thirdBet===0)){
+        else if((firstBet===0&&secondBet===0&&thirdBet===0)){
           dragonCard=Math.floor(Math.random()*13)+1;
           tigerCard=Math.floor(Math.random()*13)+1;
           dragonColor=Math.floor(Math.random()*4)+1;
