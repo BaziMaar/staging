@@ -6,9 +6,9 @@ const updateAuto = async (req, res) => {
   
       if (existingEntry) {
         // If an entry exists, update it with the new data
-        existingEntry.auto_dt = req.body.auto_dt || existingEntry.auto_dt;
-        existingEntry.auto_color = req.body.auto_color || existingEntry.auto_color;
-        existingEntry.auto_spin = req.body.auto_spin || existingEntry.auto_spin;
+        existingEntry.auto_dt = req.body.auto_dt ;
+        existingEntry.auto_color = req.body.auto_color;
+        existingEntry.auto_spin = req.body.auto_spin;
         await existingEntry.save();
       } else {
         // If no entry exists, create a new one
