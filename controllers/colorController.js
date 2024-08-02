@@ -3,6 +3,7 @@ const User = require("../models/userModel.js");  // Import the User model
 const Ref=require('../models/referModel')
 const Result=require('../models/resultModel.js')
 const ColorEntryTransaction=require('../models/ColorTransactionsEntryModel.js')
+const AutoModel=require('../models/AutoModel')
 let firstBet = 0;
 let secondBet = 0;
 let thirdBet = 0;
