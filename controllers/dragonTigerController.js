@@ -146,6 +146,7 @@ const generateAndBroadcastNumber = (io) => {
         io.emit('dragonTiger', { number: currentNumber, time: timeRemaining,dragonCard:dragonCard,tigerCard:tigerCard,dragonColor:dragonColor,tigerColor:tigerColor,spin:spin, result: winner,firstBet:a,secondBet:b,thirdBet:c,a:lastNumbers[0],b:lastNumbers[1],c:lastNumbers[2],d:lastNumbers[3],e:lastNumbers[4],f:lastNumbers[5],f:lastNumbers[5],g:lastNumbers[6],h:lastNumbers[7],i:lastNumbers[8],j:lastNumbers[9],k:lastNumbers[10],l:lastNumbers[11] ,arr1:arr1,arr2:arr2,arr3:arr3 });
         spin=true
         if(dtAuto==true){
+          console.log(`>>>>>>>>>.`)
           winner=Math.floor(Math.random()*2)+1
           if(winner===1){
             dragonCard=Math.floor(Math.random()*6)+7;
