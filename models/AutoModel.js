@@ -2,15 +2,15 @@ const mongoose = require("mongoose");
 
 const autoSchema = new mongoose.Schema({
     auto_dt: {
-        type: Boolean,
+        type: Number,
         required: true
     },
     auto_color: {
-        type: Boolean,
+        type: Number,
         required:true
     },
     auto_spin:{
-        type:Boolean,
+        type:Number,
         require:true
     }
 },{

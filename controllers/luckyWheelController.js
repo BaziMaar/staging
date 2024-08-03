@@ -149,9 +149,10 @@ const generateAndBroadcastNumber = (io) => {
         currentNumber++;
         io.emit('spinPlaced',{red:firstBet,yellow:secondBet,blue:thirdBet})
         io.emit('luckyBet', { number: currentNumber, time: timeRemaining,spin:spin, result: winner,firstBet:a,secondBet:b,thirdBet:c,a:lastNumbers[0],b:lastNumbers[1],c:lastNumbers[2],d:lastNumbers[3],e:lastNumbers[4],f:lastNumbers[5],f:lastNumbers[5],g:lastNumbers[6],h:lastNumbers[7],i:lastNumbers[8],j:lastNumbers[9],k:lastNumbers[10],l:lastNumbers[11] ,arr1:arr1,arr2:arr2,arr3:arr3 });
-
+        fetchAutoData();
+        let randomNumber=Math.floor(Math.random()*5)+1
         spin=true
-        if(dtAuto===true){
+        if(dtAuto==1||(randomNumber<=2&&dtAuto==2)){
           winner=Math.floor(Math.random()*2)+1;
         }
         else if(firstBet===0&&secondBet===0&&thirdBet===0){
