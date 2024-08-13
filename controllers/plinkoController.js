@@ -18,9 +18,9 @@ const generateController = (io) => {
                     user_id: dataObj.user_id // Ensure user_id is a string
                 });
                 await plinkoData.save();
-                socket.emit('saveDataResponse', { status: 'success', message: 'Data saved successfully' });
+                socket.emit('saveDataResponse', { status: 'success',data:plinkoData });
             } catch (err) {
-                socket.emit('saveDataResponse', { status: 'error', message: 'Failed to save data', error: err.message });
+                socket.emit('saveDataResponse', { status: 'error', error: err.message });
             }
         });
 
