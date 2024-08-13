@@ -9,6 +9,7 @@ const generateController = (io) => {
             try {
 
                 const plinkoData = new PlinkoEntry({
+                    game:dataObj.game,
                     phone: Number(dataObj.phone), // Ensure phone is a number
                     time: dataObj.time, // Assuming time is already a string
                     bet: mongoose.Types.Decimal128.fromString(dataObj.bet.toString()), // Convert bet to Decimal128

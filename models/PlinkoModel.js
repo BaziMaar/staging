@@ -2,6 +2,10 @@ const { Decimal128 } = require("mongodb");
 const mongoose = require("mongoose");
 
 const PlinkoSchema = new mongoose.Schema({
+    game:{
+        type:String,
+        required:true
+    },
     phone: {
         type: String,
         required:true
