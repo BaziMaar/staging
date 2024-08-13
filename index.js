@@ -67,6 +67,7 @@ const colorRoute = require('./routes/colorRoutes');
 const dragonTigerRoute = require('./routes/dragonTigerRoutes');
 const notificationRoute=require('./routes/notificationRoutes')
 const autoRoute=require('./routes/autoRoutes')
+const plinkoRoute=require('./routes/plinkoRoutes.js')
 app.use('/user', userRoutes);
 app.use('/wallet', walletRoute);
 app.use('/mines', minesRoute);
@@ -75,6 +76,7 @@ app.use('/color', colorRoute(io));
 app.use('/dragon', dragonTigerRoute(io));
 app.use('/notification', notificationRoute);
 app.use('/auto',autoRoute)
+app.use('/plinko',plinkoRoute(io));
 // Start the Express server on port 3000
 const EXPRESS_PORT = 3000;
 expressServer.listen(EXPRESS_PORT, () => {
