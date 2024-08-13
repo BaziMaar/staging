@@ -5,10 +5,9 @@ const generateController = (io) => {
     io.on('connection', (socket) => {
         console.log('A user connected:', socket.id);
 
-        socket.on('savePlinkoData', async (data) => {
+        socket.on('savePlinkoData', async (dataObj) => {
             try {
-                const datas=JSON.stringify(data)
-                const dataObj=JSON.parse(data)
+
                 const plinkoData = new PlinkoEntry({
                     phone: Number(dataObj.phone), // Ensure phone is a number
                     time: dataObj.time, // Assuming time is already a string
@@ -18,7 +17,7 @@ const generateController = (io) => {
                     user_id: dataObj.user_id // Ensure user_id is a string
                 });
                 await plinkoData.save();
-                socket.emit('saveDataResponse', { status: 'success',data:data });
+                socket.emit('saveDataResponse', { status: 'success',data:dataObj });
             } catch (err) {
                 socket.emit('saveDataResponse', { status: 'error', error: err.message });
             }
