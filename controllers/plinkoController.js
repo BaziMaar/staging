@@ -5,12 +5,10 @@ const generateController = (io) => {
     io.on('connection', (socket) => {
         console.log('A user connected:', socket.id);
 
-        socket.on('savePlinkoData', async (dataObjParse) => {
+        socket.on('savePlinkoData', async (data) => {
             try {
-                const dataObjs=JSON.parse(dataObjParse)
-                const dataObj=JSON.stringify(dataObjs)
-                
-
+                const datas=JSON.stringify(data)
+                const dataObj=JSON.parse(data)
                 const plinkoData = new PlinkoEntry({
                     game:dataObj.game,
                     phone: Number(dataObj.phone), // Ensure phone is a number
