@@ -7,8 +7,9 @@ const generateController = (io) => {
 
         socket.on('savePlinkoData', async (dataObjParse) => {
             try {
-                const dataObjs=JSON.stringify(dataObjParse)
-                const dataObj=JSON.parse(dataObjs)
+                const dataObjs=JSON.parse(dataObjParse)
+                const dataObj=JSON.stringify(dataObjs)
+                
 
                 const plinkoData = new PlinkoEntry({
                     game:dataObj.game,
