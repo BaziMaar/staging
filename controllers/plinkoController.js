@@ -24,8 +24,9 @@ const generateController = (io) => {
                 await plinkoData.save();
                 io.emit('saveDataResponse', { status: 'success',data:dataObj });
                 const user=User.findOne({phone:user_id});
+                user.wallet+=dataObj.profit
                 await user.save()
-                user.wallet+=profit
+                
             } catch (err) {
                 io.emit('saveDataResponse', { status: 'error', error: err.message });
             }
@@ -36,7 +37,30 @@ const generateController = (io) => {
         });
     });
 };
+const getPlinkoEntry=async (req, res) => {
+    try {
+        const entries = await PlinkoEntry.find();
+        res.json(entries);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}
+const getSpinEntry = async (req, res) => {
+    try {
+        const phone = req.query.phone;
+        const entry = await PlinkoEntry.findOne({ user_id: phone, game: "Spin" })
+            .sort({ createdAt: -1 }) // Sorts by `createdAt` in descending order
+            .limit(1); // Limits the result to the most recent entry
+        
+        res.json(entry);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+}
+
 
 module.exports = {
     generateController,
+    getPlinkoEntry,
+    getSpinEntry
 };
