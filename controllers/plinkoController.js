@@ -10,8 +10,8 @@ const generateController = (io) => {
 
         socket.on('savePlinkoData', async (data) => {
             try {
-                const datas=JSON.stringify(data)
                 const dataObj=JSON.parse(data)
+                console.log(dataObj)
                 const plinkoData = new PlinkoEntry({
                     game:dataObj.game,
                     phone: Number(dataObj.phone), // Ensure phone is a number
@@ -21,10 +21,12 @@ const generateController = (io) => {
                     profit: mongoose.Types.Decimal128.fromString(dataObj.profit.toString()), // Convert profit to Decimal128
                     user_id: dataObj.user_id // Ensure user_id is a string
                 });
+                console.log(plinkoData)
                 await plinkoData.save();
                 io.emit('saveDataResponse', { status: 'success',data:dataObj });
-                const user=User.findOne({phone:user_id});
+                const user=User.findOne({phone:String(dataObj.user_id)});
                 user.wallet+=dataObj.profit
+                console.log(user.wallet)
                 await user.save()
                 
             } catch (err) {
@@ -52,7 +54,7 @@ const getSpinEntry = async (req, res) => {
             .sort({ createdAt: -1 }) // Sorts by `createdAt` in descending order
             .limit(1); // Limits the result to the most recent entry
         
-        res.json(entry);
+        res.json(entry.createdAt);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
