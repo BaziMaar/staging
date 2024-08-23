@@ -3,7 +3,7 @@ const User = require('../models/userModel');
 const Ref=require(`../models/referModel`);
 
 const Wallet=require('../models/walletModel');
-const addFunds = async (phone, amount) => {
+const addFunds = async (phone, amount,utr) => {
   try {
     // Find user
     let user = await User.findOne({ phone: phone });
@@ -12,9 +12,11 @@ const addFunds = async (phone, amount) => {
     if (!user) {
       throw new Error('User not found');
     }
-
+    if(utr===""){
+      user.wallet += amount;
+    }
     // Update user's wallet
-    user.wallet += amount;
+    
 
     // Find referred users
     const referredUsers = await User.findOne({ refer_id: { $in: user.user_id } });
@@ -63,7 +65,10 @@ const addFunds = async (phone, amount) => {
     }
 
     // Add the new transaction to wallet
-    wallet.walletTrans.push({ time: new Date(), amount: amount, status: 0 });
+    if(utr!==""){
+      wallet.walletTrans.push({ time: new Date(), amount: amount, status: 0,utr:utr });
+    }
+    wallet.walletTrans.push({ time: new Date(), amount: amount, status: 1 });
     await wallet.save();
 
     // Return updated wallet balance

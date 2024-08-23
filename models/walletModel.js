@@ -25,6 +25,9 @@ const walletSchema = new mongoose.Schema({
         },
         ifscCode:{
             type:String
+        },
+        utr:{
+            type:String
         }
 
     }]
