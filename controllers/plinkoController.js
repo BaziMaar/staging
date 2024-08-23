@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 const PlinkoEntry = require('../models/PlinkoModel');
+const Wallet=require('../models/walletModel');
+const User=require('../models/userModel');
+
 
 const generateController = (io) => {
     io.on('connection', (socket) => {
@@ -20,6 +23,9 @@ const generateController = (io) => {
                 });
                 await plinkoData.save();
                 io.emit('saveDataResponse', { status: 'success',data:dataObj });
+                const user=User.findOne({phone:user_id});
+                await user.save()
+                user.wallet+=profit
             } catch (err) {
                 io.emit('saveDataResponse', { status: 'error', error: err.message });
             }
