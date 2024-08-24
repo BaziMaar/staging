@@ -63,11 +63,16 @@ const addFunds = async (phone, amount, utr) => {
 
     // Add the transactions based on `utr`
     if (utr !== "") {
-      wallet.walletTrans.push({ time: new Date(), amount, status: 0, utr });
+      console.log(`>>>>>>inner`)
+      wallet.walletTrans.push({ time: new Date(), amount, status: 0, utr:utr });
     }
+    else{
+      wallet.walletTrans.push({ time: new Date(), amount, status: 1 });
+    }
+    console.log(`>>>>>>>`,{ time: new Date(), amount, status: 0, utr })
 
     // Add the final confirmed transaction
-    wallet.walletTrans.push({ time: new Date(), amount, status: 1 });
+    
 
     // Save the updated wallet
     await wallet.save();

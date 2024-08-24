@@ -6,6 +6,7 @@ const depositFunds = async (req, res) => {
   const phone=req.body.phone
   const amount=req.body.amount
   const utr=req.body.utr
+  console.log(req.body)
   try {
     const newBalance = await walletService.addFunds(phone, amount,utr);
     res.status(200).json({ newBalance });
