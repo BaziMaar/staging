@@ -51,7 +51,7 @@ const getPlinkoEntry=async (req, res) => {
 const getSpinEntry = async (req, res) => {
     try {
         const phone = req.query.phone;
-        const entry = await PlinkoEntry.findOne({ user_id: phone, game: "Spin" })
+        const entry = await PlinkoEntry.findOne({ user_id: phone, game: "spin" })
             .sort({ createdAt: -1 }) // Sorts by `createdAt` in descending order
             .limit(1); // Limits the result to the most recent entry
         
