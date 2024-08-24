@@ -3,60 +3,57 @@ const User = require('../models/userModel');
 const Ref=require(`../models/referModel`);
 
 const Wallet=require('../models/walletModel');
-const addFunds = async (phone, amount,utr) => {
+const addFunds = async (phone, amount, utr) => {
   try {
-    // Find user
-    let user = await User.findOne({ phone: phone });
+    // Find user by phone
+    const user = await User.findOne({ phone });
 
     // If user not found, throw an error
     if (!user) {
       throw new Error('User not found');
     }
-    if(utr===""){
+
+    // Update the user's wallet balance
+    if (utr === "") {
       user.wallet += amount;
     }
-    // Update user's wallet
-    
 
-    // Find referred users
-    const referredUsers = await User.findOne({ refer_id: { $in: user.user_id } });
+    // Handle referral bonus logic if there is a referred user
+    const referredUser = await User.findOne({ refer_id: user.user_id });
 
-    if (referredUsers){
+    if (referredUser) {
       const referralBonus = 0.02 * amount;
-      referredUsers.referred_wallet += referralBonus;
-      await referredUsers.save();
-      let ref = await Ref.findOne({ phone: referredUsers.phone });
+      referredUser.referred_wallet += referralBonus;
+      await referredUser.save();
+
+      // Handle the referral transaction in the `Ref` collection
+      let ref = await Ref.findOne({ phone: referredUser.phone });
+      const referralTransaction = {
+        user_id: user.user_id,
+        avatar: user.avatar || 1,
+        amount: referralBonus,
+        deposit_amount: amount,
+        withdraw_amount: 0
+      };
+
       if (ref) {
-        ref.referred.push({
-          user_id: user.user_id,
-          avatar: user.avatar||1,
-          amount: referralBonus,
-          deposit_amount:amount,
-          withdraw_amount:0
-        })
-      } 
-      else {
+        ref.referred.push(referralTransaction);
+      } else {
         ref = new Ref({
-          phone:referredUsers.phone,
-          referred: {
-            user_id: user.user_id,
-            avatar: user.avatar||1,
-            amount: referralBonus,
-            deposit_amount:amount,
-            withdraw_amount:0
-          }
+          phone: referredUser.phone,
+          referred: [referralTransaction]
         });
       }
 
-    await ref.save();
+      await ref.save();
     }
+
     // Save the updated user
     await user.save();
 
-    // Find wallet
-    let wallet = await Wallet.findOne({ phone: phone });
+    // Find or create a wallet for the user
+    let wallet = await Wallet.findOne({ phone });
 
-    // If wallet not found, create a new one
     if (!wallet) {
       wallet = new Wallet({
         phone,
@@ -64,20 +61,26 @@ const addFunds = async (phone, amount,utr) => {
       });
     }
 
-    // Add the new transaction to wallet
-    if(utr!==""){
-      wallet.walletTrans.push({ time: new Date(), amount: amount, status: 0,utr:utr });
+    // Add the transactions based on `utr`
+    if (utr !== "") {
+      wallet.walletTrans.push({ time: new Date(), amount, status: 0, utr });
     }
-    wallet.walletTrans.push({ time: new Date(), amount: amount, status: 1 });
+
+    // Add the final confirmed transaction
+    wallet.walletTrans.push({ time: new Date(), amount, status: 1 });
+
+    // Save the updated wallet
     await wallet.save();
 
-    // Return updated wallet balance
+    // Return the updated wallet balance
     return user.wallet;
+
   } catch (error) {
     console.error('Error adding funds:', error);
     throw error;
   }
 };
+
 
   
 
