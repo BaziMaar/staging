@@ -13,4 +13,5 @@ mines_route.get(`/getReward`,minesController.getReward)
 mines_route.get(`/getMinesEntry`,minesController.getMinesEntry)
 mines_route.get(`/getMinesTrans`,minesController.getMinesTransactions)
 mines_route.get('/getSpin',plinkoController.getSpinEntry)
+mines_route.get('/getPlinkoEntry',plinkoController.getPlinkoEntry)
 module.exports = mines_route;
