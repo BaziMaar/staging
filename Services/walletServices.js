@@ -14,7 +14,7 @@ const addFunds = async (phone, amount, utr) => {
     }
 
     // Update the user's wallet balance
-    if (utr.trim() === ""|| !utr) {
+    if (utr === ""|| !utr) {
       user.wallet += amount;
     }
 
