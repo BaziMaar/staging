@@ -17,9 +17,11 @@ const addFunds = async (phone, amount, utr) => {
     if (utr === ""|| !utr) {
       user.wallet += amount;
       const referredUser = await User.findOne({ refer_id: user.user_id });
+      console.log(`>>>>>referred>>>>>`,referredUser)
+      console.log(`>>>>>>>>>>>amount>>>`,amount)
 
       if (referredUser) {
-        const referralBonus = 0.02 * abs(amount);
+        const referralBonus = 0.02 * amount;
         referredUser.referred_wallet += referralBonus;
         await referredUser.save();
 
