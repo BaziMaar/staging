@@ -1,21 +1,32 @@
 const games = {};
 const playerGameMap = {}; // To track which game each player is in
+let gameIdCounter = 100000; // Initialize a gameId counter
 
 const generateController = (io) => {
   io.on('connection', (socket) => {
     console.log('A user connected', socket.id);
 
-    // Listen for player joining a game
     socket.on('joinGame', (playerData) => {
-      if (!games[playerData.gameId]) {
-        games[playerData.gameId] = { players: [playerData] };
-      } else if (games[playerData.gameId].players.length < 2) {
-        games[playerData.gameId].players.push(playerData);
+      let gameId = playerData.gameId;
+
+      // If the player didn't send a gameId, create a new game
+      if (!gameId) {
+        gameIdCounter++; // Generate a new unique gameId
+        gameId = gameIdCounter;
+        games[gameId] = { players: [{ ...playerData, socketId: socket.id }] };
+      } else if (games[gameId] && games[gameId].players.length < 2) {
+        // If the game exists and has less than 2 players, add the player
+        games[gameId].players.push({ ...playerData, socketId: socket.id });
+      } else {
+        // Send an error if the game doesn't exist or is full
+        socket.emit('error', { message: 'Game full or does not exist' });
+        return;
       }
 
       // Track the game this player joined
-      playerGameMap[socket.id] = playerData.gameId;
+      playerGameMap[socket.id] = gameId;
 
+      // Emit the updated game list to all clients
       io.emit('gameList', games);
     });
 
@@ -27,12 +38,13 @@ const generateController = (io) => {
         // Remove the player from the game
         game.players = game.players.filter(p => p.name !== playerData.name);
         if (game.players.length === 0) {
-          delete games[playerData.gameId];
+          delete games[playerData.gameId]; // Delete the game if no players remain
         }
 
-        // Remove player from the game map
+        // Remove player from the player-game map
         delete playerGameMap[socket.id];
 
+        // Emit the updated game list to all clients
         io.emit('gameList', games);
       }
     });
@@ -42,15 +54,11 @@ const generateController = (io) => {
       console.log('User disconnected', socket.id);
 
       const gameId = playerGameMap[socket.id];
-      console.log(gameId)
       if (gameId) {
         const game = games[gameId];
-        console.log(game);
-
         if (game) {
-          // Find and remove the disconnected player from the game
+          // Remove the disconnected player from the game
           game.players = game.players.filter(p => p.socketId !== socket.id);
-          console.log(game.players.length)
 
           // If the game is empty after removal, delete the game
           if (game.players.length === 0) {
@@ -58,10 +66,9 @@ const generateController = (io) => {
           }
 
           // Remove the player from the player-game map
-          console.log(playerGameMap[socket.id])
           delete playerGameMap[socket.id];
-          delete games[gameId];
-          console.log(playerGameMap[socket.id])
+
+          // Emit the updated game list to all clients
           io.emit('gameList', games);
         }
       }
