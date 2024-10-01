@@ -1,26 +1,30 @@
 const games = {};
 const playerGameMap = {}; // To track which game each player is in
-let gameIdCounter = 100000; // Initialize a gameId counter
+let gameIdCounter = 100000; // Initialize a gameId counter.
 
 const generateController = (io) => {
   io.on('connection', (socket) => {
     console.log('A user connected', socket.id);
 
     socket.on('joinGame', (playerData) => {
-      let gameId = playerData.gameId;
-
-      // If the player didn't send a gameId, create a new game
+      const { amount } = playerData; 
+      let gameId;
+      for (const id in games) {
+        if (games[id].players.length < 2 && games[id].amount === amount) {
+          gameId = id;
+          break;
+        }
+      }
       if (!gameId) {
-        gameIdCounter++; // Generate a new unique gameId
+        gameIdCounter++; 
         gameId = gameIdCounter;
-        games[gameId] = { players: [{ ...playerData, socketId: socket.id }] };
-      } else if (games[gameId] && games[gameId].players.length < 2) {
-        // If the game exists and has less than 2 players, add the player
-        games[gameId].players.push({ ...playerData, socketId: socket.id });
+        games[gameId] = { 
+          players: [{ ...playerData, socketId: socket.id }],
+          amount,
+        };
       } else {
-        // Send an error if the game doesn't exist or is full
-        socket.emit('error', { message: 'Game full or does not exist' });
-        return;
+        // Add player to the found game
+        games[gameId].players.push({ ...playerData, socketId: socket.id });
       }
 
       // Track the game this player joined
