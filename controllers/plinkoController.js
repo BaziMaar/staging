@@ -40,14 +40,26 @@ const generateController = (io) => {
         });
     });
 };
-const getPlinkoEntry=async (req, res) => {
+const getPlinkoEntry = async (req, res) => {
+    const { page = 1, limit = 100 } = req.query; // Default to page 1, 10 entries per page
     try {
-        const entries = await PlinkoEntry.find();
-        res.json(entries);
+      const entries = await PlinkoEntry.find()
+        .limit(limit * 1)
+        .skip((page - 1) * limit)
+        .exec();
+      
+      const count = await PlinkoEntry.countDocuments();
+  
+      res.json({
+        entries,
+        totalPages: Math.ceil(count / limit),
+        currentPage: page,
+      });
     } catch (err) {
-        res.status(500).json({ message: err.message });
+      res.status(500).json({ message: err.message });
     }
-}
+  };
+  
 const getSpinEntry = async (req, res) => {
     try {
         const phone = req.query.phone;
