@@ -10,7 +10,6 @@ const { generateAndBroadcastNumber, sendDragonMoney ,receiveForMoney,getDragonTr
 const { verifyDeviceId } = require('../middlewares/verifyDeviceId');
 
 module.exports = (io) => {
-  // Route to trigger number generation and broadcast
   router.get('/currentDragon', (req, res) => {
     generateAndBroadcastNumber(io);
     res.send('Generate Lucky route');

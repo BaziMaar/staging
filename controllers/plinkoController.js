@@ -40,6 +40,30 @@ const generateController = (io) => {
         });
     });
 };
+const savePlinkoEntry=async(req,res)=>{
+    try{
+        const data=req.body;
+        const plinkoData = new PlinkoEntry({
+            game:dataObj.game,
+            phone: Number(dataObj.phone), // Ensure phone is a number
+            time: dataObj.time, // Assuming time is already a string
+            bet: mongoose.Types.Decimal128.fromString(dataObj.bet.toString()), // Convert bet to Decimal128
+            payOut: mongoose.Types.Decimal128.fromString(dataObj.payOut.toString()), // Convert payOut to Decimal128
+            profit: mongoose.Types.Decimal128.fromString(dataObj.profit.toString()), // Convert profit to Decimal128
+            user_id: dataObj.user_id // Ensure user_id is a string
+        });
+        await plinkoData.save();
+        const user=await User.findOne({phone:dataObj.user_id});
+        user.wallet+=dataObj.profit
+        await user.save()
+        res.status(200).json({msg:"data saved successfully",data:plinkoData});
+    }
+    catch(error){
+        res.status(500).json({message:error.message});
+
+    }
+
+}
 const getPlinkoEntry = async (req, res) => {
     const { page = 1, limit = 100 } = req.query; // Default to page 1, 10 entries per page
     try {
@@ -76,5 +100,6 @@ const getSpinEntry = async (req, res) => {
 module.exports = {
     generateController,
     getPlinkoEntry,
-    getSpinEntry
+    getSpinEntry,
+    savePlinkoEntry
 };
