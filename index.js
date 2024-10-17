@@ -69,6 +69,7 @@ const notificationRoute=require('./routes/notificationRoutes')
 const autoRoute=require('./routes/autoRoutes')
 const plinkoRoute=require('./routes/plinkoRoutes.js')
 const ludoRoute=require('./routes/ludoRoute.js')
+const plinkoController=require('./controllers/plinkoController.js')
 app.use('/user', userRoutes);
 app.use('/wallet', walletRoute);
 app.use('/mines', minesRoute);
@@ -84,6 +85,8 @@ const EXPRESS_PORT = 3000;
 expressServer.listen(EXPRESS_PORT, () => {
   console.log(`Express server running on port ${EXPRESS_PORT}`);
   generateAndBroadcastNumber(io);
+  plinkoController.generateController(io);
+
   luckyWheelController.generateAndBroadcastNumber(io);
   colorController.generateAndBroadcastNumber(io);
   dragonTigerController.generateAndBroadcastNumber(io);

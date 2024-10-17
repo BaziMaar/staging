@@ -1,8 +1,11 @@
 const express = require('express');
+const { savePlinkoEntry } = require('../controllers/plinkoController');
+
 const router = express.Router();
-const { generateController } = require('../controllers/plinkoController');
 
 module.exports = (io) => {
-    generateController(io);  // Initialize the controller with the io instance
+    // Define the route and pass `io` to the handler
+    router.post('/savePlinkoEntry', savePlinkoEntry(io));
+
     return router;
 };
