@@ -40,7 +40,7 @@ const generateController = (io) => {
         });
     });
 };
-const savePlinkoEntry=async(req,res)=>{
+const savePlinkoEntry=(io)=>async(req,res)=>{
     try{
         const dataObj=req.body;
         const plinkoData = new PlinkoEntry({
@@ -53,8 +53,10 @@ const savePlinkoEntry=async(req,res)=>{
             user_id: dataObj.user_id // Ensure user_id is a string
         });
         await plinkoData.save();
+        io.emit('saveDataResponse', { status: 'success',data:dataObj });
         const user=await User.findOne({phone:dataObj.user_id});
         user.wallet+=dataObj.profit
+
         await user.save()
         res.status(200).json({msg:"data saved successfully",data:plinkoData});
     }
