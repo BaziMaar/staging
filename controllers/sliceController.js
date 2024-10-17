@@ -42,7 +42,7 @@ const generateController = (io) => {
 };
 const saveSliceEntry=async(req,res)=>{
     try{
-        const data=req.body;
+        const dataObj=req.body;
         const plinkoData = new SliceEntry({
             game:dataObj.game,
             phone: Number(dataObj.phone), // Ensure phone is a number
