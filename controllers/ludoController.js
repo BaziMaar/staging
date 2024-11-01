@@ -82,5 +82,24 @@ const generateController = (io) => {
     socket.emit('gameList', games);
   });
 };
+const sendData = (io) => {
+  io.on('connection', (socket) => {
+    socket.on('diceMove', (moveData) => {
+      const { gameId, move } = moveData; // Assuming moveData includes gameId and move information
+      const game = games[gameId];
 
-module.exports = { generateController };
+      if (game) {
+        // Determine the socket IDs of the players in the game
+        const playerSockets = game.players.map(player => player.socketId);
+
+        // Emit the move to the specific players in the game
+        playerSockets.forEach(playerSocketId => {
+          io.to(playerSocketId).emit('playerMoved', { move }); // Replace 'playerMoved' with your event name
+        });
+      }
+    });
+  });
+};
+
+
+module.exports = { generateController,sendData };
