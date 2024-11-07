@@ -69,7 +69,6 @@ const generateController = (io) => {
           delete playerGameMap[socket.id];
 
           // Emit the updated game list to all clients
-          io.emit('GameDeleted',games[gameId]);
           io.emit('gameList', games);
         }
       }
