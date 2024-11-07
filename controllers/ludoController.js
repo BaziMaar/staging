@@ -58,9 +58,11 @@ const generateController = (io) => {
         if (game) {
           // Remove the disconnected player from the game
           game.players = game.players.filter(p => p.socketId !== socket.id);
-          io.emit('GameDeleted',games[playerData.gameId]);
 
-          delete games[gameId];
+          // If the game is empty after removal, delete the game
+          if (game.players.length === 0||game.players.length===1) {
+            delete games[gameId];
+          }
 
           // Remove the player from the player-game map
           delete playerGameMap[socket.id];
@@ -83,6 +85,7 @@ const sendData = (io) => {
 
         // Emit the move to the specific players in the game
           io.emit('playerMoved', { gameId,move }); // Replace 'playerMoved' with your event name
+
     });
   });
 };
