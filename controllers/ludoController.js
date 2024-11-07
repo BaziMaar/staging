@@ -89,7 +89,7 @@ const sendData = (io) => {
 
         // Emit the move to the specific players in the game
         playerSockets.forEach(playerSocketId => {
-          io.to(playerSocketId).emit('playerMoved', { move }); // Replace 'playerMoved' with your event name
+          io.emit('playerMoved', { move }); // Replace 'playerMoved' with your event name
         });
       }
     });
