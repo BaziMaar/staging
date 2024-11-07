@@ -41,14 +41,9 @@ const generateController = (io) => {
       if (game) {
         // Remove the player from the game
         game.players = game.players.filter(p => p.name !== playerData.name);
-        if (game.players.length === 0) {
-          delete games[playerData.gameId]; // Delete the game if no players remain
-        }
-
-        // Remove player from the player-game map
+        io.emit('GameDeleted',games[playerData.gameId]);
+        delete games[playerData.gameId];
         delete playerGameMap[socket.id];
-
-        // Emit the updated game list to all clients
         io.emit('gameList', games);
       }
     });
