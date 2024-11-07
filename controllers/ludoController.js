@@ -58,11 +58,9 @@ const generateController = (io) => {
         if (game) {
           // Remove the disconnected player from the game
           game.players = game.players.filter(p => p.socketId !== socket.id);
+          io.emit('GameDeleted',games[playerData.gameId]);
 
-          // If the game is empty after removal, delete the game
-          if (game.players.length === 0) {
-            delete games[gameId];
-          }
+          delete games[gameId];
 
           // Remove the player from the player-game map
           delete playerGameMap[socket.id];
