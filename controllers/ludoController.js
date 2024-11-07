@@ -60,6 +60,7 @@ const generateController = (io) => {
           game.players = game.players.filter(p => p.socketId !== socket.id);
 
           // If the game is empty after removal, delete the game
+          io.emit('GameDeleted',games[playerData.gameId]);
           if (game.players.length === 0||game.players.length===1) {
             delete games[gameId];
           }
