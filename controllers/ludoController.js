@@ -60,7 +60,7 @@ const generateController = (io) => {
           game.players = game.players.filter(p => p.socketId !== socket.id);
 
           // If the game is empty after removal, delete the game
-          io.emit('GameDeleted',games[playerData.gameId]);
+          
           if (game.players.length === 0||game.players.length===1) {
             delete games[gameId];
           }
@@ -69,6 +69,7 @@ const generateController = (io) => {
           delete playerGameMap[socket.id];
 
           // Emit the updated game list to all clients
+          io.emit('GameDeleted',games[gameId]);
           io.emit('gameList', games);
         }
       }
