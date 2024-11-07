@@ -70,6 +70,7 @@ const generateController = (io) => {
 
           // Emit the updated game list to all clients
           io.emit('gameList', games);
+          io.emit('gameLeft',game);
         }
       }
     });
