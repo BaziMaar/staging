@@ -83,13 +83,8 @@ const sendData = (io) => {
       const { gameId, move } = moveData; // Assuming moveData includes gameId and move information
       const game = games[gameId];
 
-      if (game) {
-        // Determine the socket IDs of the players in the game
-        const playerSockets = game.players.map(player => player.socketId);
-
         // Emit the move to the specific players in the game
           io.emit('playerMoved', { gameId,move }); // Replace 'playerMoved' with your event name
-      }
     });
   });
 };
