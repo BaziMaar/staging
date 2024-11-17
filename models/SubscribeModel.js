@@ -10,11 +10,11 @@ var subscribeSchema = mongoose.Schema({
         required:true
     },
     txn_date:{
-        type:Number,
+        type:String,
         required:true
     },
     txn_amount:{
-        type:String,
+        type:Number,
         required:true
     }
 },
