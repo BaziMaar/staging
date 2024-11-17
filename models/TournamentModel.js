@@ -1,6 +1,6 @@
 var mongoose = require('mongoose');
 
-var productSchema = mongoose.Schema({
+var tournamentSchema = mongoose.Schema({
     tournament_name: {
         type: String,
         required: true
@@ -36,4 +36,4 @@ var productSchema = mongoose.Schema({
 },
 { timestamps: true });
 
-module.exports = mongoose.model('Product', productSchema);
+module.exports = mongoose.model('Tournament', tournamentSchema);
