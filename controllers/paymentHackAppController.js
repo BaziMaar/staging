@@ -20,7 +20,7 @@ exports.createOrder = async (req, res) => {
 };
 exports.checkOrder = async (req, res) => {
     try {
-        console.log(req.body)
+        console.log('>>>>>>>',req)
         const response = await axios.post(`https://allapi.in/order/status`, req.body, {
             headers: {
                 'Content-Type': 'application/json',
