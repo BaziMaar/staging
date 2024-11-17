@@ -9,7 +9,7 @@ const addTournament=async(req,res)=>{
           tournament_name,
           price,
           start_time:start_time_UTC,
-          end_timeend_time_UTC,
+          end_time:end_time_UTC,
           short_description,
           category_name,
           description,
