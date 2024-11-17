@@ -107,3 +107,41 @@ exports.getDateSubscribe=async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 }
+exports.checkSubscribe=async (req, res) => {
+    const { email } = req.query;
+
+    // Validate input
+    if (!email) {
+        return res.status(400).json({ error: 'Email is required.' });
+    }
+
+    try {
+        // Calculate the date 30 days ago
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+        // Check if a subscription exists for the email within the last 30 days
+        const validSubscription = await Subscribe.findOne({
+            customer_email: email,
+            createdAt: { $gte: thirtyDaysAgo }, // Check if createdAt is within the last 30 days
+        });
+
+        if (validSubscription) {
+            return res.status(200).json({
+                message: 'Valid subscription found.',
+                subscription: {
+                    order_id: validSubscription.order_id,
+                    customer_email: validSubscription.customer_email,
+                    txn_date: validSubscription.txn_date,
+                    txn_amount: validSubscription.txn_amount,
+                    created_at: validSubscription.createdAt,
+                },
+            });
+        } else {
+            return res.status(404).json({ message: 'No valid subscription found.' });
+        }
+    } catch (error) {
+        console.error('Error checking subscription:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
