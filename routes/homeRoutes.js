@@ -7,6 +7,6 @@ user_route.use(bodyParser.json());
 user_route.use(bodyParser.urlencoded({ extended: true }));
 user_route.post('/addGame',game_controller.addGame)
 user_route.get('/getGame',game_controller.getGame)
-user_route.post('addTournament',tournament_controller.addTournament)
-user_route.get('getTournament',tournament_controller.getTodayTournaments)
+user_route.post('/addTournament',tournament_controller.addTournament)
+user_route.get('/getTournament',tournament_controller.getTodayTournaments)
 module.exports = user_route;
