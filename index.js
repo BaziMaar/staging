@@ -70,6 +70,7 @@ const autoRoute=require('./routes/autoRoutes')
 const plinkoRoute=require('./routes/plinkoRoutes.js')
 const ludoRoute=require('./routes/ludoRoute.js')
 const plinkoController=require('./controllers/plinkoController.js')
+const homeRoute=require('./routes/homeRoutes.js')
 app.use('/user', userRoutes);
 app.use('/wallet', walletRoute);
 app.use('/mines', minesRoute);
@@ -80,6 +81,7 @@ app.use('/notification', notificationRoute);
 app.use('/auto',autoRoute)
 app.use('/plinko',plinkoRoute(io));
 app.use('/ludo',ludoRoute(io));
+app.use('/home',homeRoute)
 // Start the Express server on port 3000
 const EXPRESS_PORT = 3000;
 expressServer.listen(EXPRESS_PORT, () => {
