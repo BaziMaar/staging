@@ -13,7 +13,8 @@ const addTournament=async(req,res)=>{
           short_description,
           category_name,
           description,
-          tournament_image
+          tournament_image,
+          entry_fee
         });
     
         // Save the product to the database

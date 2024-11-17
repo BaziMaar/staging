@@ -29,6 +29,10 @@ var tournamentSchema = mongoose.Schema({
         type:String,
         required:true
     },
+    entry_fee:{
+        type:Number,
+        required:true
+    },
     tournament_image:{
         type:String,
         required:true
