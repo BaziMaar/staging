@@ -171,16 +171,14 @@ exports.Signup=async (req, res) => {
     }
   }
   exports.Login=async (req, res) => {
-    const { email, password } = req.body;
+    const { email, password,app_name } = req.body;
   
     try {
       // Find the user by email
-      const user = await HackUser.findOne({ email });
+      const user = await HackUser.findOne({ email:email,app_name:app_name });
       if (!user) {
         return res.status(404).json({ message: "User not found" });
       }
-  
-      // Compare the password
       if (user.password !== password) {
         return res.status(401).json({ message: "Invalid password" });
       }
