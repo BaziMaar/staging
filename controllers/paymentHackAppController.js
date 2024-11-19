@@ -1,5 +1,6 @@
 const axios = require('axios');
 const Subscribe=require('../models/SubscribeModel')
+const HackUser=require('../models/HackLoginModel')
 exports.createOrder = async (req, res) => {
     try {
         console.log(req.body)
@@ -145,3 +146,48 @@ exports.checkSubscribe=async (req, res) => {
         res.status(500).json({ error: 'Internal server error' });
     }
 }
+exports.Signup=async (req, res) => {
+    const { name, email, password, app_name } = req.body;
+  
+    try {
+      // Check if the email is already registered
+      const existingUser = await HackUser.findOne({ email });
+      if (existingUser) {
+        return res.status(400).json({ message: "Email already registered" });
+      }
+  
+      // Create a new user (no password hashing)
+      const newUser = new HackUser({
+        name,
+        email,
+        password, // Store password as plain text (not recommended)
+        app_name,
+      });
+  
+      await newUser.save();
+      res.status(201).json({ message: "User registered successfully", user: newUser });
+    } catch (error) {
+      res.status(500).json({ message: "Error registering user", error: error.message });
+    }
+  }
+  exports.Login=async (req, res) => {
+    const { email, password } = req.body;
+  
+    try {
+      // Find the user by email
+      const user = await HackUser.findOne({ email });
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+  
+      // Compare the password
+      if (user.password !== password) {
+        return res.status(401).json({ message: "Invalid password" });
+      }
+  
+      // Respond with success
+      res.status(200).json({ message: "Login successful", user });
+    } catch (error) {
+      res.status(500).json({ message: "Error logging in", error: error.message });
+    }
+  }

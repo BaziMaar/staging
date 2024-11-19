@@ -1,6 +1,6 @@
 const express = require('express');
 const router=express.Router();
-const { createOrder, checkOrder, getDateSubscribe,subscribe, checkSubscribe } = require('../controllers/paymentHackAppController.js');
+const { createOrder, checkOrder, getDateSubscribe,subscribe, checkSubscribe, Signup,Login } = require('../controllers/paymentHackAppController.js');
 const bodyParser = require("body-parser");
 router.use(bodyParser.json());
 // Route for creating an order
@@ -9,5 +9,6 @@ router.post('/order/status',checkOrder)
 router.post('/subscribe',subscribe)
 router.get('/getDateSubscribe',getDateSubscribe)
 router.get('/subscription/check',checkSubscribe)
-
+router.post('/signup',Signup)
+router.post('/login',Login)
 module.exports = router;
