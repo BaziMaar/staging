@@ -136,6 +136,7 @@ exports.checkSubscribe=async (req, res) => {
                     txn_date: validSubscription.txn_date,
                     txn_amount: validSubscription.txn_amount,
                     created_at: validSubscription.createdAt,
+                    txn_note: validSubscription.txn_note
                 },
             });
         } else {
