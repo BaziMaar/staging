@@ -40,7 +40,7 @@ exports.checkOrder = async (req, res) => {
     }
 };
 exports.subscribe=async (req, res) => {
-    const { order_id, customer_email, txn_date, txn_amount } = req.body;
+    const { order_id, customer_email, txn_date, txn_amount,txn_note } = req.body;
 
     // Validate input
     if (!order_id || !customer_email || !txn_date || !txn_amount) {
@@ -70,6 +70,7 @@ exports.subscribe=async (req, res) => {
             customer_email,
             txn_date,
             txn_amount,
+            txn_note
         });
 
         // Save to the database

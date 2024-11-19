@@ -16,6 +16,10 @@ var subscribeSchema = mongoose.Schema({
     txn_amount:{
         type:Number,
         required:true
+    },
+    txn_note:{
+        type:String,
+        required:true
     }
 },
 { timestamps: true });
