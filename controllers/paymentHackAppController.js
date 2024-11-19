@@ -154,7 +154,7 @@ exports.Signup=async (req, res) => {
   
     try {
       // Check if the email is already registered
-      const existingUser = await HackUser.findOne({ email });
+      const existingUser = await HackUser.findOne({ email:email,app_name:app_name });
       if (existingUser) {
         return res.status(400).json({ message: "Email already registered" });
       }
