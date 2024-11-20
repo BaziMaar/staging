@@ -127,6 +127,7 @@ exports.checkSubscribe=async (req, res) => {
         const validSubscription = await Subscribe.findOne({
             customer_email: email,
             createdAt: { $gte: thirtyDaysAgo }, // Check if createdAt is within the last 30 days
+            txn_note:txn_note
         });
 
         if (validSubscription) {
