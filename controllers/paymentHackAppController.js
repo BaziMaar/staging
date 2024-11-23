@@ -194,14 +194,31 @@ exports.Signup=async (req, res) => {
     }
   }
   exports.PostLink=async (req, res) => {
+    const { game_code } = req.body;
+
+    if (!game_code) {
+        return res.status(400).json({ error: "game_code is required." });
+    }
+
     try {
+        // Check if a document with the same game_code exists
+        const existingDocument = await Auto.findOne({ game_code });
+
+        if (existingDocument) {
+            // Delete the existing document
+            await Auto.deleteOne({ game_code });
+            console.log(`Deleted document with game_code: ${game_code}`);
+        }
+
+        // Create and save the new document
         const auto = new Auto(req.body);
         const savedAuto = await auto.save();
+
         res.status(201).json(savedAuto);
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(500).json({ error: error.message });
     }
-  }
+}
   esports.GetLink=async (req, res) => {
     try {
         const autos = await Auto.find();
