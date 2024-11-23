@@ -193,3 +193,20 @@ exports.Signup=async (req, res) => {
       res.status(500).json({ message: "Error logging in", error: error.message });
     }
   }
+  exports.PostLink=async (req, res) => {
+    try {
+        const auto = new Auto(req.body);
+        const savedAuto = await auto.save();
+        res.status(201).json(savedAuto);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+  }
+  esports.GetLink=async (req, res) => {
+    try {
+        const autos = await Auto.find();
+        res.status(200).json(autos);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
