@@ -220,7 +220,7 @@ exports.Signup=async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 }
-  esports.GetLink=async (req, res) => {
+  exports.GetLink=async (req, res) => {
     try {
         const autos = await Auto.find();
         res.status(200).json(autos);
