@@ -2,7 +2,7 @@ const Product=require('../models/HomeModel.js');
 
 const addGame=async(req,res)=>{
     try {
-        const { game_name, users, short_description, category_name, description, product_image } = req.body;
+        const { game_name, users, short_description, category_name, description, product_image,banner_image } = req.body;
     
         // Create a new product instance
         const newProduct = new Product({
@@ -12,6 +12,7 @@ const addGame=async(req,res)=>{
           category_name,
           description,
           product_image,
+          banner_image
         });
     
         // Save the product to the database

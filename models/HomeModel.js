@@ -24,6 +24,10 @@ var productSchema = mongoose.Schema({
     product_image:{
         type:String,
         required:true
+    },
+    banner_image:{
+        type:String,
+        required:true
     }
 },
 { timestamps: true });

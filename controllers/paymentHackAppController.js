@@ -7,8 +7,7 @@ exports.createOrder = async (req, res) => {
         console.log(req.body)
         const response = await axios.post(`https://allapi.in/order/create`, req.body, {
             headers: {
-                'Content-Type': 'application/json',
-                // Add additional headers if needed
+                'Content-Type': 'application/json'
             },
         })
         console.log(response)

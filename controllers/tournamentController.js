@@ -2,7 +2,7 @@ const Product=require('../models/TournamentModel.js');
 const moment = require('moment-timezone');
 const addTournament=async(req,res)=>{
     try {
-        const { tournament_name, price, short_description, start_time,end_time,category_name, description, tournament_image,entry_fee } = req.body;
+        const { tournament_name, price, short_description, start_time,end_time,category_name, description, tournament_image,entry_fee,banner_image } = req.body;
         const start_time_UTC = moment.tz(req.body.start_time, "Asia/Kolkata").utc().toDate();
         const end_time_UTC = moment.tz(req.body.end_time, "Asia/Kolkata").utc().toDate();   
         const newProduct = new Product({
@@ -14,7 +14,8 @@ const addTournament=async(req,res)=>{
           category_name,
           description,
           tournament_image,
-          entry_fee
+          entry_fee,
+          banner_image
         });
     
         // Save the product to the database
