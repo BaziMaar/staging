@@ -1,8 +1,10 @@
 const TournamentEntry = require('../models/TournamentEntryModel');
-
+const User=require('../models/userModel');
 const addTournamentEntry = async (req, res) => {
   try {
     const { tournament_id, phone, amount, avatar, player_name } = req.body;
+    const user=User.findOne({phone});
+
 
     const newEntry = new TournamentEntry({
       tournament_id,
@@ -11,12 +13,15 @@ const addTournamentEntry = async (req, res) => {
       avatar,
       player_name
     });
+    user.wallet-=amount
+    await user.save()
 
     const savedEntry = await newEntry.save();
 
     res.status(201).json({
       message: 'Tournament entry added successfully',
-      entry: savedEntry
+      entry: savedEntry,
+      newBalance:user.wallet
     });
   } catch (error) {
     res.status(500).json({

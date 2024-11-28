@@ -8,7 +8,7 @@ const receiveMoney = async (req, res) => {
         return res.status(404).json({ error: "Sender not found" });
       }
       sender.wallet += amount;
-      
+      await sender.save();
       const newBet = new GameBetEntry({ phone, avatar, score, amount, game_name });
 
       const savedBet = await newBet.save();

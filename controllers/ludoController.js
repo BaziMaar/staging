@@ -7,10 +7,10 @@ const generateController = (io) => {
     console.log('A user connected', socket.id);
 
     socket.on('joinGame', (playerData) => {
-      const { amount } = playerData; 
+      const { amount,game_name } = playerData; 
       let gameId;
       for (const id in games) {
-        if (games[id].players.length < 2 && games[id].amount === amount) {
+        if (games[id].players.length < 2 && games[id].amount === amount && games[id].game_name===game_name) {
           gameId = id;
           break;
         }
@@ -20,7 +20,7 @@ const generateController = (io) => {
         gameId = gameIdCounter;
         games[gameId] = { 
           players: [{ ...playerData, socketId: socket.id }],
-          amount,
+          amount   
         };
       } else {
         // Add player to the found game
