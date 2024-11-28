@@ -12,7 +12,7 @@ const receiveMoney = async (req, res) => {
       const newBet = new GameBetEntry({ phone, avatar, score, amount, game_name });
 
       const savedBet = await newBet.save();
-      res.status(201).json(savedBet);
+      res.status(201).json(savedBet,{newBalance:sender.wallet});
     } catch (err) {
       res.status(400).json({ error: err.message });
     }
@@ -46,7 +46,7 @@ const sendMoney = async (req, res) => {
       const savedBet = await newBet.save();
   
       // Send response
-      res.status(201).json(savedBet);
+      res.status(201).json(savedBet,{newBalance:sender.wallet});
   
       // Emit wallet update event
       const time = new Date().toISOString(); // Capture current timestamp
