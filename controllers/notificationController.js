@@ -1,5 +1,5 @@
 const admin = require('../firebase');
-
+const Auto=require('../models/NotificationModel')
 const sendNotification = async (req, res) => {
     const { token, title, body } = req.body;
 
