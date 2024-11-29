@@ -7,7 +7,7 @@ const gameController = require('../controllers/homeController');
 const tournamentController = require('../controllers/tournamentController');
 const sendController = require('../controllers/GameBetController');
 const tournamentEntryController = require('../controllers/tournamentMoneyController');
-
+const {verifyDeviceId} = require('../middlewares/verifyDeviceId');
 // Middleware
 userRoute.use(bodyParser.json());
 userRoute.use(bodyParser.urlencoded({ extended: true }));
