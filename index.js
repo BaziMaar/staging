@@ -65,7 +65,7 @@ const minesRoute = require('./routes/minesRoute');
 const luckyRoute = require('./routes/luckyRoutes');
 const colorRoute = require('./routes/colorRoutes');
 const dragonTigerRoute = require('./routes/dragonTigerRoutes');
-const notificationRoute=require('./routes/notificationRoutes')
+
 const autoRoute=require('./routes/autoRoutes')
 const plinkoRoute=require('./routes/plinkoRoutes.js')
 const ludoRoute=require('./routes/ludoRoute.js')
@@ -78,7 +78,7 @@ app.use('/mines', minesRoute);
 app.use('/lucky', luckyRoute(io));
 app.use('/color', colorRoute(io));
 app.use('/dragon', dragonTigerRoute(io));
-app.use('/notification', notificationRoute);
+
 app.use('/auto',autoRoute)
 app.use('/plinko',plinkoRoute(io));
 app.use('/ludo',ludoRoute(io));
