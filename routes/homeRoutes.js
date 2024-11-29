@@ -15,12 +15,8 @@ userRoute.use(bodyParser.urlencoded({ extended: true }));
 // Routes for game-related actions
 userRoute.post('/addGame', gameController.addGame);
 userRoute.get('/getGame', gameController.getGame);
-
-// Routes for tournament-related actions
 userRoute.post('/addTournament', tournamentController.addTournament);
 userRoute.get('/getTournament', tournamentController.getTodayTournaments);
-
-// Routes for tournament entry-related actions
 userRoute.post('/addTournamentEntry', tournamentEntryController.addTournamentEntry);
 userRoute.put('/updateScoreTournament', tournamentEntryController.updateScoreByTransactionAndPhone); 
 userRoute.post('/send_money', sendController.sendMoney);

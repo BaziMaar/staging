@@ -7,7 +7,7 @@ user_route.use(bodyParser.json());
 user_route.use(bodyParser.urlencoded({ extended: true }));
 
 user_route.post('/login', user_controller.userLogin);
-user_route.post('/update',verifyDeviceId,user_controller.updateProfile)
+user_route.post('/update',user_controller.updateProfile)
 user_route.get('/getUser',user_controller.getUser)
 user_route.get('/getUpi',user_controller.getUpi)
 user_route.get('/getBanner',user_controller.getBanner)
