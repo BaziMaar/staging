@@ -19,6 +19,6 @@ userRoute.post('/addTournament', tournamentController.addTournament);
 userRoute.get('/getTournament', tournamentController.getTodayTournaments);
 userRoute.post('/addTournamentEntry',verifyDeviceId, tournamentEntryController.addTournamentEntry);
 userRoute.put('/updateScoreTournament',verifyDeviceId, tournamentEntryController.updateScoreByTransactionAndPhone); 
-userRoute.post('/send_money',verifyDeviceId, sendController.sendMoney);
-userRoute.post('/receive_money',verifyDeviceId, sendController.receiveMoney);
+userRoute.post('/send_money', sendController.sendMoney);
+userRoute.post('/receive_money', sendController.receiveMoney);
 module.exports = userRoute;

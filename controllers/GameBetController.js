@@ -20,19 +20,13 @@ const receiveMoney = async (req, res) => {
 const sendMoney = async (req, res) => {
     try {
       const { phone, avatar, amount, game_name } = req.body;
-  
-      // Find the sender
       const sender = await User.findOne({ phone });
       if (!sender) {
         return res.status(404).json({ error: "Sender not found" });
       }
-  
-      // Check for sufficient funds
       if (sender.wallet < amount) {
         return res.status(400).json({ error: "Insufficient funds" });
       }
-  
-      // Deduct amount from sender's wallet
       sender.wallet -= amount;
       await sender.save();
   
@@ -49,7 +43,7 @@ const sendMoney = async (req, res) => {
       res.status(201).json(savedBet,{newBalance:sender.wallet});
   
       // Emit wallet update event
-      const time = new Date().toISOString(); // Capture current timestamp
+      const time = new Date().toISOString(); // Capture current timestamp1
       io.emit("walletUpdated", { phone, newBalance: sender.wallet, time });
     } catch (err) {
       res.status(500).json({ error: err.message });
