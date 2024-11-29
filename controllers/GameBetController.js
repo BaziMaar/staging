@@ -41,10 +41,6 @@ const sendMoney = async (req, res) => {
   
       // Send response
       res.status(201).json(savedBet,{newBalance:sender.wallet});
-  
-      // Emit wallet update event
-      const time = new Date().toISOString(); // Capture current timestamp1
-      io.emit("walletUpdated", { phone, newBalance: sender.wallet, time });
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
