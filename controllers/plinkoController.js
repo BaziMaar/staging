@@ -25,9 +25,9 @@ const generateController = (io) => {
                 await plinkoData.save();
                 io.emit('saveDataResponse', { status: 'success',data:dataObj });
                 const user=await User.findOne({phone:dataObj.user_id});
-                user.wallet+=dataObj.profit
-                console.log(dataObj.profit)
-                console.log(user.wallet)
+                if(game=="plinko"){
+                    user.wallet+=dataObj.profit
+                }
                 await user.save()
                 
             } catch (err) {
