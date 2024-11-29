@@ -3,7 +3,7 @@ const User=require('../models/userModel');
 const addTournamentEntry = async (req, res) => {
   try {
     const { tournament_id, phone, amount, avatar, player_name } = req.body;
-    const user=User.findOne({phone});
+    const user=await User.findOne({phone});
 
 
     const newEntry = new TournamentEntry({
