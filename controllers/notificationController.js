@@ -32,6 +32,25 @@ const sendNotification = async (req, res) => {
         });
     }
 };
+const postNotification=async (req, res) => {
+    try {
+        const { image, title, description } = req.body;
+        const notification = new Auto({ image, title, description });
+        await notification.save();
+        res.status(201).json({ success: true, data: notification });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+}
+const getNotification=async(req, res) => {
+    try {
+        const notifications = await Auto.find();
+        res.status(200).json({ success: true, data: notifications });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+}
+
 
 
 module.exports = { sendNotification };
