@@ -53,4 +53,4 @@ const getNotification=async(req, res) => {
 
 
 
-module.exports = { sendNotification };
+module.exports = { sendNotification,postNotification,getNotification };
