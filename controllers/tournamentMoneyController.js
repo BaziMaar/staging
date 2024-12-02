@@ -67,49 +67,54 @@ const updateScoreByTransactionAndPhone = async (req, res) => {
     }
     return randomScores;
 };
-  const getLeaderboard = async (req, res) => {
-    try {
-        const { tournament_id, phone } = req.query;
+const getLeaderboard = async (req, res) => {
+  try {
+      const { tournament_id, phone } = req.query;
 
-        // Validate input
-        if (!tournament_id || !phone) {
-            return res.status(400).json({ error: 'tournament_id and phone are required' });
-        }
+      // Validate input
+      if (!tournament_id || !phone) {
+          return res.status(400).json({ error: 'tournament_id and phone are required' });
+      }
 
-        // Fetch all entries for the given tournament
-        const entries = await TournamentEntry.find({ tournament_id }).sort({ score: -1 });
+      // Fetch all entries for the given tournament
+      const entries = await TournamentEntry.find({ tournament_id }).sort({ score: -1 });
 
-        if (entries.length === 0) {
-            return res.status(404).json({ error: 'No entries found for this tournament' });
-        }
+      if (entries.length === 0) {
+          return res.status(404).json({ error: 'No entries found for this tournament' });
+      }
 
-        // Find the user's rank by phone number
-        const userRank = entries.findIndex(entry => entry.phone === phone) + 1;
+      // Find the user's rank and corresponding entry
+      const userEntryIndex = entries.findIndex(entry => entry.phone === phone);
+      const userEntry = entries[userEntryIndex];
 
-        if (userRank === 0) {
-            return res.status(404).json({ error: 'Player with this phone number not found in the tournament' });
-        }
+      if (!userEntry) {
+          return res.status(404).json({ error: 'Player with this phone number not found in the tournament' });
+      }
 
-        // Get the score of the 1st rank player
-        const topPlayerScore = entries[0].score;
+      const userRank = userEntryIndex + 1;
 
-        // Generate or reuse random scores
-        if (!cachedRandomScores) {
-            cachedRandomScores = generateRandomScores(topPlayerScore);
-        }
+      // Get the score of the 1st rank player
+      const topPlayerScore = entries[0].score;
 
-        res.json({
-            phone,
-            tournament_id,
-            userRank:(userRank+5),
-            topPlayerScore,
-            top5Scores: cachedRandomScores,
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-}
+      // Generate or reuse random scores
+      if (!cachedRandomScores) {
+          cachedRandomScores = generateRandomScores(topPlayerScore);
+      }
+
+      res.json({
+          phone,
+          tournament_id,
+          userRank: userRank + 5,
+          userScore: userEntry.score, // Include user's score
+          topPlayerScore,
+          top5Scores: cachedRandomScores,
+      });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+};
+
 const getRank=async (tournament_id,phone) => {
   try {
       if (!tournament_id || !phone) {
