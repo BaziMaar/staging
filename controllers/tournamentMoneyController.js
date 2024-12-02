@@ -101,7 +101,7 @@ const updateScoreByTransactionAndPhone = async (req, res) => {
         res.json({
             phone,
             tournament_id,
-            userRank,
+            userRank:(userRank+5),
             topPlayerScore,
             top5Scores: cachedRandomScores,
         });
