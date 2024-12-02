@@ -21,5 +21,5 @@ userRoute.post('/addTournamentEntry',verifyDeviceId, tournamentEntryController.a
 userRoute.put('/updateScoreTournament',verifyDeviceId, tournamentEntryController.updateScoreByTransactionAndPhone); 
 userRoute.post('/send_money', sendController.sendMoney);
 userRoute.post('/receive_money', sendController.receiveMoney);
-userRoute.get('/getLeaderBoard',tournamentEntryController.getLeaderboard)
+userRoute.get('/getLeaderboard',tournamentEntryController.getLeaderboard)
 module.exports = userRoute;

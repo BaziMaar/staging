@@ -57,40 +57,79 @@ const updateScoreByTransactionAndPhone = async (req, res) => {
       });
     }
   };
+  const generateRandomScores = (maxScore) => {
+    const randomScores = [];
+    for (let i = 0; i < 5; i++) {
+        maxScore -= Math.floor(Math.random() * 100) + 50; // Decrease score by random value
+        if (maxScore < 1000) break; // Ensure scores don't go below 1000
+        randomScores.push(maxScore);
+    }
+    return randomScores;
+};
   const getLeaderboard = async (req, res) => {
     try {
-        // Generate random scores for 10 users between 500 and 10,000
-        let users = Array.from({ length: 5 }, (_, i) => ({
-            user: `User${i + 1}`,
-            score: getRandomNumber(500, 10000)
-        }));
+        const { tournament_id, phone } = req.query;
 
-        // Find the highest score among the generated random scores
-        const maxScore = Math.max(...users.map(user => user.score));
+        // Validate input
+        if (!tournament_id || !phone) {
+            return res.status(400).json({ error: 'tournament_id and phone are required' });
+        }
 
-        // Generate 5 additional scores greater than the maxScore
-        const topScores = Array.from({ length: 5 }, () => getRandomNumber(maxScore + 1, maxScore + 1000));
+        // Fetch all entries for the given tournament
+        const entries = await TournamentEntry.find({ tournament_id }).sort({ score: -1 });
 
-        // Create 5 top users with those higher scores
-        const topUsers = topScores.map((score, i) => ({
-            user: `TopUser${i + 1}`,
-            score
-        }));
+        if (entries.length === 0) {
+            return res.status(404).json({ error: 'No entries found for this tournament' });
+        }
 
-        // Combine top users and random users
-        const leaderboard = [...topUsers, ...users];
+        // Find the user's rank by phone number
+        const userRank = entries.findIndex(entry => entry.phone === phone) + 1;
 
-        // Sort leaderboard by score in descending order
-        leaderboard.sort((a, b) => b.score - a.score);
+        if (userRank === 0) {
+            return res.status(404).json({ error: 'Player with this phone number not found in the tournament' });
+        }
 
-        // Respond with the leaderboard
-        res.status(200).json({
-            success: true,
-            leaderboard
+        // Get the score of the 1st rank player
+        const topPlayerScore = entries[0].score;
+
+        // Generate or reuse random scores
+        if (!cachedRandomScores) {
+            cachedRandomScores = generateRandomScores(topPlayerScore);
+        }
+
+        res.json({
+            phone,
+            tournament_id,
+            userRank,
+            topPlayerScore,
+            top5Scores: cachedRandomScores,
         });
-    } catch (err) {
-        res.status(500).json({ error: err.message });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
+}
+const getRank=async (tournament_id,phone) => {
+  try {
+      if (!tournament_id || !phone) {
+          return res.status(400).json({ error: 'tournament_id and phone are required' });
+      }
+
+      // Fetch all entries for the given tournament
+      const entries = await TournamentEntry.find({ tournament_id }).sort({ score: -1 });
+
+      // Find the user's rank by phone number
+      const rank = entries.findIndex(entry => entry.phone === phone) + 1;
+
+      if (rank === 0) {
+          return res.status(404).json({ error: 'Player with this phone number not found in the tournament' });
+      }
+
+      res.json({ phone, tournament_id, rank });
+  } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
 };
 
 module.exports = { addTournamentEntry,updateScoreByTransactionAndPhone,getLeaderboard };
