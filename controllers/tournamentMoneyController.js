@@ -57,5 +57,40 @@ const updateScoreByTransactionAndPhone = async (req, res) => {
       });
     }
   };
+  const getLeaderboard = async (req, res) => {
+    try {
+        // Generate random scores for 10 users between 500 and 10,000
+        let users = Array.from({ length: 5 }, (_, i) => ({
+            user: `User${i + 1}`,
+            score: getRandomNumber(500, 10000)
+        }));
 
-module.exports = { addTournamentEntry,updateScoreByTransactionAndPhone };
+        // Find the highest score among the generated random scores
+        const maxScore = Math.max(...users.map(user => user.score));
+
+        // Generate 5 additional scores greater than the maxScore
+        const topScores = Array.from({ length: 5 }, () => getRandomNumber(maxScore + 1, maxScore + 1000));
+
+        // Create 5 top users with those higher scores
+        const topUsers = topScores.map((score, i) => ({
+            user: `TopUser${i + 1}`,
+            score
+        }));
+
+        // Combine top users and random users
+        const leaderboard = [...topUsers, ...users];
+
+        // Sort leaderboard by score in descending order
+        leaderboard.sort((a, b) => b.score - a.score);
+
+        // Respond with the leaderboard
+        res.status(200).json({
+            success: true,
+            leaderboard
+        });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+module.exports = { addTournamentEntry,updateScoreByTransactionAndPhone,getLeaderboard };
