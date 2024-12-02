@@ -22,16 +22,26 @@ const addTournament=async(req,res)=>{
       }
 }
 const getTodayTournaments = async (req, res) => {
-    try {
-      const todayTournaments = await Product.find();
-  
+  try {
+      // Get the current date and 24 hours ahead
+      const currentDateTime = new Date();
+      const next24Hours = new Date();
+      next24Hours.setHours(currentDateTime.getHours() + 24);
+
+      // Fetch tournaments with start_time within the next 24 hours
+      const todayTournaments = await Product.find({
+          start_time: { $gte: currentDateTime, $lte: next24Hours }
+      });
+
+      // Check if any tournaments are found
       if (todayTournaments.length === 0) {
-        return res.status(404).json({ message: 'No tournaments found for today' });
+          return res.status(404).json({ message: 'No tournaments found for the next 24 hours' });
       }
-  
+
       res.status(200).json(todayTournaments);
-    } catch (error) {
+  } catch (error) {
       res.status(500).json({ message: 'Error retrieving today\'s tournaments', error: error.message });
-    }
-  };
+  }
+};
+
 module.exports={addTournament,getTodayTournaments}
