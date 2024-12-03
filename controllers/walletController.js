@@ -16,30 +16,21 @@ const depositFunds = async (req, res) => {
 };
 const getWallet = async (req, res) => {
   try {
-    const { phone } = req.query;
-    if (!phone) {
-      return res.status(400).json({ error: 'Phone number is required' });
-    }
-    const user = await User.findOne({ phone });
-    if (!user) {
+    const { phone } = req.query; // Assuming phone is in the request body
+    const wallet = await User.findOne({ phone:phone });
+    if (!wallet) {
       return res.status(404).json({ error: 'User not found' });
     }
-    const walletMoney = user.wallet || 0;
-    user.withdrawable_balance = Math.min(user.wallet, user.withdrawable_balance || 0);
 
-    // Save the updated user data
-    await user.save();
-
-    res.status(200).json({
-      wallet: walletMoney,
-      refer_wallet: user.referred_wallet || 0,
-      withdrawable_balance: user.withdrawable_balance || 0,
-    });
+    const walletMoney = wallet[0].wallet;
+    wallet[0].withdrawable_balance=Math.min(wallet[0].wallet,wallet[0].withdrawable_balance)
+    wallet.save()
+    res.status(200).send({ wallet:walletMoney,refer_wallet:wallet[0].referred_wallet,withdrawable_balance:wallet[0].withdrwarl_amount });
   } catch (error) {
     console.error('Error getting wallet:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).send({ error: 'Internal Server Error' });
   }
-};
+}; 
 
 const getWalletTrans = async (req, res) => {
   try {
