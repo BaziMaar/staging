@@ -10,7 +10,7 @@ const generateController = (io) => {
       const { amount,game_name } = playerData; 
       let gameId;
       for (const id in games) {
-        if (games[id].players.length < 2 && games[id].amount === amount && games[id].game_name===game_name) {
+        if (games[id].players.length < 2 && games[id].amount === amount && games[id].game_name==game_name) {
           gameId = id;
           break;
         }
