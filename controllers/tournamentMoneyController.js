@@ -1,9 +1,6 @@
 const TournamentEntry = require('../models/TournamentEntryModel');
 const User=require('../models/userModel');
 let cachedRandomScores = null;
-function isEmpty(str) {
-  return (!str || str.length === 0 );
-}
 const addTournamentEntry = async (req, res) => {
   try {
     const { tournament_id, phone, amount, avatar, player_name } = req.body;
@@ -70,62 +67,56 @@ const updateScoreByTransactionAndPhone = async (req, res) => {
     }
     return randomScores;
 };
+
+const isEmpty = (value) => value === null || value === undefined || value === '';
+
 const getLeaderboard = async (req, res) => {
-  try {
-      const { tournament_id, phone } = req.query;
-      if (!tournament_id || !phone) {
-          return res.status(400).json({ error: 'tournament_id and phone are required' });
-      }
-      const entries = await TournamentEntry.find({ tournament_id }).sort({ score: -1 });
-      // if (entries.length === 0) {
-      //     return res.status(404).json({ error: 'No entries found for this tournament' });
-      // }
-      const userEntryIndex = entries.findIndex(entry => entry.phone === phone);
-      const userEntry = entries[userEntryIndex];
-      // if (!userEntry) {
-      //     return res.status(404).json({ error: 'Player with this phone number not found in the tournament' });
-      // }
+    try {
+        const { tournament_id, phone } = req.query;
 
-      const userRank = userEntryIndex + 1;
-      const topPlayerScore = isEmpty(entries[0].score) ? 1000 : entries[0].score
-      if (!cachedRandomScores) {
-          cachedRandomScores = generateRandomScores(topPlayerScore);
-      }
-      res.json({
-          phone,
-          tournament_id,
-          userRank: isEmpty(userRank)? null : (userRank + 5),
-          userScore: isEmpty(userEntry)?0:userEntry.score, // Include user's score
-          topPlayerScore,
-          top5Scores: cachedRandomScores,
-      });
-  } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Internal Server Error' });
-  }
-};
+        // Validate input
+        if (isEmpty(tournament_id) || isEmpty(phone)) {
+            return res.status(400).json({ error: 'tournament_id and phone are required' });
+        }
 
-const getRank=async (tournament_id,phone) => {
-  try {
-      if (!tournament_id || !phone) {
-          return res.status(400).json({ error: 'tournament_id and phone are required' });
-      }
+        // Fetch all entries for the given tournament, sorted by score
+        const entries = await TournamentEntry.find({ tournament_id }).sort({ score: -1 });
 
-      // Fetch all entries for the given tournament
-      const entries = await TournamentEntry.find({ tournament_id }).sort({ score: -1 });
+        // Handle cases where no entries are found
+        if (!entries || entries.length === 0) {
+            return res.status(404).json({ error: 'No entries found for this tournament' });
+        }
 
-      // Find the user's rank by phone number
-      const rank = entries.findIndex(entry => entry.phone === phone) + 1;
+        // Find the user's entry and rank
+        const userEntryIndex = entries.findIndex(entry => entry.phone === phone);
+        const userEntry = entries[userEntryIndex];
 
-      if (rank === 0) {
-          return res.status(404).json({ error: 'Player with this phone number not found in the tournament' });
-      }
+        // Handle cases where the user's entry is not found
+        if (isEmpty(userEntry)) {
+            return res.status(404).json({ error: 'Player with this phone number not found in the tournament' });
+        }
 
-      res.json({ phone, tournament_id, rank });
-  } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: 'Internal Server Error' });
-  }
+        const userRank = userEntryIndex + 1;
+        const topPlayerScore = isEmpty(entries[0]?.score) ? 1000 : entries[0].score;
+
+        // Generate or reuse random scores
+        if (!cachedRandomScores) {
+            cachedRandomScores = generateRandomScores(topPlayerScore);
+        }
+
+        // Respond with leaderboard data
+        res.json({
+            phone,
+            tournament_id,
+            userRank: userRank ? userRank + 5 : null,
+            userScore: userEntry?.score || 0,
+            topPlayerScore,
+            top5Scores: cachedRandomScores,
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
 };
 
 module.exports = { addTournamentEntry,updateScoreByTransactionAndPhone,getLeaderboard };
