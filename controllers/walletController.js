@@ -21,11 +21,11 @@ const getWallet = async (req, res) => {
     if (!wallet) {
       return res.status(404).json({ error: 'User not found' });
     }
-
-    const walletMoney = wallet[0].wallet;
-    wallet[0].withdrawable_balance=Math.min(wallet[0].wallet,wallet[0].withdrawable_balance)
+    console.log(wallet);
+    const walletMoney = wallet.wallet;
+    wallet.withdrwarl_amount =Math.min(wallet.wallet,wallet.withdrwarl_amount )
     wallet.save()
-    res.status(200).send({ wallet:walletMoney,refer_wallet:wallet[0].referred_wallet,withdrawable_balance:wallet[0].withdrwarl_amount });
+    res.status(200).send({ wallet:walletMoney,refer_wallet:wallet.referred_wallet,withdrawable_balance:wallet.withdrwarl_amount });
   } catch (error) {
     console.error('Error getting wallet:', error);
     res.status(500).send({ error: 'Internal Server Error' });
