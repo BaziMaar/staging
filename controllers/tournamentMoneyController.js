@@ -84,20 +84,15 @@ const getLeaderboard = async (req, res) => {
       // }
 
       const userRank = userEntryIndex + 1;
-
-      // Get the score of the 1st rank player
-      const topPlayerScore = entries[0].score;
-
-      // Generate or reuse random scores
+      const topPlayerScore = isEmpty(entries[0].score) ? 0 : entries[0].score
       if (!cachedRandomScores) {
           cachedRandomScores = generateRandomScores(topPlayerScore);
       }
-
       res.json({
           phone,
           tournament_id,
-          userRank: userRank + 5,
-          userScore: userEntry.score, // Include user's score
+          userRank: isEmpty(userRank)? null : (userRank + 5),
+          userScore: isEmpty(userEntry)?0:userEntry.score, // Include user's score
           topPlayerScore,
           top5Scores: cachedRandomScores,
       });
