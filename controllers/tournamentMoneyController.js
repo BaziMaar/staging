@@ -87,7 +87,7 @@ const getLeaderboard = async (req, res) => {
       // }
 
       const userRank = userEntryIndex + 1;
-      const topPlayerScore = isEmpty(entries[0].score) ? 0 : entries[0].score
+      const topPlayerScore = isEmpty(entries[0].score) ? 1000 : entries[0].score
       if (!cachedRandomScores) {
           cachedRandomScores = generateRandomScores(topPlayerScore);
       }
