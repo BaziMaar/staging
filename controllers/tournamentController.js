@@ -23,29 +23,31 @@ const addTournament=async(req,res)=>{
 }
 const getTodayTournaments = async (req, res) => {
   try {
-      // Get the current date and time
-      const currentDateTime = new Date();
-      const next24Hours = new Date();
-      next24Hours.setHours(currentDateTime.getHours() -24);
+    // Get the current date and time
+    const currentDateTime = new Date();
+    const last24Hours = new Date();
+    last24Hours.setHours(currentDateTime.getHours() - 24);
 
-      // Fetch tournaments with start_time within the next 24 hours
-      const todayTournaments = await Product.find({
-          end_time: {
-              $gte: next24Hours.toISOString(),
-              $lte: currentDateTime.toISOString()
-          }
-      });
-
-      // Check if any tournaments are found
-      if (todayTournaments.length === 0) {
-          return res.status(404).json({ message: 'No tournaments found for the next 24 hours' });
+    // Fetch tournaments with end_time within the last 24 hours
+    const todayTournaments = await Product.find({
+      end_time: {
+        $gte: last24Hours.toISOString(),
+        $lte: currentDateTime.toISOString()
       }
+    });
 
-      res.status(200).json(todayTournaments);
+    // Check if any tournaments are found
+    if (todayTournaments.length === 0) {
+      return res.status(404).json({ message: 'No tournaments found in the last 24 hours' });
+    }
+
+    res.status(200).json(todayTournaments);
   } catch (error) {
-      res.status(500).json({ message: 'Error retrieving today\'s tournaments', error: error.message });
+    console.error('Error retrieving tournaments:', error);
+    res.status(500).json({ message: 'Error retrieving tournaments', error: error.message });
   }
 };
+
 
 
 module.exports={addTournament,getTodayTournaments}
