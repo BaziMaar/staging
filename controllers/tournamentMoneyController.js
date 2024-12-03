@@ -1,6 +1,9 @@
 const TournamentEntry = require('../models/TournamentEntryModel');
 const User=require('../models/userModel');
 let cachedRandomScores = null;
+function isEmpty(str) {
+  return (!str || str.length === 0 );
+}
 const addTournamentEntry = async (req, res) => {
   try {
     const { tournament_id, phone, amount, avatar, player_name } = req.body;
