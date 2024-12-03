@@ -70,26 +70,18 @@ const updateScoreByTransactionAndPhone = async (req, res) => {
 const getLeaderboard = async (req, res) => {
   try {
       const { tournament_id, phone } = req.query;
-
-      // Validate input
       if (!tournament_id || !phone) {
           return res.status(400).json({ error: 'tournament_id and phone are required' });
       }
-
-      // Fetch all entries for the given tournament
       const entries = await TournamentEntry.find({ tournament_id }).sort({ score: -1 });
-
-      if (entries.length === 0) {
-          return res.status(404).json({ error: 'No entries found for this tournament' });
-      }
-
-      // Find the user's rank and corresponding entry
+      // if (entries.length === 0) {
+      //     return res.status(404).json({ error: 'No entries found for this tournament' });
+      // }
       const userEntryIndex = entries.findIndex(entry => entry.phone === phone);
       const userEntry = entries[userEntryIndex];
-
-      if (!userEntry) {
-          return res.status(404).json({ error: 'Player with this phone number not found in the tournament' });
-      }
+      // if (!userEntry) {
+      //     return res.status(404).json({ error: 'Player with this phone number not found in the tournament' });
+      // }
 
       const userRank = userEntryIndex + 1;
 
