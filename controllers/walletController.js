@@ -16,21 +16,14 @@ const depositFunds = async (req, res) => {
 };
 const getWallet = async (req, res) => {
   try {
-    const { phone } = req.query; // Assuming phone is in the query string
-
-    // Validate input
+    const { phone } = req.query;
     if (!phone) {
       return res.status(400).json({ error: 'Phone number is required' });
     }
-
-    // Find user by phone number
     const user = await User.findOne({ phone });
-
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
-
-    // Calculate wallet and withdrawable balance
     const walletMoney = user.wallet || 0;
     user.withdrawable_balance = Math.min(user.wallet, user.withdrawable_balance || 0);
 
