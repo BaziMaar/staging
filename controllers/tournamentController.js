@@ -26,13 +26,13 @@ const getTodayTournaments = async (req, res) => {
       // Get the current date and time
       const currentDateTime = new Date();
       const next24Hours = new Date();
-      next24Hours.setHours(currentDateTime.getHours() + 24);
+      next24Hours.setHours(currentDateTime.getHours() -24);
 
       // Fetch tournaments with start_time within the next 24 hours
       const todayTournaments = await Product.find({
-          start_time: {
-              $gte: currentDateTime.toISOString(),
-              $lte: next24Hours.toISOString()
+          end_time: {
+              $gte: next24Hours.toISOString(),
+              $lte: currentDateTime.toISOString()
           }
       });
 
