@@ -28,11 +28,15 @@ const getTodayTournaments = async (req, res) => {
     const last24Hours = new Date();
     last24Hours.setHours(currentDateTime.getHours() - 24);
 
+    // Convert the range to ISO string format
+    const currentDateTimeISO = currentDateTime.toISOString();
+    const last24HoursISO = last24Hours.toISOString();
+
     // Fetch tournaments with end_time within the last 24 hours
     const todayTournaments = await Product.find({
       end_time: {
-        $gte: last24Hours.toISOString(),
-        $lte: currentDateTime.toISOString()
+        $gte: last24HoursISO,
+        $lte: currentDateTimeISO,
       }
     });
 
@@ -47,6 +51,7 @@ const getTodayTournaments = async (req, res) => {
     res.status(500).json({ message: 'Error retrieving tournaments', error: error.message });
   }
 };
+
 
 
 
