@@ -73,43 +73,26 @@ const isEmpty = (value) => value === null || value === undefined || value === ''
 const getLeaderboard = async (req, res) => {
     try {
         const { tournament_id, phone } = req.query;
-
-        // Validate input
         if (isEmpty(tournament_id) || isEmpty(phone)) {
             return res.status(400).json({ error: 'tournament_id and phone are required' });
         }
-
-        // Fetch tournament entries
         const entries = await TournamentEntry.find({ tournament_id }).sort({ score: -1 });
-
-        // Check if tournament has any entries
-        if (!entries || entries.length === 0) {
-            return res.status(404).json({ error: 'No entries found for this tournament' });
-        }
-
-        // Get the top player's score
+        // if (!entries || entries.length === 0) {
+        //     return res.status(404).json({ error: 'No entries found for this tournament' });
+        // }
         const topPlayerScore = isEmpty(entries[0]?.score) ? 1000 : entries[0].score;
-
-        // Generate random scores if not already cached
         if (!cachedRandomScores) {
             cachedRandomScores = generateRandomScores(topPlayerScore);
         }
-
-        // Find user's entry
         const userEntryIndex = entries.findIndex(entry => entry.phone === phone);
-        const userEntry = entries[userEntryIndex];
-
-        // If user entry is not found, return random top scores only
+        const userEntry = isEmpty(userEntryIndex)?null:entries[userEntryIndex];
         if (isEmpty(userEntry)) {
             return res.json({
                 message: 'Player not found in the tournament. Displaying random top 5 scores.',
                 top5Scores: cachedRandomScores,
             });
         }
-
-        // If user entry is found, return leaderboard details
         const userRank = userEntryIndex + 1;
-
         res.json({
             phone,
             tournament_id,
