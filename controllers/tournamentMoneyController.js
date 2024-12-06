@@ -58,12 +58,11 @@ const updateScoreByTransactionAndPhone = async (req, res) => {
       });
     }
   };
-  const generateRandomScores = (maxScore) => {
+  const generateRandomScores = async (maxScore) => {
     const randomScores = [];
     for (let i = 0; i < 5; i++) {
-        maxScore = Math.floor(Math.random() * 1000) + 50; // Decrease score by random value
-        if (maxScore < 1000) break; // Ensure scores don't go below 1000
-        randomScores.push(maxScore);
+        let ansScore = Math.floor(Math.random() * 1000) + maxScore; // Decrease score by random value
+        randomScores.push(ansScore);
     }
     const ans=randomScores.sort()
     return ans;
@@ -83,7 +82,7 @@ const getLeaderboard = async (req, res) => {
         // }
         const topPlayerScore = isEmpty(entries[0]?.score) ? 1000 : entries[0].score;
         if (!cachedRandomScores) {
-            cachedRandomScores = generateRandomScores(topPlayerScore);
+            cachedRandomScores = await generateRandomScores(topPlayerScore);
         }
         const userEntryIndex = entries.findIndex(entry => entry.phone === phone);
         const userEntry = isEmpty(userEntryIndex)?null:entries[userEntryIndex];
