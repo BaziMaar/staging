@@ -61,11 +61,12 @@ const updateScoreByTransactionAndPhone = async (req, res) => {
   const generateRandomScores = (maxScore) => {
     const randomScores = [];
     for (let i = 0; i < 5; i++) {
-        maxScore -= Math.floor(Math.random() * 100) + 50; // Decrease score by random value
+        maxScore = Math.floor(Math.random() * 1000) + 50; // Decrease score by random value
         if (maxScore < 1000) break; // Ensure scores don't go below 1000
         randomScores.push(maxScore);
     }
-    return randomScores;
+    const ans=randomScores.sort()
+    return ans;
 };
 
 const isEmpty = (value) => value === null || value === undefined || value === '';
