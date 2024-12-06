@@ -23,15 +23,16 @@ const addTournament=async(req,res)=>{
 }
 const getTodayTournaments = async (req, res) => {
   try {
-    // Get the current date and time
     const currentDateTime = new Date();
     const last24Hours = new Date();
+    console.log(currentDateTime);
     last24Hours.setHours(currentDateTime.getHours() - 24);
-
-    // Convert the range to ISO string format
+    currentDateTime.setHours(29,30,0,0)
+    console.log(`>>>>>last@5>>>`,last24Hours);
     const currentDateTimeISO = currentDateTime.toISOString();
     const last24HoursISO = last24Hours.toISOString();
-
+    console.log(currentDateTimeISO)
+    console.log(last24HoursISO);
     // Fetch tournaments with end_time within the last 24 hours
     const todayTournaments = await Product.find({
       end_time: {
