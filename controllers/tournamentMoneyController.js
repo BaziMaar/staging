@@ -58,54 +58,68 @@ const updateScoreByTransactionAndPhone = async (req, res) => {
       });
     }
   };
+  let cachedRandomScoresByTournament = {}; // Cache random scores by tournament_id
+
   const generateRandomScores = async (maxScore) => {
-    const randomScores = [];
-    for (let i = 0; i < 5; i++) {
-        let ansScore = Math.floor(Math.random() * 1000) + maxScore; // Decrease score by random value
-        randomScores.push(ansScore);
-    }
-    const ans=randomScores.sort()
-    return ans;
-};
-
-const isEmpty = (value) => value === null || value === undefined || value === '';
-
-const getLeaderboard = async (req, res) => {
-    try {
-        const { tournament_id, phone } = req.query;
-        if (isEmpty(tournament_id) || isEmpty(phone)) {
-            return res.status(400).json({ error: 'tournament_id and phone are required' });
-        }
-        const entries = await TournamentEntry.find({ tournament_id }).sort({ score: -1 });
-        // if (!entries || entries.length === 0) {
-        //     return res.status(404).json({ error: 'No entries found for this tournament' });
-        // }
-        const topPlayerScore = isEmpty(entries[0]?.score) ? 1000 : entries[0].score;
-        if (!cachedRandomScores) {
-            cachedRandomScores = await generateRandomScores(topPlayerScore);
-        }
-        const userEntryIndex = entries.findIndex(entry => entry.phone === phone);
-        const userEntry = isEmpty(userEntryIndex)?null:entries[userEntryIndex];
-        if (isEmpty(userEntry)) {
-            return res.json({
-                message: 'Player not found in the tournament. Displaying random top 5 scores.',
-                top5Scores: cachedRandomScores,
-            });
-        }
-        const userRank = userEntryIndex + 1;
-        res.json({
-            phone,
-            tournament_id,
-            userRank: userRank + 5,
-            userScore: userEntry?.score || 0,
-            topPlayerScore,
-            top5Scores: cachedRandomScores,
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-};
+      const randomScores = [];
+      for (let i = 0; i < 5; i++) {
+          let ansScore = Math.floor(Math.random() * 1000) + maxScore; // Generate random scores
+          let ansId=Math.floor(Math.random()*100000)+100000
+          let ansAvatar=Math.floor(Math.random()*10)+1;
+          randomScores.push({"score":ansScore,"id":ansId,"avatar":ansAvatar});
+      }
+      return randomScores.sort((a, b) => b - a); // Sort in descending order
+  };
+  
+  const isEmpty = (value) => value === null || value === undefined || value === '';
+  
+  const getLeaderboard = async (req, res) => {
+      try {
+          const { tournament_id, phone } = req.query;
+          if (isEmpty(tournament_id) || isEmpty(phone)) {
+              return res.status(400).json({ error: 'tournament_id and phone are required' });
+          }
+  
+          // Find entries for the tournament
+          const entries = await TournamentEntry.find({ tournament_id }).sort({ score: -1 });
+  
+          // Determine the top player's score
+          const topPlayerScore = isEmpty(entries[0]?.score) ? 1000 : entries[0].score;
+  
+          // Generate or retrieve cached random scores for the tournament
+          if (!cachedRandomScoresByTournament[tournament_id]) {
+              cachedRandomScoresByTournament[tournament_id] = await generateRandomScores(topPlayerScore);
+          }
+          const cachedRandomScores = cachedRandomScoresByTournament[tournament_id];
+  
+          // Find user entry in the leaderboard
+          const userEntryIndex = entries.findIndex(entry => entry.phone === phone);
+          const userEntry = userEntryIndex >= 0 ? entries[userEntryIndex] : null;
+  
+          if (isEmpty(userEntry)) {
+              return res.json({
+                  message: 'Player not found in the tournament. Displaying random top 5 scores.',
+                  top5Scores: cachedRandomScores,
+              });
+          }
+  
+          const userRank = userEntryIndex + 1;
+  
+          // Respond with leaderboard details
+          res.json({
+              phone,
+              tournament_id,
+              userRank: userRank + 5,
+              userScore: userEntry?.score || 0,
+              topPlayerScore,
+              top5Scores: cachedRandomScores,
+          });
+      } catch (error) {
+          console.error(error);
+          res.status(500).json({ error: 'Internal Server Error' });
+      }
+  };
+  
 
 
 
