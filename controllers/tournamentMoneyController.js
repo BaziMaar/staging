@@ -88,7 +88,10 @@ const getLeaderboard = async (req, res) => {
         }
 
         // Find entries for the tournament
-        const entries = await TournamentEntry.find({ tournament_id }).sort({ score: -1 });
+        console.log(tournament_id);
+        const entries = await Tournam          const err = new MongooseError(message);
+        entEntry.find({ tournament_id }).sort({ score: -1 });
+        console.log(entries);
 
         // Determine the top player's score
         const topPlayerScore = entries.length > 0 ? entries[0].score : 1000;
