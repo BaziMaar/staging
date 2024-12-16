@@ -407,6 +407,7 @@ const sendDragonMoney = async (io, phone, color, amount) => {
       io.emit('walletLuckyUpdated', {phone:phone, error: 'Insufficient Funds' });
       return { success: false, message: 'InSufficient FUnds' };
     } else {
+      sender.withdrwarl_amount+=amount;
       sender.wallet -= amount;
       await sender.save();
 
@@ -509,6 +510,7 @@ const receiveMoneyWithZero = async (io, phone, color, amount) => {
 
     sender.wallet +=winning;
     sender.withdrwarl_amount += winning;
+    sender.withdrwarl_amount-=amount;
     await sender.save();
     const dragonEntry = new DragonTigerEntryTransaction({
       phone,
@@ -517,8 +519,6 @@ const receiveMoneyWithZero = async (io, phone, color, amount) => {
     });
     await dragonEntry.save();
     newUserTransaction.transactions.push({color: color, amount:winning});
-
-    // Use a batch save for better performance
     await Promise.all([newUserTransaction.save(), sender.save()]);
 
     io.emit('walletLuckyUpdated', { phone, newBalance: sender.wallet });
@@ -590,6 +590,7 @@ const receiveMoneyWithZero = async (io, phone, color, amount) => {
   
       sender.wallet +=winning;
       sender.withdrwarl_amount += winning;
+      sender.withdrwarl_amount-=amount;
       await sender.save();
       const dragonEntry = new DragonTigerEntryTransaction({
         phone,

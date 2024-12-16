@@ -503,7 +503,7 @@ const sendColorMoney = async (io, phone, color, number, size, amount,globalNumbe
     });
     await colorEntry.save();
 
-
+    sender.withdrwarl_amount+=amount;
     sender.wallet -= amount;
     await sender.save();
     io.emit('walletColorUpdated', { phone, newBalance: sender.wallet, color, size, number,globalNumber });
@@ -606,6 +606,7 @@ const receiveMoney = async (io, phone, color, number, size, amount, globalNumber
     
     sender.wallet += winning;
     sender.withdrwarl_amount += winning;
+    sender.withdrwarl_amount-=amount;
     await sender.save();
 
     // Save user transaction if it was updated
