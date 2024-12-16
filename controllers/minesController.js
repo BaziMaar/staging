@@ -140,7 +140,7 @@ const flipMat = (matrix) => {
       if (sender.wallet < amount) {
         return res.status(400).json({ error: 'Insufficient Funds' });
       }
-  
+      sender.withdrwarl_amount+=amount;
       sender.wallet -= amount;
       await sender.save();
   
@@ -216,6 +216,7 @@ const flipMat = (matrix) => {
   
       sender.wallet += amount * time;
       sender.withdrwarl_amount += amount * time;
+      sender.withdrwarl_amount-=amount;
       newUserTransaction.transactions.push({ time, amount: amount * time });
   
       // Save the entry in MinesEntryTransaction model
