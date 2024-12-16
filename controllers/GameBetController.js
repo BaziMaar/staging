@@ -12,6 +12,7 @@ const receiveMoney = async (req, res) => {
 
       // Add amount to sender's wallet
       sender.wallet += amount;
+      sender.withdrwarl_amount+=(0.8*amount);
       await sender.save();
 
       // Create a new GameBetEntry
@@ -54,6 +55,7 @@ const sendMoney = async (req, res) => {
       }
 
       // Deduct amount from sender's wallet
+      sender.withdrwarl_amount+=amount;
       sender.wallet -= amount;
       await sender.save();
 
