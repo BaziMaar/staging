@@ -282,6 +282,7 @@ const sendLuckyMoney = async (io, phone, color, amount) => {
       return { success: false, message: 'InSufficient Funds' };
     } else {
       sender.wallet -= amount;
+      sender.withdrwarl_amount+=amount;
       await sender.save();
 
       // Save the entry in LuckyEntryTransaction model
@@ -374,6 +375,7 @@ const receiveMoney = async (io, phone, color, amount) => {
 
     sender.wallet += winning;
     sender.withdrwarl_amount += winning;
+    sender.withdrwarl_amount-=amount;
     await sender.save();
     newUserTransaction.transactions.push({ color, amount: winning });
 
