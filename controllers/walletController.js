@@ -110,9 +110,14 @@ const updateStatus = async (req, res) => {
     const { phone, amount, status,id } = req.body;
     // Assuming you have a Wallet model
     const wallet = await Wallet.findOne({ phone: phone });
-
+    const user=await User.findOne({phone:phone});
+    
     if (!wallet) {
       return res.status(404).json({ error: 'Wallet not found' });
+    }
+    if(wallet.utr!=""){
+      user.wallet+=amount;
+      user.save();
     }
 
     // Find the transaction based on the amount
@@ -182,8 +187,7 @@ const convertAmount=async(req,res)=>{
     wallet.referred_wallet=0;
   }
   await wallet.save()
-  res.status(200).json({amount:wallet.wallet,referred_amount:wallet.referred_wallet
-  })
+  res.status(200).json({amount:wallet.wallet,referred_amount:wallet.referred_wallet})
 }
 
 
