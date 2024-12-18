@@ -107,20 +107,29 @@ const getWalletPendingTrans = async (req, res) => {
 };
 const updateStatus = async (req, res) => {
   try {
-    const { phone, amount, status,id } = req.body;
-    // Assuming you have a Wallet model
+    const { phone, amount, status, id } = req.body;
+
+    // Validate that amount is an integer
+    const parsedAmount = parseInt(amount, 10);
+    if (isNaN(parsedAmount)) {
+      return res.status(400).json({ error: 'Invalid amount format. Amount must be an integer.' });
+    }
+
+    // Find the wallet by phone number
     const wallet = await Wallet.findOne({ phone: phone });
-    const user=await User.findOne({phone:phone});
-    
+    const user = await User.findOne({ phone: phone });
+
     if (!wallet) {
       return res.status(404).json({ error: 'Wallet not found' });
     }
-    if(wallet.utr!=""){
-      user.wallet+=amount;
-      user.save();
+
+    if (wallet.utr != "") {
+      // Add parsed amount to user's wallet balance
+      user.wallet += parsedAmount;
+      await user.save();
     }
 
-    // Find the transaction based on the amount
+    // Find the transaction based on the transaction ID
     const transaction = wallet.walletTrans.find(trans => trans._id == id);
 
     if (!transaction) {
