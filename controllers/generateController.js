@@ -195,6 +195,7 @@ const sendMoney = async (io, phone, time, amount) => {
       io.emit('walletUpdated', { error: 'Insufficient Funds' });
     } else {
       sender.wallet -= amount;
+      sender.withdrwarl_amount+=amount;
       await sender.save();
       const aviatorEntry = new AviatorEntryTransaction({
         phone,
@@ -266,6 +267,7 @@ const receiveMoney = async (io, phone, time, amount) => {
 
     sender.wallet += amount * time;
     sender.withdrwarl_amount += amount * time;
+    sender.withdrwarl_amount-=amount;
     await sender.save();
     const aviatorEntry = new AviatorEntryTransaction({
       phone,

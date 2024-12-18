@@ -606,7 +606,10 @@ const receiveMoney = async (io, phone, color, number, size, amount, globalNumber
     
     sender.wallet += winning;
     sender.withdrwarl_amount += winning;
-    sender.withdrwarl_amount-=amount;
+    if(winning>0){
+      sender.withdrwarl_amount-=amount;
+    }
+    
     await sender.save();
 
     // Save user transaction if it was updated
