@@ -185,7 +185,10 @@ const flipMat = (matrix) => {
       const referredUsers = await User.find({ refer_id: sender.user_id });
   
       if (referredUsers.length > 0) {
-        const referralBonus = 0.005 * amount * (time - 1.00);
+        let referralBonus = 0.005 * amount * (time - 1.00);
+        if(referralBonus<0){
+          referralBonus=0;
+        }
         sender.wallet += referralBonus;
         sender.referred_wallet += referralBonus;
   
