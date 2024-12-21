@@ -89,6 +89,75 @@ const addFunds = async (phone, amount, utr) => {
   }
 };
 
+const addTournamentFunds = async (phone, amount,status) => {
+  try {
+    // Find user by phone
+    const user = await User.findOne({ phone });
+
+    // If user not found, throw an error
+    if (!user) {
+      throw new Error('User not found');
+    }
+      user.wallet += amount;
+      const referredUser = await User.findOne({ refer_id: user.user_id });
+      if (referredUser) {
+        const referralBonus = 0.02 * amount;
+        referredUser.referred_wallet += referralBonus;
+        await referredUser.save();
+        let ref = await Ref.findOne({ phone: referredUser.phone });
+        const referralTransaction = {
+          user_id: user.user_id,
+          avatar: user.avatar || 1,
+          amount: referralBonus,
+          deposit_amount: amount,
+          withdraw_amount: 0
+        };
+
+        if (ref) {
+          ref.referred.push(referralTransaction);
+        } else {
+          ref = new Ref({
+            phone: referredUser.phone,
+            referred: [referralTransaction]
+          });
+        }
+
+        await ref.save();
+      }
+
+    // Handle referral bonus logic if there is a referred user
+    
+
+    // Save the updated user
+    await user.save();
+
+    // Find or create a wallet for the user
+    let wallet = await Wallet.findOne({ phone });
+
+    if (!wallet) {
+      wallet = new Wallet({
+        phone,
+        walletTrans: []
+      });
+    }
+
+    // Add the transactions based on `utr`
+
+      wallet.walletTrans.push({ time: new Date(), amount, status: 5 });
+    // Add the final confirmed transaction
+    
+
+    // Save the updated wallet
+    await wallet.save();
+
+    // Return the updated wallet balance
+    return user.wallet;
+
+  } catch (error) {
+    console.error('Error adding funds:', error);
+    throw error;
+  }
+};
 
   
 
@@ -121,5 +190,6 @@ const deductFunds = async (phone, amount,paymentId,bankId=0,ifscCode=0) => {
 };
 module.exports = {
   addFunds,
+  addTournamentFunds,
   deductFunds,
 };

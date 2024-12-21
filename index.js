@@ -84,8 +84,6 @@ app.use('/plinko',plinkoRoute(io));
 app.use('/ludo',ludoRoute(io));
 app.use('/home',homeRoute)
 app.use('/payment',paymentRoute)
-
-// Start the Express server on port 3000
 const EXPRESS_PORT = 3000;
 expressServer.listen(EXPRESS_PORT, () => {
   console.log(`Express server running on port ${EXPRESS_PORT}`);

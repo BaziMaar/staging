@@ -1,6 +1,7 @@
 const TournamentEntry = require('../models/TournamentEntryModel');
 const User=require('../models/userModel');
 let cachedRandomScores = null;
+const Funds=require("../Services/walletServices.js")
 const addTournamentEntry = async (req, res) => {
   try {
     const { tournament_id, phone, amount, avatar, player_name } = req.body;
@@ -70,7 +71,7 @@ let cachedRandomScoresByTournament = {}; // Cache random scores by tournament_id
 const generateRandomScores = async (maxScore) => {
     const randomScores = [];
     for (let i = 0; i < 5; i++) {
-        let ansScore = Math.floor(Math.random() * 1000) + maxScore; // Generate random scores
+        let ansScore = Math.floor(Math.random() * 1000) + 1000; // Generate random scores
         let ansId = Math.floor(Math.random() * 100000) + 100000;
         let ansAvatar = Math.floor(Math.random() * 10) + 1;
         randomScores.push({ score: ansScore, id: ansId, avatar: ansAvatar });
@@ -101,8 +102,6 @@ const getLeaderboard = async (req, res) => {
             cachedRandomScoresByTournament[tournament_id] = await generateRandomScores(topPlayerScore);
         }
         const cachedRandomScores = cachedRandomScoresByTournament[tournament_id];
-
-        // Find user entry in the leaderboard
         const userEntryIndex = entries.findIndex(entry => entry.phone === phone);
         const userEntry = userEntryIndex >= 0 ? entries[userEntryIndex] : null;
 
@@ -129,4 +128,36 @@ const getLeaderboard = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
-module.exports = { addTournamentEntry,updateScoreByTransactionAndPhone,getLeaderboard };
+const endTournament = async (req, res) => {
+  try {
+    const { tournament_id } = req.body;  
+    const entries = await TournamentEntry.find({ tournament_id }).sort({ score: -1 }).limit(1);
+    console.log(entries);
+    if (entries.length === 0) {
+      return res.status(404).json({ message: 'No entries found for this tournament' });
+    }
+    const topPlayers = entries.map(entry => ({
+      player_name: entry.player_name,
+      phone: entry.phone,
+      score: entry.score,
+    }));
+    const user = await User.findOne({ phone: topPlayers[0].phone });
+
+    if (user) {
+      user.wallet += entries.price;
+      Funds.addTournamentFunds(user.phone,entries.price);
+      await user.save();
+    }
+
+    res.status(200).json({
+      message: 'Tournament ended successfully. Top players have been rewarded.',
+      topPlayers,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: 'Error ending tournament and rewarding players',
+      error: error.message,
+    });
+  }
+};
+module.exports = { addTournamentEntry,updateScoreByTransactionAndPhone,getLeaderboard,endTournament };
