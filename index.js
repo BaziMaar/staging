@@ -120,5 +120,6 @@ app.post('/api/sendMoney', express.json(), async (req, res) => {
 });
 cron.schedule('* * * * *', async () => {
   console.log('Running ScheduleEndTournament cron job...');
+  console.log("cron is running for endTournament",currentTime)
   await tournamentCron.ScheduleEndTournament();
 });
