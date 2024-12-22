@@ -72,6 +72,11 @@ const ludoRoute=require('./routes/ludoRoute.js')
 const plinkoController=require('./controllers/plinkoController.js')
 const homeRoute=require('./routes/homeRoutes.js')
 const paymentRoute=require('./routes/paymentRoute.js')
+const moment = require('moment-timezone');
+const cron = require('node-cron');
+const currentTime = moment().tz('Asia/Kolkata').format('YYYY-MM-DDTHH:mm:ss');
+const tournamentCron=require("./CronJobs/endTournament.js")
+console.log(currentTime);
 app.use('/user', userRoutes);
 app.use('/wallet', walletRoute);
 app.use('/mines', minesRoute);
@@ -112,4 +117,8 @@ app.post('/api/sendMoney', express.json(), async (req, res) => {
     console.error('Error sending money:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
+});
+cron.schedule('* * * * *', async () => {
+  console.log('Running ScheduleEndTournament cron job...');
+  await tournamentCron.ScheduleEndTournament();
 });

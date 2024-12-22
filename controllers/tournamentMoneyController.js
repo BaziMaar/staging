@@ -1,4 +1,5 @@
 const TournamentEntry = require('../models/TournamentEntryModel');
+const Tournament=require("../models/TournamentModel");
 const User=require('../models/userModel');
 let cachedRandomScores = null;
 const Funds=require("../Services/walletServices.js")
@@ -128,36 +129,55 @@ const getLeaderboard = async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
-const endTournament = async (req, res) => {
+const endTournament = async (req, res = null) => {
   try {
-    const { tournament_id } = req.body;  
+    const { tournament_id } = req.body; 
+    const tournament = await Tournament.findById(tournament_id);
     const entries = await TournamentEntry.find({ tournament_id }).sort({ score: -1 }).limit(1);
     console.log(entries);
     if (entries.length === 0) {
-      return res.status(404).json({ message: 'No entries found for this tournament' });
+      if (res) {
+        return res.status(404).json({ message: 'No entries found for this tournament' });
+      }
+      throw new Error('No entries found for this tournament');
     }
+
     const topPlayers = entries.map(entry => ({
       player_name: entry.player_name,
       phone: entry.phone,
       score: entry.score,
     }));
     const user = await User.findOne({ phone: topPlayers[0].phone });
-
     if (user) {
-      user.wallet += entries.price;
-      Funds.addTournamentFunds(user.phone,entries.price);
+      user.wallet += tournament.price;
+      Funds.addTournamentFunds(user.phone, tournament.price);
       await user.save();
     }
 
-    res.status(200).json({
-      message: 'Tournament ended successfully. Top players have been rewarded.',
-      topPlayers,
-    });
+    if (res) {
+      return res.status(200).json({
+        message: 'Tournament ended successfully. Top players have been rewarded.',
+        topPlayers,
+      });
+    } else {
+      console.log('Tournament ended successfully. Top players have been rewarded.', topPlayers);
+    }
   } catch (error) {
-    res.status(500).json({
-      message: 'Error ending tournament and rewarding players',
-      error: error.message,
-    });
+    if (res) {
+      return res.status(500).json({
+        message: 'Error ending tournament and rewarding players',
+        error: error.message,
+      });
+    } else {
+      console.error('Error ending tournament and rewarding players:', error.message);
+      throw error;
+    }
   }
 };
-module.exports = { addTournamentEntry,updateScoreByTransactionAndPhone,getLeaderboard,endTournament };
+
+module.exports = { 
+  addTournamentEntry,
+  updateScoreByTransactionAndPhone,
+  getLeaderboard,
+  endTournament
+};
