@@ -76,6 +76,8 @@ const moment = require('moment-timezone');
 const cron = require('node-cron');
 const currentTime = moment().tz('Asia/Kolkata').format('YYYY-MM-DDTHH:mm:ss');
 const tournamentCron=require("./CronJobs/endTournament.js")
+const miniAutoRoute=require("./routes/miniAutoRoute.js")
+const minicolorRoute=require("./routes/miniColorRoute.js")
 console.log(currentTime);
 app.use('/user', userRoutes);
 app.use('/wallet', walletRoute);
@@ -89,12 +91,13 @@ app.use('/plinko',plinkoRoute(io));
 app.use('/ludo',ludoRoute(io));
 app.use('/home',homeRoute)
 app.use('/payment',paymentRoute)
+app.use('/minicolor',minicolorRoute(io))
+app.use('/miniauto',miniAutoRoute)
 const EXPRESS_PORT = 3000;
 expressServer.listen(EXPRESS_PORT, () => {
   console.log(`Express server running on port ${EXPRESS_PORT}`);
   generateAndBroadcastNumber(io);
   plinkoController.generateController(io);
-
   luckyWheelController.generateAndBroadcastNumber(io);
   colorController.generateAndBroadcastNumber(io);
   dragonTigerController.generateAndBroadcastNumber(io);
