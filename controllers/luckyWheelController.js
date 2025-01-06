@@ -314,6 +314,7 @@ const receiveForMoney = async (io, phone, colors,amounts) => {
   }
   if(finalResWinning==0){
     finalResWinning-=prevAmount
+    
   }
   return { newBalance:finalResBalance,amount:finalResWinning};
 };
@@ -374,8 +375,11 @@ const receiveMoney = async (io, phone, color, amount) => {
     }
 
     sender.wallet += winning;
-    sender.withdrwarl_amount += winning;
-    sender.withdrwarl_amount-=amount;
+    if(winning>0){
+      sender.withdrwarl_amount += winning;
+      sender.withdrwarl_amount-=amount;
+    }
+
     await sender.save();
     newUserTransaction.transactions.push({ color, amount: winning });
 

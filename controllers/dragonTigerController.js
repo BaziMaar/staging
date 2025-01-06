@@ -509,8 +509,11 @@ const receiveMoneyWithZero = async (io, phone, color, amount) => {
     }
 
     sender.wallet +=winning;
-    sender.withdrwarl_amount += winning;
-    sender.withdrwarl_amount-=amount;
+    if(winning>0){
+      sender.withdrwarl_amount += winning;
+      sender.withdrwarl_amount-=amount;
+    }
+
     await sender.save();
     const dragonEntry = new DragonTigerEntryTransaction({
       phone,
@@ -589,8 +592,11 @@ const receiveMoneyWithZero = async (io, phone, color, amount) => {
       }
   
       sender.wallet +=winning;
-      sender.withdrwarl_amount += winning;
-      sender.withdrwarl_amount-=amount;
+      if(winning>0){
+        sender.withdrwarl_amount += winning;
+        sender.withdrwarl_amount-=amount;
+      }
+
       await sender.save();
       const dragonEntry = new DragonTigerEntryTransaction({
         phone,
